@@ -1,9 +1,11 @@
 package com.gerenciador_estoque_fluxo_caixa.model.dao;
 
+import com.gerenciador_estoque_fluxo_caixa.dtos.ProdutoCreateDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.ProdutoDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 
 public interface ProdutoDao {
-	void adicionaProduto(Produto produto);
+	ProdutoDTO adicionaProduto(ProdutoCreateDTO produtoCreateDTO);
 
 	void atualizaProduto(Produto produto);
 

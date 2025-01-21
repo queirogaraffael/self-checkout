@@ -6,6 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.JOptionPane;
 
+import com.gerenciador_estoque_fluxo_caixa.dtos.ProdutoCreateDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.ProdutoDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ProdutoDao;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 
@@ -17,21 +19,33 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 		this.entityManagerFactory = entityManagerFactory;
 	}
 
-	public void adicionaProduto(Produto produto) {
+	public ProdutoDTO adicionaProduto(ProdutoCreateDTO produtoCreateDTO) {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 
 		try {
+			Produto produto = new Produto();
+
+			produto.setCodigoDeBarra(produtoCreateDTO.getCodigoDeBarra());
+			produto.setNome(produtoCreateDTO.getNome());
+			produto.setPreco(produtoCreateDTO.getPreco());
+			produto.setQuantidade(produtoCreateDTO.getQuantidade());
+			produto.setCategoria(produtoCreateDTO.getCategoria());
+
 			entityManager.persist(produto);
 			entityManager.getTransaction().commit();
+			return new ProdutoDTO(produto.getCodigoDeBarra(), produto.getNome(), produto.getPreco());
 
 		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Problemas em adicionar o produto" + erro);
+			entityManager.getTransaction().rollback();
+			JOptionPane.showMessageDialog(null, "Problemas em adicionar o produto: " + erro.getMessage());
+			return null;
 		} finally {
 			entityManager.close();
 		}
-
 	}
+
+
 
 	public void atualizaProduto(Produto produto) {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();

@@ -1,22 +1,29 @@
 package com.gerenciador_estoque_fluxo_caixa.model.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "produtos")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Produto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 	private String codigoDeBarra;
 	private String nome;
 	private Double preco;
@@ -25,54 +32,6 @@ public class Produto implements Serializable {
 
 	@OneToMany(mappedBy = "id.produto")
 	private Set<ItemVenda> itens = new HashSet<>();
-
-	public Produto() {
-
-	}
-
-	public Produto(String codigoDeBarra, String nome, Double preco, Integer quantidade, Integer categoria) {
-		this.codigoDeBarra = codigoDeBarra;
-		this.nome = nome;
-		this.preco = preco;
-		this.quantidade = quantidade;
-		this.categoria = categoria;
-	}
-
-	public String getcodigoDeBarra() {
-		return codigoDeBarra;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public Double getpreco() {
-		return preco;
-	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
-
-	public void setpreco(Double preco) {
-		this.preco = preco;
-	}
-
-	public Integer getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(Integer categoria) {
-		this.categoria = categoria;
-	}
 
 	@Override
 	public int hashCode() {
