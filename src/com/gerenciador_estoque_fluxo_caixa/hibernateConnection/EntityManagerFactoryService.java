@@ -5,9 +5,9 @@ import javax.persistence.Persistence;
 
 public class EntityManagerFactoryService {
 
-	private static EntityManagerFactory entityManagerFactory;
+	private EntityManagerFactory entityManagerFactory;
 
-	public static EntityManagerFactory entityManagerFactory() {
+	public EntityManagerFactory entityManagerFactory() {
 
 		if (entityManagerFactory == null) {
 			entityManagerFactory = Persistence.createEntityManagerFactory("persistencia");
@@ -15,13 +15,13 @@ public class EntityManagerFactoryService {
 		return entityManagerFactory;
 	}
 
-	public static void inicializarEntityManagerFactory() {
+	public void inicializarEntityManagerFactory() {
 		if (entityManagerFactory == null) {
 			entityManagerFactory = Persistence.createEntityManagerFactory("persistencia");
 		}
 	}
 
-	public static void fechaEntityManagerFactory() {
+	public void fechaEntityManagerFactory() {
 
 		if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
 			entityManagerFactory.close();

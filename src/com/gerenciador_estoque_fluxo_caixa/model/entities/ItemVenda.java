@@ -69,7 +69,7 @@ public class ItemVenda implements Serializable {
 	}
 
 	public Double subTotal() {
-		return id.getProduto().getpreco() * quantidade;
+		return id.getProduto().getPreco() * quantidade;
 	}
 
 }

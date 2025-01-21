@@ -340,7 +340,7 @@ public class CaixaController {
 		if (!listaCompras.isEmpty()) {
 			for (ItemVenda item : listaCompras) {
 
-				Produto produtoEmEstoque = produtoDao.retornaProdutoPorCodigo(item.getProduto().getcodigoDeBarra());
+				Produto produtoEmEstoque = produtoDao.retornaProdutoPorCodigo(item.getProduto().getCodigoDeBarra());
 
 				int quantidadeReal = item.getQuantidade() + produtoEmEstoque.getQuantidade();
 

@@ -5,9 +5,8 @@ import com.gerenciador_estoque_fluxo_caixa.hibernateConnection.EntityManagerFact
 
 public class Main {
 	public static void main(String[] args) {
-		EntityManagerFactoryService.inicializarEntityManagerFactory();
 
-		MenuPrincipalController controller = new MenuPrincipalController();
+		MenuPrincipalController controller = new MenuPrincipalController(new EntityManagerFactoryService());
 		controller.exibirMenuPrincipal();
 	}
 }
