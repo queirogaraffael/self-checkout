@@ -10,9 +10,8 @@ import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 public class Main {
     public static void main(String[] args) {
         final EntityManagerFactoryService entityManagerFactoryService = new EntityManagerFactoryService();
-        final NotaFiscal notaFiscal = new NotaFiscal();
 
-        ControllerFactory factory = new ControllerFactory(entityManagerFactoryService, notaFiscal);
+        ControllerFactory factory = new ControllerFactory(entityManagerFactoryService);
 
         EstoqueController estoqueController = factory.createEstoqueController();
         CaixaController caixaController = factory.createCaixaController();

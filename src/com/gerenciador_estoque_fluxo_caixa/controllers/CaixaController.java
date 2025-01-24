@@ -21,11 +21,11 @@ import com.gerenciador_estoque_fluxo_caixa.views.FluxoDeCaixaView;
 
 public class CaixaController {
 
-	private NotaFiscal notaFiscal;
-	private CategoriaService categoriaService;
-	private ItemVendaService itemVendaService;
-	private ProdutoService produtoService;
-	private VendaService vendaService;
+	private final NotaFiscal notaFiscal;
+	private final CategoriaService categoriaService;
+	private final ItemVendaService itemVendaService;
+	private final ProdutoService produtoService;
+	private final VendaService vendaService;
 
 	public CaixaController(NotaFiscal notaFiscal,
 						   ItemVendaService itemVendaService,

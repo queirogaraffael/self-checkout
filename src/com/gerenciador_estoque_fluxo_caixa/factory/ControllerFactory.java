@@ -12,27 +12,58 @@ import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 public class ControllerFactory {
 
     private final EntityManagerFactoryService entityManagerFactoryService;
-    private final NotaFiscal notaFiscal;
+    private NotaFiscal notaFiscal;
 
-    public ControllerFactory(EntityManagerFactoryService entityManagerFactoryService, NotaFiscal notaFiscal) {
+    private ItemVendaService itemVendaService;
+    private CategoriaService categoriaService;
+    private ProdutoService produtoService;
+    private VendaService vendaService;
+
+    public ControllerFactory(EntityManagerFactoryService entityManagerFactoryService) {
         this.entityManagerFactoryService = entityManagerFactoryService;
-        this.notaFiscal = notaFiscal;
+    }
+
+    public NotaFiscal createNotaFiscal(){
+        if(notaFiscal == null){
+            notaFiscal = new NotaFiscal();
+        }
+        return notaFiscal;
+    }
+
+    public ItemVendaService createItemVendaService() {
+        if (itemVendaService == null) {
+            itemVendaService = new ItemVendaService(entityManagerFactoryService.entityManagerFactory());
+        }
+        return itemVendaService;
+    }
+
+    public CategoriaService createCategoriaService() {
+        if (categoriaService == null) {
+            categoriaService = new CategoriaService(entityManagerFactoryService.entityManagerFactory());
+        }
+        return categoriaService;
+    }
+
+    public ProdutoService createProdutoService(){
+        if(produtoService == null){
+            produtoService = new ProdutoService((entityManagerFactoryService.entityManagerFactory()));
+        }
+        return produtoService;
+    }
+
+    public VendaService createVendaService(){
+        if(vendaService == null){
+            vendaService = new VendaService((entityManagerFactoryService.entityManagerFactory()));
+        }
+        return vendaService;
     }
 
     public EstoqueController createEstoqueController() {
-        ItemVendaService itemVendaService = new ItemVendaService(entityManagerFactoryService.entityManagerFactory());
-        CategoriaService categoriaService = new CategoriaService(entityManagerFactoryService.entityManagerFactory());
-        ProdutoService produtoService = new ProdutoService(entityManagerFactoryService.entityManagerFactory());
-        VendaService vendaService = new VendaService(entityManagerFactoryService.entityManagerFactory());
-        return new EstoqueController(notaFiscal, itemVendaService, categoriaService, produtoService, vendaService);
+        return new EstoqueController(createNotaFiscal(), createItemVendaService(), createCategoriaService(), createProdutoService(), createVendaService());
     }
 
     public CaixaController createCaixaController() {
-        ItemVendaService itemVendaService = new ItemVendaService(entityManagerFactoryService.entityManagerFactory());
-        CategoriaService categoriaService = new CategoriaService(entityManagerFactoryService.entityManagerFactory());
-        ProdutoService produtoService = new ProdutoService(entityManagerFactoryService.entityManagerFactory());
-        VendaService vendaService = new VendaService(entityManagerFactoryService.entityManagerFactory());
-        return new CaixaController(notaFiscal, itemVendaService, categoriaService, produtoService, vendaService);
+        return new CaixaController(createNotaFiscal(), createItemVendaService(), createCategoriaService(), createProdutoService(), createVendaService());
     }
 }
 
