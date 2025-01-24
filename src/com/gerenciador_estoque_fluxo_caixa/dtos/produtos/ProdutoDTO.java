@@ -1,4 +1,4 @@
-package com.gerenciador_estoque_fluxo_caixa.dtos;
+package com.gerenciador_estoque_fluxo_caixa.dtos.produtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

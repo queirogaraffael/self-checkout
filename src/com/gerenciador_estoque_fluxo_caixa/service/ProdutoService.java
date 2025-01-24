@@ -1,7 +1,7 @@
 package com.gerenciador_estoque_fluxo_caixa.service;
 
-import com.gerenciador_estoque_fluxo_caixa.dtos.ProdutoCreateDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.ProdutoDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ProdutoDao;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.imp.ProdutoDaoHibernate;
 

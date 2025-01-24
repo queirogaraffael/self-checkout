@@ -7,6 +7,9 @@ import javax.swing.JOptionPane;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuEstoque;
 import com.gerenciador_estoque_fluxo_caixa.hibernateConnection.EntityManagerFactoryService;
+import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
+import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
+import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 import com.gerenciador_estoque_fluxo_caixa.utils.ManipulacaoData;
 import com.gerenciador_estoque_fluxo_caixa.utils.VerificaDiretorio;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.CategoriaDao;
@@ -22,15 +25,17 @@ import com.gerenciador_estoque_fluxo_caixa.views.GerenciadorDeEstoqueView;
 
 public class EstoqueController {
 	private NotaFiscal notaFiscal;
-	private EntityManagerFactoryService entityManagerFactoryService;
-	private CategoriaDao categoriaDao;
-	private ItemVendaDao itemVendaDao;
-	private ProdutoDao produtoDao;
-	private VendaDao vendaDao;
 
-	public EstoqueController(NotaFiscal notaFiscal, EntityManagerFactoryService entityManagerFactoryService) {
+	private ItemVendaService itemVendaService;
+	private CategoriaService categoriaService;
+	private ProdutoService produtoService;
+	private VendaService vendaService;
+
+
+	public EstoqueController(NotaFiscal notaFiscal, EntityManagerFactoryService entityManagerFactory) {
 		this.notaFiscal = notaFiscal;
-		this.entityManagerFactoryService = entityManagerFactoryService;
+
+
 	}
 
 	public void gerenciadorEstoque() {

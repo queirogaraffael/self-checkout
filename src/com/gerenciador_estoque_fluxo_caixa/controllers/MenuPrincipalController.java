@@ -9,15 +9,15 @@ import com.gerenciador_estoque_fluxo_caixa.views.ValidaSenha;
 
 public class MenuPrincipalController {
 
-    private final EntityManagerFactoryService entityManagerFactoryService;
+    private final EntityManagerFactoryService entityManagerFactory;
     private final EstoqueController estoqueController;
     private final CaixaController caixaController;
 
-    public MenuPrincipalController(EntityManagerFactoryService entityManagerFactoryService, NotaFiscal notaFiscal) {
-        this.entityManagerFactoryService = entityManagerFactoryService;
+    public MenuPrincipalController(EntityManagerFactoryService entityManagerFactory, NotaFiscal notaFiscal) {
+        this.entityManagerFactory = entityManagerFactory;
 
-        this.estoqueController = new EstoqueController(notaFiscal, entityManagerFactoryService);
-        this.caixaController = new CaixaController(notaFiscal, entityManagerFactoryService);
+        this.estoqueController = new EstoqueController(notaFiscal, entityManagerFactory);
+        this.caixaController = new CaixaController(notaFiscal, entityManagerFactory);
     }
 
     public void exibirMenuPrincipal() {
@@ -46,7 +46,7 @@ public class MenuPrincipalController {
             } while (opcaoMenuPrincipal != ConstantesMenuPrincipal.ENCERRAR_PROGRAMA);
 
         } finally {
-            entityManagerFactoryService.fechaEntityManagerFactory();
+            entityManagerFactory.fechaEntityManagerFactory();
         }
     }
 

@@ -6,8 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.JOptionPane;
 
-import com.gerenciador_estoque_fluxo_caixa.dtos.ProdutoCreateDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.ProdutoDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ProdutoDao;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 

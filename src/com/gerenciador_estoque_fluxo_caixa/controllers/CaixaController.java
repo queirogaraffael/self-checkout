@@ -24,15 +24,15 @@ import com.gerenciador_estoque_fluxo_caixa.views.FluxoDeCaixaView;
 public class CaixaController {
 
 	private NotaFiscal notaFiscal;
-	private EntityManagerFactoryService entityManagerFactoryService;
+	private EntityManagerFactoryService entityManagerFactory;
 	private CategoriaDao categoriaDao;
 	private ItemVendaDao itemVendaDao;
 	private ProdutoDao produtoDao;
 	private VendaDao vendaDao;
 
-	public CaixaController(NotaFiscal notaFiscal, EntityManagerFactoryService entityManagerFactoryService) {
+	public CaixaController(NotaFiscal notaFiscal, EntityManagerFactoryService entityManagerFactory) {
 		this.notaFiscal = notaFiscal;
-		this.entityManagerFactoryService = entityManagerFactoryService;
+		this.entityManagerFactory = entityManagerFactory;
 	}
 
 	public void fluxoDeCaixa() {
