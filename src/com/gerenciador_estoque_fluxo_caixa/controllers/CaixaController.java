@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuFluxoCaixa;
+import com.gerenciador_estoque_fluxo_caixa.hibernateConnection.EntityManagerFactoryService;
 import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
 import com.gerenciador_estoque_fluxo_caixa.utils.GeradorNotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.CategoriaDao;
@@ -23,18 +24,15 @@ import com.gerenciador_estoque_fluxo_caixa.views.FluxoDeCaixaView;
 public class CaixaController {
 
 	private NotaFiscal notaFiscal;
+	private EntityManagerFactoryService entityManagerFactoryService;
 	private CategoriaDao categoriaDao;
 	private ItemVendaDao itemVendaDao;
 	private ProdutoDao produtoDao;
 	private VendaDao vendaDao;
 
-	public CaixaController(NotaFiscal notaFiscal, CategoriaDao categoriaDao, ItemVendaDao itemVendaDao,
-			ProdutoDao produtoDao, VendaDao vendaDao) {
+	public CaixaController(NotaFiscal notaFiscal, EntityManagerFactoryService entityManagerFactoryService) {
 		this.notaFiscal = notaFiscal;
-		this.categoriaDao = categoriaDao;
-		this.itemVendaDao = itemVendaDao;
-		this.produtoDao = produtoDao;
-		this.vendaDao = vendaDao;
+		this.entityManagerFactoryService = entityManagerFactoryService;
 	}
 
 	public void fluxoDeCaixa() {

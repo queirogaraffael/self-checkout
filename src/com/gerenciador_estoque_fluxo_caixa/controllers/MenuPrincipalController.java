@@ -2,37 +2,22 @@ package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuPrincipal;
 import com.gerenciador_estoque_fluxo_caixa.hibernateConnection.EntityManagerFactoryService;
-import com.gerenciador_estoque_fluxo_caixa.model.dao.*;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
 import com.gerenciador_estoque_fluxo_caixa.views.MenuPrincipalControllerView;
-
-import javax.swing.*;
+import com.gerenciador_estoque_fluxo_caixa.views.ValidaSenha;
 
 public class MenuPrincipalController {
+
     private final EntityManagerFactoryService entityManagerFactoryService;
+    private final EstoqueController estoqueController;
+    private final CaixaController caixaController;
 
-    private EstoqueController estoqueController;
-    private CaixaController caixaController;
-    private NotaFiscal notaFiscal;
-    private CategoriaDao categoriaDao;
-    private ItemVendaDao itemVendaDao;
-    private ProdutoDao produtoDao;
-    private VendaDao vendaDao;
-
-    public MenuPrincipalController(EntityManagerFactoryService entityManagerFactoryService) {
+    public MenuPrincipalController(EntityManagerFactoryService entityManagerFactoryService, NotaFiscal notaFiscal) {
         this.entityManagerFactoryService = entityManagerFactoryService;
 
-        this.notaFiscal = new NotaFiscal();
-
-        this.categoriaDao = DaoFactory.createCategoriaDao();
-        this.itemVendaDao = DaoFactory.createItemVendaDao();
-        this.produtoDao = DaoFactory.createProdutoDao();
-        this.vendaDao = DaoFactory.createVendaDao();
-
-        this.estoqueController = new EstoqueController(notaFiscal, categoriaDao, itemVendaDao, produtoDao, vendaDao);
-        this.caixaController = new CaixaController(notaFiscal, categoriaDao, itemVendaDao, produtoDao, vendaDao);
-
+        this.estoqueController = new EstoqueController(notaFiscal, entityManagerFactoryService);
+        this.caixaController = new CaixaController(notaFiscal, entityManagerFactoryService);
     }
 
     public void exibirMenuPrincipal() {
@@ -40,26 +25,22 @@ public class MenuPrincipalController {
 
         try {
             do {
-
                 opcaoMenuPrincipal = MenuPrincipalControllerView.exibeViewMenuPrincipal();
 
                 switch (opcaoMenuPrincipal) {
-                    case (ConstantesMenuPrincipal.GERENCIADOR_ESTOQUE):
-                        String senhaDigitada = JOptionPane.showInputDialog(null, "Digite a senha: ");
-                        boolean autenticacao = AutenticadorDeSenha.autenticacaoSenha(senhaDigitada);
-
-                        if (autenticacao) {
-
-                            estoqueController.gerenciadorEstoque();
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Senha incorreta. Tente novamente!");
-                        }
-
+                    case ConstantesMenuPrincipal.GERENCIADOR_ESTOQUE:
+                        processarGerenciadorEstoque();
                         break;
-                    case (ConstantesMenuPrincipal.FLUXO_CAIXA):
-                        caixaController.fluxoDeCaixa();
+
+                    case ConstantesMenuPrincipal.FLUXO_CAIXA:
+                        processarFluxoCaixa();
                         break;
+
+                    case ConstantesMenuPrincipal.ENCERRAR_PROGRAMA:
+                        break;
+
                     default:
+                        opcaoMenuPrincipal = ConstantesMenuPrincipal.ENCERRAR_PROGRAMA;
                         break;
                 }
             } while (opcaoMenuPrincipal != ConstantesMenuPrincipal.ENCERRAR_PROGRAMA);
@@ -68,4 +49,21 @@ public class MenuPrincipalController {
             entityManagerFactoryService.fechaEntityManagerFactory();
         }
     }
+
+    private void processarGerenciadorEstoque() {
+        String senhaDigitada = ValidaSenha.exibirValidaSenha();
+        boolean autenticacao = AutenticadorDeSenha.autenticacaoSenha(senhaDigitada);
+
+        if (autenticacao) {
+            estoqueController.gerenciadorEstoque();
+        } else {
+            ValidaSenha.exibirSenhaIncorreta();
+        }
+    }
+
+    private void processarFluxoCaixa() {
+        caixaController.fluxoDeCaixa();
+    }
+
 }
+
