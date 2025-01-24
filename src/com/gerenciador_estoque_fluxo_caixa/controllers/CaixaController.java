@@ -7,13 +7,11 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuFluxoCaixa;
-import com.gerenciador_estoque_fluxo_caixa.hibernateConnection.EntityManagerFactoryService;
+import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
+import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
+import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
 import com.gerenciador_estoque_fluxo_caixa.utils.GeradorNotaFiscal;
-import com.gerenciador_estoque_fluxo_caixa.model.dao.CategoriaDao;
-import com.gerenciador_estoque_fluxo_caixa.model.dao.ItemVendaDao;
-import com.gerenciador_estoque_fluxo_caixa.model.dao.ProdutoDao;
-import com.gerenciador_estoque_fluxo_caixa.model.dao.VendaDao;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
@@ -24,15 +22,21 @@ import com.gerenciador_estoque_fluxo_caixa.views.FluxoDeCaixaView;
 public class CaixaController {
 
 	private NotaFiscal notaFiscal;
-	private EntityManagerFactoryService entityManagerFactory;
-	private CategoriaDao categoriaDao;
-	private ItemVendaDao itemVendaDao;
-	private ProdutoDao produtoDao;
-	private VendaDao vendaDao;
+	private CategoriaService categoriaService;
+	private ItemVendaService itemVendaService;
+	private ProdutoService produtoService;
+	private VendaService vendaService;
 
-	public CaixaController(NotaFiscal notaFiscal, EntityManagerFactoryService entityManagerFactory) {
+	public CaixaController(NotaFiscal notaFiscal,
+						   ItemVendaService itemVendaService,
+						   CategoriaService categoriaService,
+						   ProdutoService produtoService,
+						   VendaService vendaService) {
 		this.notaFiscal = notaFiscal;
-		this.entityManagerFactory = entityManagerFactory;
+		this.itemVendaService = itemVendaService;
+		this.categoriaService = categoriaService;
+		this.produtoService = produtoService;
+		this.vendaService = vendaService;
 	}
 
 	public void fluxoDeCaixa() {
