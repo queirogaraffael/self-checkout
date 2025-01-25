@@ -10,10 +10,10 @@ import java.util.Set;
 
 public class ItemVendaService {
 
-    private ItemVendaDao itemVendaDao;
+    private final ItemVendaDao itemVendaDao;
 
-    public ItemVendaService(EntityManagerFactory entityManagerFactory) {
-        this.itemVendaDao = new ItemVendaDaoHibernate(entityManagerFactory);
+    public ItemVendaService(ItemVendaDao itemVendaDao) {
+        this.itemVendaDao = itemVendaDao;
     }
 
     public boolean contemProduto(Set<ItemVenda> listaCompras, String codigo) {

@@ -2,7 +2,6 @@ package com.gerenciador_estoque_fluxo_caixa.factory;
 
 import com.gerenciador_estoque_fluxo_caixa.controllers.CaixaController;
 import com.gerenciador_estoque_fluxo_caixa.controllers.EstoqueController;
-import com.gerenciador_estoque_fluxo_caixa.hibernateConnection.EntityManagerFactoryService;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
@@ -11,7 +10,7 @@ import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 
 public class ControllerFactory {
 
-    private final EntityManagerFactoryService entityManagerFactoryService;
+    private final DaoFactory daoFactory;
     private NotaFiscal notaFiscal;
 
     private ItemVendaService itemVendaService;
@@ -19,12 +18,12 @@ public class ControllerFactory {
     private ProdutoService produtoService;
     private VendaService vendaService;
 
-    public ControllerFactory(EntityManagerFactoryService entityManagerFactoryService) {
-        this.entityManagerFactoryService = entityManagerFactoryService;
+    public ControllerFactory(DaoFactory daoFactory) {
+        this.daoFactory = daoFactory;
     }
 
-    public NotaFiscal createNotaFiscal(){
-        if(notaFiscal == null){
+    public NotaFiscal createNotaFiscal() {
+        if (notaFiscal == null) {
             notaFiscal = new NotaFiscal();
         }
         return notaFiscal;
@@ -32,28 +31,28 @@ public class ControllerFactory {
 
     public ItemVendaService createItemVendaService() {
         if (itemVendaService == null) {
-            itemVendaService = new ItemVendaService(entityManagerFactoryService.entityManagerFactory());
+            itemVendaService = new ItemVendaService(daoFactory.createItemVendaDao());
         }
         return itemVendaService;
     }
 
     public CategoriaService createCategoriaService() {
         if (categoriaService == null) {
-            categoriaService = new CategoriaService(entityManagerFactoryService.entityManagerFactory());
+            categoriaService = new CategoriaService(daoFactory.createCategoriaDao());
         }
         return categoriaService;
     }
 
-    public ProdutoService createProdutoService(){
-        if(produtoService == null){
-            produtoService = new ProdutoService((entityManagerFactoryService.entityManagerFactory()));
+    public ProdutoService createProdutoService() {
+        if (produtoService == null) {
+            produtoService = new ProdutoService(daoFactory.createProdutoDao());
         }
         return produtoService;
     }
 
-    public VendaService createVendaService(){
-        if(vendaService == null){
-            vendaService = new VendaService((entityManagerFactoryService.entityManagerFactory()));
+    public VendaService createVendaService() {
+        if (vendaService == null) {
+            vendaService = new VendaService(daoFactory.createVendaDao());
         }
         return vendaService;
     }

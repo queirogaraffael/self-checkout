@@ -9,7 +9,7 @@ public class VendaService {
 
     private final VendaDao vendaDao;
 
-    public VendaService(EntityManagerFactory entityManagerFactory) {
-        this.vendaDao = new VendaDaoHibernate(entityManagerFactory);
+    public VendaService(VendaDao vendaDao) {
+        this.vendaDao = vendaDao;
     }
 }
