@@ -11,7 +11,7 @@ import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 import com.gerenciador_estoque_fluxo_caixa.utils.ManipulacaoData;
 import com.gerenciador_estoque_fluxo_caixa.utils.VerificaDiretorio;
-import com.gerenciador_estoque_fluxo_caixa.views.GerenciadorDeEstoqueView;
+import com.gerenciador_estoque_fluxo_caixa.ui.GerenciadorDeEstoqueView;
 
 import javax.swing.*;
 import java.time.LocalDate;

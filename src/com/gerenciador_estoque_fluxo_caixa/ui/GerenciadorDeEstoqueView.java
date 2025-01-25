@@ -1,4 +1,4 @@
-package com.gerenciador_estoque_fluxo_caixa.views;
+package com.gerenciador_estoque_fluxo_caixa.ui;
 
 import javax.swing.JOptionPane;
 

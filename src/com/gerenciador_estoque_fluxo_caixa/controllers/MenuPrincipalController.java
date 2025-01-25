@@ -3,8 +3,8 @@ package com.gerenciador_estoque_fluxo_caixa.controllers;
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuPrincipal;
 import com.gerenciador_estoque_fluxo_caixa.hibernateConnection.EntityManagerFactoryService;
 import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
-import com.gerenciador_estoque_fluxo_caixa.views.MenuPrincipalControllerView;
-import com.gerenciador_estoque_fluxo_caixa.views.ValidaSenha;
+import com.gerenciador_estoque_fluxo_caixa.ui.MenuPrincipalControllerView;
+import com.gerenciador_estoque_fluxo_caixa.ui.ValidaSenha;
 
 public class MenuPrincipalController {
 

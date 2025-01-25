@@ -17,7 +17,7 @@ import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
-import com.gerenciador_estoque_fluxo_caixa.views.FluxoDeCaixaView;
+import com.gerenciador_estoque_fluxo_caixa.ui.FluxoDeCaixaView;
 
 public class CaixaController {
 
