@@ -12,10 +12,10 @@ public class MenuPrincipalController {
     private final EstoqueController estoqueController;
     private final CaixaController caixaController;
 
-    public MenuPrincipalController(EstoqueController estoqueController, CaixaController caixaController, EntityManagerFactoryService entityManagerFactoryService) {
+    public MenuPrincipalController(EntityManagerFactoryService entityManagerFactoryService, EstoqueController estoqueController, CaixaController caixaController) {
+        this.entityManagerFactoryService = entityManagerFactoryService;
         this.estoqueController = estoqueController;
         this.caixaController = caixaController;
-        this.entityManagerFactoryService = entityManagerFactoryService;
     }
 
     public void exibirMenuPrincipal() {
