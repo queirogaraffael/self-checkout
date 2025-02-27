@@ -1,8 +1,8 @@
 package com.gerenciador_estoque_fluxo_caixa.model.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "categorias")
@@ -11,6 +11,9 @@ public class Categoria {
 	@Id
 	private Integer id;
 	private String nome;
+
+	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+	private Set<Produto> produtos = new HashSet<>();
 
 	public Categoria() {
 	}

@@ -51,8 +51,8 @@ public class CategoriaDaoHibernate implements CategoriaDao {
 			if (categorias.isEmpty()) {
 
 				String[] nomesCategorias = { "Alimentos e Bebidas", "Produtos de Limpeza", "Higiene Pessoal",
-						"Eletr�nicos", "Roupas e Acess�rios", "M�veis e Decora��o", "Ferramentas e Equipamentos",
-						"Livros e Materiais de Escrit�rio", "Sa�de e Bem-Estar", "Automotivo", "Outra" };
+						"Eletronicos", "Roupas e Acessorios", "M�veis e Decoracao", "Ferramentas e Equipamentos",
+						"Livros e Materiais de Escritorio", "Saude e Bem-Estar", "Automotivo", "Outra" };
 
 				for (int i = 1; i <= nomesCategorias.length; i++) {
 					Categoria categoria = new Categoria(i, nomesCategorias[i - 1]);
@@ -71,7 +71,7 @@ public class CategoriaDaoHibernate implements CategoriaDao {
 
 	}
 
-	public Integer retornaIdCategoria() {
+	public Categoria retornaCategoria() {
 
 		Object[] categorias = categorias();
 
@@ -80,7 +80,8 @@ public class CategoriaDaoHibernate implements CategoriaDao {
 
 		String[] categoriaDado = resultadoCategoria.toString().split(" - ");
 
-		int categoria = Integer.parseInt(categoriaDado[0]);
-		return categoria;
+		return new Categoria(Integer.parseInt(categoriaDado[0]), categoriaDado[1]);
+
+
 	}
 }

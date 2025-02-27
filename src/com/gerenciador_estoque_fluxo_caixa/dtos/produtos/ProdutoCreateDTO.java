@@ -1,5 +1,6 @@
 package com.gerenciador_estoque_fluxo_caixa.dtos.produtos;
 
+import com.gerenciador_estoque_fluxo_caixa.model.entities.Categoria;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,6 @@ public class ProdutoCreateDTO {
     private String nome;
     private Double preco;
     private Integer quantidade;
-    private Integer categoria;
+    private Categoria categoria;
 
 }

@@ -2,21 +2,19 @@ package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuEstoque;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.Categoria;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 import com.gerenciador_estoque_fluxo_caixa.ui.GerenciadorDeEstoqueView;
-import com.gerenciador_estoque_fluxo_caixa.utils.ManipulacaoData;
-import com.gerenciador_estoque_fluxo_caixa.utils.VerificaDiretorio;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoView;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProduto;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProduto;
 
 import javax.swing.*;
-import java.time.LocalDate;
-import java.util.Set;
 
 public class EstoqueController {
 
@@ -53,40 +51,40 @@ public class EstoqueController {
 
                     case (ConstantesMenuEstoque.EDITAR):
 
-                        editarProduto();
+                       // editarProduto();
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM):
 
-                        listarProdutos();
+                       // listarProdutos();
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_ESTOQUE_BAIXO):
-                        listaProdutosEstoqueBaixo();
+                        //listaProdutosEstoqueBaixo();
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_CATEGORIAS):
-                        listarCategorias();
+                        //listarCategorias();
                         break;
 
                     case (ConstantesMenuEstoque.REMOVER):
 
-                        removerProduto();
+                        //removerProduto();
                         break;
 
                     case (ConstantesMenuEstoque.CONFIGURAR_NOTA_FICAL):
 
-                        ativadorNotaFiscal(notaFiscal);
+                       // ativadorNotaFiscal(notaFiscal);
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_VENDAS):
 
-                        listarVendas();
+                        //listarVendas();
                         break;
 
                     case (ConstantesMenuEstoque.DETALHES_VENDA):
 
-                        detalharVenda();
+                       // detalharVenda();
                         break;
 
                     case (ConstantesMenuEstoque.MENU_PRINCIPAL):
@@ -103,24 +101,28 @@ public class EstoqueController {
 
     private void cadastrarProduto() {
 
-        String codigoBarra = JOptionPane.showInputDialog("Digite o codigo de barra do produto: ");
+        String codigoBarra = LeDadosProduto.leCodigoBarraProduto();
 
-        if (produtoService.retornaProdutoPorCodigo(codigoBarra) != null) {
-            JOptionPane.showMessageDialog(null, "Produto ja cadastrado anteriormente.");
+        if (produtoService.haProdutoComMesmoCodigoBarra(codigoBarra)) {
+            AlertasProdutoView.alertaProdutoJaCadastrado();
         } else {
 
-            String nome = JOptionPane.showInputDialog("Digite o nome do produto: ");
-            Double valor = Double.parseDouble(JOptionPane.showInputDialog("Valor do produto: "));
-            Integer quantidade = Integer.parseInt(JOptionPane.showInputDialog("Quantidade do produto: "));
+            String nome = LeDadosProduto.leNomeProduto();
+            Double valor = LeDadosProduto.leValorProduto();
+            Integer quantidade = LeDadosProduto.leQuantidadeProduto();
 
-            int categoria = categoriaService.retornaIdCategoria();
+            Categoria categoria = categoriaService.retornaIdCategoria();
 
-            produtoService.adicionaProduto(new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, categoria));
+            ProdutoCreateDTO produtoCreateDTO = produtoService.adicionaProduto(new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, categoria));
+
+           if(produtoCreateDTO != null){
+               PrintaProduto.exibeProdutoCriado(produtoCreateDTO);
+            }
 
         }
-
     }
 
+    /*
     private void editarProduto() {
 
         Object[] opcoes = {"Nome", "Preco", "Quantidade", "Categoria", "Voltar"};
@@ -308,4 +310,5 @@ public class EstoqueController {
             JOptionPane.showMessageDialog(null, "Sem venda registrada ainda.");
         }
     }
+     */
 }

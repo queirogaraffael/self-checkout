@@ -13,16 +13,12 @@ public class ProdutoService {
         this.produtoDao = produtoDao;
     }
 
-    public ProdutoDTO adicionarProduto(ProdutoCreateDTO produtoCreateDTO) {
+    public ProdutoCreateDTO adicionaProduto(ProdutoCreateDTO produtoCreateDTO) {
         return produtoDao.adicionaProduto(produtoCreateDTO);
     }
 
-
-    public Produto retornaProdutoPorCodigo(String codigoBarra) {
-        return null;
-    }
-
-    public void adicionaProduto(ProdutoCreateDTO produtoCreateDTO) {
+    public ProdutoDTO retornaProdutoPorCodigo(String codigoBarra) {
+        return produtoDao.retornaProdutoPorCodigo(codigoBarra);
     }
 
     public void atualizaProduto(Produto produto) {
@@ -41,5 +37,10 @@ public class ProdutoService {
     }
 
     public void removeProduto(String codigoProdutoParaRemover) {
+    }
+
+    public boolean haProdutoComMesmoCodigoBarra(String codigoBarra) {
+        return produtoDao.haProdutoComMesmoCodigoBarra(codigoBarra);
+
     }
 }

@@ -1,6 +1,7 @@
 package com.gerenciador_estoque_fluxo_caixa.service;
 
 import com.gerenciador_estoque_fluxo_caixa.model.dao.CategoriaDao;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.Categoria;
 
 public class CategoriaService {
 
@@ -10,8 +11,9 @@ public class CategoriaService {
         this.categoriaDao = categoriaDao;
     }
 
-    public int retornaIdCategoria() {
-        return 0;
+    public Categoria retornaIdCategoria() {
+        return categoriaDao.retornaCategoria();
+
     }
 
     public Object categorias() {

@@ -3,18 +3,13 @@ package com.gerenciador_estoque_fluxo_caixa.controllers;
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuFluxoCaixa;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
-import com.gerenciador_estoque_fluxo_caixa.ui.FluxoDeCaixaView;
-import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
-import com.gerenciador_estoque_fluxo_caixa.utils.GeradorNotaFiscal;
+import com.gerenciador_estoque_fluxo_caixa.ui.fluxoDeCaixa.FluxoDeCaixaView;
 
 import javax.swing.*;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,44 +46,44 @@ public class CaixaController {
 				switch (opcaoMenuFluxoDeCaixa) {
 
 				case (ConstantesMenuFluxoCaixa.ADICIONAR_PRODUTO):
-					adicionaProduto(listaCompras);
+					//adicionaProduto(listaCompras);
 					break;
 
 				case (ConstantesMenuFluxoCaixa.SACOLA_COMPRAS):
-					listarSacola(listaCompras);
+					//listarSacola(listaCompras);
 
 					break;
 
 				case (ConstantesMenuFluxoCaixa.PRODUTOS_EM_ESTOQUE):
-					listarEstoque();
+					//listarEstoque();
 
 					break;
 
 				case (ConstantesMenuFluxoCaixa.REMOVER_DA_SACOLA):
 
-					removerProduto(listaCompras);
+					//removerProduto(listaCompras);
 
 					break;
 
 				case (ConstantesMenuFluxoCaixa.ALTERAR_QUANTIDADE):
 
-					modificarQuantidade(listaCompras);
+					//modificarQuantidade(listaCompras);
 
 					break;
 
 				case (ConstantesMenuFluxoCaixa.FINALIZAR_COMPRA):
 
-					finalizarCompra(listaCompras, notaFiscal);
+					//finalizarCompra(listaCompras, notaFiscal);
 					break;
 
 				case (ConstantesMenuFluxoCaixa.LIMPAR_SACOLA):
 
-					limparCarrinho(listaCompras);
+					//limparCarrinho(listaCompras);
 					break;
 
 				case (ConstantesMenuFluxoCaixa.MENU_PRINCIPAL):
 
-					opcaoMenuFluxoDeCaixa = sair();
+					//opcaoMenuFluxoDeCaixa = sair();
 
 					break;
 
@@ -101,7 +96,8 @@ public class CaixaController {
 		} while (!opcaoMenuFluxoDeCaixa.equals(ConstantesMenuFluxoCaixa.MENU_PRINCIPAL));
 	}
 
-	private void adicionaProduto(Set<ItemVenda> listaCompras) {
+
+	/*private void adicionaProduto(Set<ItemVenda> listaCompras) {
 		String codigoProduto = JOptionPane
 				.showInputDialog("Digite o codigo do produto que voce deseja adicionar a lista de compras");
 
@@ -368,5 +364,7 @@ public class CaixaController {
 		return ConstantesMenuFluxoCaixa.MENU_PRINCIPAL;
 
 	}
+
+	 */
 
 }

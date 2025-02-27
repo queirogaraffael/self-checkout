@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.swing.JOptionPane;
 
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
@@ -19,7 +20,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 		this.entityManagerFactory = entityManagerFactory;
 	}
 
-	public ProdutoDTO adicionaProduto(ProdutoCreateDTO produtoCreateDTO) {
+	public ProdutoCreateDTO adicionaProduto(ProdutoCreateDTO produtoCreateDTO) {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 
@@ -34,7 +35,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 
 			entityManager.persist(produto);
 			entityManager.getTransaction().commit();
-			return new ProdutoDTO(produto.getCodigoDeBarra(), produto.getNome(), produto.getPreco());
+			return new ProdutoCreateDTO(produto.getCodigoDeBarra(), produto.getNome(), produto.getPreco(), produto.getQuantidade(), produto.getCategoria());
 
 		} catch (Exception erro) {
 			entityManager.getTransaction().rollback();
@@ -85,16 +86,28 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 
 	}
 
-	public Produto retornaProdutoPorCodigo(String codigo) {
+	public ProdutoDTO retornaProdutoPorCodigo(String codigo) {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 
 		try {
-			return entityManager.find(Produto.class, codigo);
+			String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO(p.codigoDeBarra, p.nome, p.preco) " +
+					"FROM Produto p " +
+					"WHERE p.codigoDeBarra = :codigoDeBarra";
+
+			List<ProdutoDTO> produtos = entityManager.createQuery(jpql, ProdutoDTO.class)
+					.setParameter("codigoDeBarra", codigo)
+					.getResultList();
+
+			if (produtos.isEmpty()) {
+				return null;
+			}
+
+			return produtos.get(0);
+
 
 		} catch (Exception erro) {
 			JOptionPane.showMessageDialog(null, "Problemas ao buscar por produto" + erro);
 			return null;
-
 		} finally {
 			entityManager.close();
 		}
@@ -174,6 +187,29 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 			entityManager.close();
 		}
 
+	}
+
+	@Override
+	public Boolean haProdutoComMesmoCodigoBarra(String codigo) {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+		try {
+
+			String jpql = "SELECT COUNT(p) FROM Produto p " +
+					"WHERE p.codigoDeBarra = :codigoDeBarra";
+
+			Long quantidade = entityManager.createQuery(jpql, Long.class)
+					.setParameter("codigoDeBarra", codigo)
+					.getSingleResult();
+
+			return quantidade > 0;
+
+		} catch (Exception erro) {
+			JOptionPane.showMessageDialog(null, "Problemas ao buscar por produto" + erro);
+			return false;
+		} finally {
+			entityManager.close();
+		}
 	}
 
 }

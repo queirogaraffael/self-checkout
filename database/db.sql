@@ -22,16 +22,18 @@ INSERT INTO categorias (id, nome) VALUES
 
 
 CREATE TABLE produtos (
-    codigoDeBarra VARCHAR(13) PRIMARY KEY NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    codigoDeBarra VARCHAR(13) UNIQUE,
     nome VARCHAR(40),
     preco DOUBLE,
     quantidade INT,
-    categoria INT NOT NULL,
-    FOREIGN KEY (categoria) REFERENCES categorias(id)
+    categoria_id INT NOT NULL,
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );
 
+
 -- Inserir produtos de Alimentos e Bebidas
-INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES 
+INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria_id) VALUES 
     ('1000000000001', 'Arroz', 5.25, 100, 1),
     ('1000000000002', 'Feijão', 7.0, 80, 1),
     ('1000000000003', 'Macarrão', 3.5, 120, 1),
@@ -54,7 +56,7 @@ INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES
     ('1000000000020', 'Pêra', 2.75, 90, 1);
 
 -- Inserir produtos de Produtos de Limpeza
-INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES 
+INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria_id) VALUES 
     ('1000000000021', 'Sabão em Pó', 8.0, 50, 2),
     ('1000000000022', 'Detergente', 3.5, 70, 2),
     ('1000000000023', 'Desinfetante', 6.0, 40, 2),
@@ -77,7 +79,7 @@ INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES
     ('1000000000040', 'Pasta para Limpeza', 4.25, 60, 2);
 
 -- Inserir produtos de Higiene Pessoal
-INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES 
+INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria_id) VALUES 
     ('1000000000041', 'Sabonete', 2.5, 100, 3),
     ('1000000000042', 'Shampoo', 8.0, 80, 3),
     ('1000000000043', 'Condicionador', 7.0, 70, 3),
@@ -100,7 +102,7 @@ INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES
     ('1000000000060', 'Perfume', 15.0, 30, 3);
 
 -- Inserir produtos de Eletrônicos
-INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES 
+INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria_id) VALUES 
     ('1000000000061', 'Smartphone', 1500.0, 50, 4),
     ('1000000000062', 'Notebook', 2500.0, 30, 4),
     ('1000000000063', 'Tablet', 800.0, 40, 4),
@@ -123,7 +125,7 @@ INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES
     ('1000000000080', 'Adaptador HDMI', 20.0, 100, 4);
 
 -- Inserir produtos de Roupas e Acessórios
-INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES 
+INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria_id) VALUES 
     ('1000000000081', 'Camiseta Masculina', 30.0, 150, 5),
     ('1000000000082', 'Camiseta Feminina', 30.0, 150, 5),
     ('1000000000083', 'Calça Jeans Masculina', 50.0, 100, 5),
@@ -146,7 +148,7 @@ INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES
     ('1000000000100', 'Relógio de Pulso', 100.0, 50, 5);
 
 -- Inserir produtos de Móveis e Decoração
-INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES 
+INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria_id) VALUES 
     ('1000000000101', 'Sofá', 800.0, 20, 6),
     ('1000000000102', 'Mesa de Jantar', 400.0, 30, 6),
     ('1000000000103', 'Cadeira de Escritório', 150.0, 50, 6),
@@ -169,7 +171,7 @@ INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES
     ('1000000000120', 'Mesa de Escritório', 200.0, 30, 6);
 
 -- Inserir produtos de Ferramentas e Equipamentos
-INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES 
+INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria_id) VALUES 
     ('1000000000121', 'Furadeira', 100.0, 30, 7),
     ('1000000000122', 'Parafusadeira', 80.0, 35, 7),
     ('1000000000123', 'Chave de Fenda', 10.0, 50, 7),
@@ -192,7 +194,7 @@ INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES
     ('1000000000140', 'Lanterna', 15.0, 30, 7);
 
 -- Inserir produtos de Livros e Materiais de Escritório
-INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES 
+INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria_id) VALUES 
     ('1000000000141', 'Livro de Romance', 25.0, 50, 8),
     ('1000000000142', 'Livro de Ficção Científica', 30.0, 40, 8),
     ('1000000000143', 'Livro de Autoajuda', 20.0, 60, 8),
@@ -215,7 +217,7 @@ INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES
     ('1000000000160', 'Gravador de Voz', 40.0, 20, 8);
 
 -- Inserir produtos de Saúde e Bem-Estar
-INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES 
+INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria_id) VALUES 
     ('1000000000161', 'Termômetro Digital', 10.0, 60, 9),
     ('1000000000162', 'Fita Métrica', 5.0, 80, 9),
     ('1000000000163', 'Balança Digital', 20.0, 40, 9),
@@ -236,5 +238,3 @@ INSERT INTO produtos (codigoDeBarra, nome, preco, quantidade, categoria) VALUES
     ('1000000000178', 'Anti-inflamatório', 10.0, 70, 9),
     ('1000000000179', 'Desodorante Antitranspirante', 6.0, 90, 9),
     ('1000000000180', 'Soro Fisiológico', 4.0, 100, 9);
-
-
