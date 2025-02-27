@@ -1,23 +1,22 @@
 package com.gerenciador_estoque_fluxo_caixa.controllers;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.swing.JOptionPane;
-
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuFluxoCaixa;
-import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
-import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
-import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
-import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
-import com.gerenciador_estoque_fluxo_caixa.utils.GeradorNotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
+import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
+import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
+import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 import com.gerenciador_estoque_fluxo_caixa.ui.FluxoDeCaixaView;
+import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
+import com.gerenciador_estoque_fluxo_caixa.utils.GeradorNotaFiscal;
+
+import javax.swing.*;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CaixaController {
 
@@ -113,7 +112,7 @@ public class CaixaController {
 
 			ItemVenda prod = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
 
-			Produto produtoEstoque = produtoDao.retornaProdutoPorCodigo(codigoProduto);
+			Produto produtoEstoque = produtoService.retornaProdutoPorCodigo(codigoProduto);
 
 			int quantidadeRealProduto = prod.getQuantidade() + produtoEstoque.getQuantidade();
 
@@ -122,7 +121,7 @@ public class CaixaController {
 				prod.setQuantidade(novaQuantidade);
 				produtoEstoque.setQuantidade(quantidadeRealProduto - novaQuantidade);
 
-				produtoDao.atualizaProduto(produtoEstoque);
+				produtoService.atualizaProduto(produtoEstoque);
 
 			} else if (quantidadeRealProduto <= 0) {
 				JOptionPane.showMessageDialog(null, "Produto indisponivel. Tente outro!");
@@ -141,7 +140,7 @@ public class CaixaController {
 					prod.setQuantidade(quantidadeRealProduto);
 					produtoEstoque.setQuantidade(0);
 
-					produtoDao.atualizaProduto(produtoEstoque);
+					produtoService.atualizaProduto(produtoEstoque);
 
 				} else {
 					JOptionPane.showMessageDialog(null, "Compra de produto cancelada.");
@@ -150,7 +149,7 @@ public class CaixaController {
 
 		} else {
 
-			Produto produto = produtoDao.retornaProdutoPorCodigo(codigoProduto);
+			Produto produto = produtoService.retornaProdutoPorCodigo(codigoProduto);
 
 			if (produto != null) {
 				Integer quantidade = Integer.parseInt(JOptionPane.showInputDialog("Quantidade: "));
@@ -163,7 +162,7 @@ public class CaixaController {
 
 					produto.setQuantidade(produto.getQuantidade() - quantidade);
 
-					produtoDao.atualizaProduto(produto);
+					produtoService.atualizaProduto(produto);
 
 				} else if (produto.getQuantidade() == 0) {
 					JOptionPane.showMessageDialog(null, "Quantidade em estoque do produto igual a 0. Tente outro!");
@@ -184,7 +183,7 @@ public class CaixaController {
 						listaCompras.add(item);
 
 						produto.setQuantidade(0);
-						produtoDao.atualizaProduto(produto);
+						produtoService.atualizaProduto(produto);
 
 					} else {
 						JOptionPane.showMessageDialog(null, "Compra de produto cancelada.");
@@ -211,13 +210,13 @@ public class CaixaController {
 
 	private void listarEstoque() {
 
-		if (produtoDao.tabelaProdutoEstaVazia()) {
+		if (produtoService.tabelaProdutoEstaVazia()) {
 			JOptionPane.showMessageDialog(null, "Lista de produtos vazia.");
 		} else {
 
-			int categoria = categoriaDao.retornaIdCategoria();
+			int categoria = categoriaService.retornaIdCategoria();
 
-			String resultado = produtoDao.geraRelatotioProdutos(categoria);
+			String resultado = produtoService.geraRelatotioProdutos(categoria);
 
 			JOptionPane.showMessageDialog(null, resultado);
 		}
@@ -241,12 +240,12 @@ public class CaixaController {
 				ItemVenda ItemListaCompras = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras,
 						codigoProdutoParaRemover);
 
-				Produto produtoDoEstoque = produtoDao.retornaProdutoPorCodigo(codigoProdutoParaRemover);
+				Produto produtoDoEstoque = produtoService.retornaProdutoPorCodigo(codigoProdutoParaRemover);
 				int quantidadeRealProduto = ItemListaCompras.getQuantidade() + produtoDoEstoque.getQuantidade();
 
 				produtoDoEstoque.setQuantidade(quantidadeRealProduto);
 
-				produtoDao.atualizaProduto(produtoDoEstoque);
+				produtoService.atualizaProduto(produtoDoEstoque);
 				listaCompras.remove(ItemListaCompras);
 
 				JOptionPane.showMessageDialog(null, "Produto removida com sucesso!");
@@ -266,7 +265,7 @@ public class CaixaController {
 
 				ItemVenda prod = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
 
-				Produto produtoEstoque = produtoDao.retornaProdutoPorCodigo(codigo);
+				Produto produtoEstoque = produtoService.retornaProdutoPorCodigo(codigo);
 
 				int quantidadeRealProduto = prod.getQuantidade() + produtoEstoque.getQuantidade();
 
@@ -275,7 +274,7 @@ public class CaixaController {
 					prod.setQuantidade(novaQuantidade);
 					produtoEstoque.setQuantidade(quantidadeRealProduto - novaQuantidade);
 
-					produtoDao.atualizaProduto(produtoEstoque);
+					produtoService.atualizaProduto(produtoEstoque);
 
 				} else if (quantidadeRealProduto <= 0) {
 					JOptionPane.showMessageDialog(null, "Produto indisponivel. Tente outro!");
@@ -294,7 +293,7 @@ public class CaixaController {
 						prod.setQuantidade(quantidadeRealProduto);
 						produtoEstoque.setQuantidade(0);
 
-						produtoDao.atualizaProduto(produtoEstoque);
+						produtoService.atualizaProduto(produtoEstoque);
 
 					} else {
 						JOptionPane.showMessageDialog(null, "Compra de produto cancelada.");
@@ -314,19 +313,19 @@ public class CaixaController {
 			Venda venda = new Venda();
 			venda.setDataHora(LocalDateTime.now());
 
-			vendaDao.adicionaVenda(venda);
+			vendaService.adicionaVenda(venda);
 
 			Double total = 0.0;
 
 			for (ItemVenda itemVenda : listaCompras) {
 				itemVenda.setVenda(venda);
 				total += itemVenda.subTotal();
-				itemVendaDao.adicionaItemVenda(itemVenda);
+				itemVendaService.adicionaItemVenda(itemVenda);
 			}
 
 			venda.setTotal(total);
 
-			vendaDao.atualizaVenda(venda);
+			vendaService.atualizaVenda(venda);
 
 			if (notaFiscal.getStatusNotaFiscal()) {
 				GeradorNotaFiscal.geradorNotaFiscal(venda, listaCompras, notaFiscal.getCaminhoNotaFiscal());
@@ -342,13 +341,13 @@ public class CaixaController {
 		if (!listaCompras.isEmpty()) {
 			for (ItemVenda item : listaCompras) {
 
-				Produto produtoEmEstoque = produtoDao.retornaProdutoPorCodigo(item.getProduto().getCodigoDeBarra());
+				Produto produtoEmEstoque = produtoService.retornaProdutoPorCodigo(item.getProduto().getCodigoDeBarra());
 
 				int quantidadeReal = item.getQuantidade() + produtoEmEstoque.getQuantidade();
 
 				produtoEmEstoque.setQuantidade(quantidadeReal);
 
-				produtoDao.atualizaProduto(produtoEmEstoque);
+				produtoService.atualizaProduto(produtoEmEstoque);
 
 			}
 			listaCompras.clear();

@@ -4,6 +4,7 @@ import com.gerenciador_estoque_fluxo_caixa.hibernateConnection.EntityManagerFact
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ItemVendaDao;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.imp.ItemVendaDaoHibernate;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.Set;
@@ -16,11 +17,11 @@ public class ItemVendaService {
         this.itemVendaDao = itemVendaDao;
     }
 
-    public boolean contemProduto(Set<ItemVenda> listaCompras, String codigo) {
+    public static boolean contemProduto(Set<ItemVenda> listaCompras, String codigo) {
         return listaCompras.stream().anyMatch(p -> p.getProduto().getCodigoDeBarra().equals(codigo));
     }
 
-    public Double somaPrecos(Set<ItemVenda> listaCompras) {
+    public static Double somaPrecos(Set<ItemVenda> listaCompras) {
         double total = 0;
 
         for (ItemVenda p : listaCompras) {
@@ -33,7 +34,7 @@ public class ItemVendaService {
         listaCompras.removeIf(p -> p.getProduto().getCodigoDeBarra().equals(codigo));
     }
 
-    public ItemVenda retornaItemVendaPeloCodigo(Set<ItemVenda> listaCompras, String codigo) {
+    public static ItemVenda retornaItemVendaPeloCodigo(Set<ItemVenda> listaCompras, String codigo) {
         for (ItemVenda p : listaCompras) {
             if (p.getProduto().getCodigoDeBarra().equals(codigo)) {
                 return p;
@@ -42,7 +43,7 @@ public class ItemVendaService {
         return null;
     }
 
-    public String geraRelatorioItemVenda(Set<ItemVenda> itens) {
+    public static String geraRelatorioItemVenda(Set<ItemVenda> itens) {
 
         StringBuilder sb = new StringBuilder();
         for (ItemVenda p : itens) {
@@ -56,4 +57,11 @@ public class ItemVendaService {
         return sb.toString();
     }
 
+    public Set<ItemVenda> retornaItensVenda(Venda venda) {
+        return null;
+    }
+
+    public void adicionaItemVenda(ItemVenda itemVenda) {
+
+    }
 }

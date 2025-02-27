@@ -1,6 +1,7 @@
 package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuEstoque;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
@@ -9,9 +10,9 @@ import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
+import com.gerenciador_estoque_fluxo_caixa.ui.GerenciadorDeEstoqueView;
 import com.gerenciador_estoque_fluxo_caixa.utils.ManipulacaoData;
 import com.gerenciador_estoque_fluxo_caixa.utils.VerificaDiretorio;
-import com.gerenciador_estoque_fluxo_caixa.ui.GerenciadorDeEstoqueView;
 
 import javax.swing.*;
 import java.time.LocalDate;
@@ -104,7 +105,7 @@ public class EstoqueController {
 
         String codigoBarra = JOptionPane.showInputDialog("Digite o codigo de barra do produto: ");
 
-        if (produtoDao.retornaProdutoPorCodigo(codigoBarra) != null) {
+        if (produtoService.retornaProdutoPorCodigo(codigoBarra) != null) {
             JOptionPane.showMessageDialog(null, "Produto ja cadastrado anteriormente.");
         } else {
 
@@ -112,9 +113,9 @@ public class EstoqueController {
             Double valor = Double.parseDouble(JOptionPane.showInputDialog("Valor do produto: "));
             Integer quantidade = Integer.parseInt(JOptionPane.showInputDialog("Quantidade do produto: "));
 
-            int categoria = categoriaDao.retornaIdCategoria();
+            int categoria = categoriaService.retornaIdCategoria();
 
-            produtoDao.adicionaProduto(new Produto(codigoBarra, nome, valor, quantidade, categoria));
+            produtoService.adicionaProduto(new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, categoria));
 
         }
 
@@ -130,26 +131,26 @@ public class EstoqueController {
         if (opcaoEditar != 4) {
             String codigo = JOptionPane.showInputDialog("Digite o codigo do produto: ");
 
-            Produto produto = produtoDao.retornaProdutoPorCodigo(codigo);
+            Produto produto = produtoService.retornaProdutoPorCodigo(codigo);
 
-            if (produtoDao.retornaProdutoPorCodigo(codigo) != null) {
+            if (produtoService.retornaProdutoPorCodigo(codigo) != null) {
                 if (opcaoEditar == 0) {
                     String novoNome = JOptionPane.showInputDialog("Digite o novo nome: ");
                     produto.setNome(novoNome);
-                    produtoDao.atualizaProduto(produto);
+                    produtoService.atualizaProduto(produto);
                 } else if (opcaoEditar == 1) {
                     Double novoPreco = Double.valueOf(JOptionPane.showInputDialog("Digite o novo preco: "));
-                    produto.setpreco(novoPreco);
-                    produtoDao.atualizaProduto(produto);
+                    produto.setPreco(novoPreco);
+                    produtoService.atualizaProduto(produto);
                 } else if (opcaoEditar == 2) {
                     Integer novaQuantidade = Integer
                             .parseInt(JOptionPane.showInputDialog("Digite a nova quantidade: "));
                     produto.setQuantidade(novaQuantidade);
-                    produtoDao.atualizaProduto(produto);
+                    produtoService.atualizaProduto(produto);
                 } else if (opcaoEditar == 3) {
                     Integer novaCategoria = Integer.parseInt(JOptionPane.showInputDialog("Digite a nova categoria: "));
                     produto.setCategoria(novaCategoria);
-                    produtoDao.atualizaProduto(produto);
+                    produtoService.atualizaProduto(produto);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Produto nao cadastrado ainda. Tente outro!");
@@ -160,13 +161,13 @@ public class EstoqueController {
 
     private void listarProdutos() {
 
-        if (produtoDao.tabelaProdutoEstaVazia()) {
+        if (produtoService.tabelaProdutoEstaVazia()) {
             JOptionPane.showMessageDialog(null, "Lista de produtos vazia.");
         } else {
 
-            int categoria = categoriaDao.retornaIdCategoria();
+            int categoria = categoriaService.retornaIdCategoria();
 
-            String resultado = produtoDao.geraRelatotioProdutos(categoria);
+            String resultado = produtoService.geraRelatotioProdutos(categoria);
 
             JOptionPane.showMessageDialog(null, resultado);
         }
@@ -175,7 +176,7 @@ public class EstoqueController {
 
     private void listaProdutosEstoqueBaixo() {
 
-        String resultado = produtoDao.geraRelatorioProdutosEstoqueBaixo();
+        String resultado = produtoService.geraRelatorioProdutosEstoqueBaixo();
 
         if (resultado.equals("")) {
             JOptionPane.showMessageDialog(null, "Sem produtos com baixo estoque!");
@@ -187,7 +188,7 @@ public class EstoqueController {
 
     private void listarCategorias() {
 
-        Object resultado = categoriaDao.categorias();
+        Object resultado = categoriaService.categorias();
 
         JOptionPane.showMessageDialog(null, resultado);
 
@@ -198,7 +199,7 @@ public class EstoqueController {
         String codigoProdutoParaRemover = JOptionPane
                 .showInputDialog("Digite o codigo do produto que voce deseja remover:");
 
-        produtoDao.removeProduto(codigoProdutoParaRemover);
+        produtoService.removeProduto(codigoProdutoParaRemover);
     }
 
     private void ativadorNotaFiscal(NotaFiscal notaFiscal) {
@@ -237,7 +238,7 @@ public class EstoqueController {
 
     private void listarVendas() {
 
-        if (!vendaDao.tabelaVendaEstaVazia()) {
+        if (!vendaService.tabelaVendaEstaVazia()) {
 
             Object[] opcoes = {"Listar todas as vendas", "Listar venda por data especifica", "Voltar"};
 
@@ -246,7 +247,7 @@ public class EstoqueController {
 
             if (opcaoListagem == 0) {
 
-                String resultadoListagemVendas = vendaDao.geraRelatioVendas();
+                String resultadoListagemVendas = vendaService.geraRelatioVendas();
                 JOptionPane.showMessageDialog(null, resultadoListagemVendas);
 
             } else if (opcaoListagem == 1) {
@@ -260,7 +261,7 @@ public class EstoqueController {
                     LocalDate data = ManipulacaoData.retornaLocalDate(dataString);
                     if (!ManipulacaoData.verificaSeADataEPosterior(dataString)) {
 
-                        String resultadoListagemVendasPorData = vendaDao.geraRelatiorioVendasPorData(data);
+                        String resultadoListagemVendasPorData = vendaService.geraRelatiorioVendasPorData(data);
 
                         if (resultadoListagemVendasPorData.equals("")) {
                             JOptionPane.showMessageDialog(null, "Sem resultado de vendas para esta data");
@@ -283,14 +284,14 @@ public class EstoqueController {
     }
 
     private void detalharVenda() {
-        if (!vendaDao.tabelaVendaEstaVazia()) {
+        if (!vendaService.tabelaVendaEstaVazia()) {
 
             Integer codigo = Integer.parseInt(JOptionPane.showInputDialog("Codigo de venda: "));
-            Venda venda = vendaDao.retornaVendaPorCodigo(codigo);
+            Venda venda = vendaService.retornaVendaPorCodigo(codigo);
 
             if (venda != null) {
 
-                Set<ItemVenda> itens = itemVendaDao.retornaItensVenda(venda);
+                Set<ItemVenda> itens = itemVendaService.retornaItensVenda(venda);
 
                 String itensVenda = ItemVendaService.geraRelatorioItemVenda(itens);
 

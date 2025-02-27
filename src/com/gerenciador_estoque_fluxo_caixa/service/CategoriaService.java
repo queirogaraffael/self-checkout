@@ -10,4 +10,11 @@ public class CategoriaService {
         this.categoriaDao = categoriaDao;
     }
 
+    public int retornaIdCategoria() {
+        return 0;
+    }
+
+    public Object categorias() {
+        return null;
+    }
 }

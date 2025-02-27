@@ -2,11 +2,8 @@ package com.gerenciador_estoque_fluxo_caixa.service;
 
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
-import com.gerenciador_estoque_fluxo_caixa.factory.DaoFactory;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ProdutoDao;
-import com.gerenciador_estoque_fluxo_caixa.model.dao.imp.ProdutoDaoHibernate;
-
-import javax.persistence.EntityManagerFactory;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 
 public class ProdutoService {
 
@@ -20,4 +17,29 @@ public class ProdutoService {
         return produtoDao.adicionaProduto(produtoCreateDTO);
     }
 
+
+    public Produto retornaProdutoPorCodigo(String codigoBarra) {
+        return null;
+    }
+
+    public void adicionaProduto(ProdutoCreateDTO produtoCreateDTO) {
+    }
+
+    public void atualizaProduto(Produto produto) {
+    }
+
+    public boolean tabelaProdutoEstaVazia() {
+        return false;
+    }
+
+    public String geraRelatotioProdutos(int categoria) {
+        return "";
+    }
+
+    public String geraRelatorioProdutosEstoqueBaixo() {
+        return "";
+    }
+
+    public void removeProduto(String codigoProdutoParaRemover) {
+    }
 }
