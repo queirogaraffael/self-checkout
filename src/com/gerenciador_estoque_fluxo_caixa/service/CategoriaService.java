@@ -1,7 +1,9 @@
 package com.gerenciador_estoque_fluxo_caixa.service;
 
+import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.CategoriaDao;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Categoria;
+
+import java.util.List;
 
 public class CategoriaService {
 
@@ -11,12 +13,18 @@ public class CategoriaService {
         this.categoriaDao = categoriaDao;
     }
 
-    public Categoria retornaIdCategoria() {
-        return categoriaDao.retornaCategoria();
-
+    public Object[] retornaCategorias() {
+        return transformaListaEmObject(categoriaDao.retornaCategorias());
     }
 
-    public Object categorias() {
-        return null;
+    public CategoriaResponseDTO converteResultadoParaCategoriaDTO(Object resultadoCategoria) {
+        String[] categoriaDado = resultadoCategoria.toString().split(" - ");
+        return new CategoriaResponseDTO(Integer.parseInt(categoriaDado[0]), categoriaDado[1]);
     }
+
+    private Object[] transformaListaEmObject(List<?> lista) {
+        return lista.toArray();
+    }
+
+
 }

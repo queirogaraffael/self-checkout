@@ -1,14 +1,15 @@
 package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuEstoque;
+import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Categoria;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
+import com.gerenciador_estoque_fluxo_caixa.ui.Categorias;
 import com.gerenciador_estoque_fluxo_caixa.ui.GerenciadorDeEstoqueView;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoView;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProduto;
@@ -51,12 +52,12 @@ public class EstoqueController {
 
                     case (ConstantesMenuEstoque.EDITAR):
 
-                       // editarProduto();
+                        //editarProduto();
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM):
 
-                       // listarProdutos();
+                        // listarProdutos();
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_ESTOQUE_BAIXO):
@@ -64,7 +65,7 @@ public class EstoqueController {
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_CATEGORIAS):
-                        //listarCategorias();
+                        listarCategorias();
                         break;
 
                     case (ConstantesMenuEstoque.REMOVER):
@@ -74,7 +75,7 @@ public class EstoqueController {
 
                     case (ConstantesMenuEstoque.CONFIGURAR_NOTA_FICAL):
 
-                       // ativadorNotaFiscal(notaFiscal);
+                        // ativadorNotaFiscal(notaFiscal);
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_VENDAS):
@@ -84,7 +85,7 @@ public class EstoqueController {
 
                     case (ConstantesMenuEstoque.DETALHES_VENDA):
 
-                       // detalharVenda();
+                        // detalharVenda();
                         break;
 
                     case (ConstantesMenuEstoque.MENU_PRINCIPAL):
@@ -93,7 +94,7 @@ public class EstoqueController {
                 }
             } catch (NumberFormatException erro) {
                 JOptionPane.showMessageDialog(null,
-                        "Entrada invalida. Por favor, insira um numero correspondente a�op�ao desejada.");
+                        "Entrada invalida. Por favor, insira um numero correspondente a opcao desejada.");
             }
 
         } while (!opcao.equals(ConstantesMenuEstoque.MENU_PRINCIPAL));
@@ -111,66 +112,70 @@ public class EstoqueController {
             Double valor = LeDadosProduto.leValorProduto();
             Integer quantidade = LeDadosProduto.leQuantidadeProduto();
 
-            Categoria categoria = categoriaService.retornaIdCategoria();
+            CategoriaResponseDTO categoria = selecionaCategoria();
 
-            ProdutoCreateDTO produtoCreateDTO = produtoService.adicionaProduto(new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, categoria));
+            ProdutoCreateDTO produtoCreateDTO = produtoService.adicionaProduto(new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, new Categoria(categoria.getId(), categoria.getNome())));
 
-           if(produtoCreateDTO != null){
-               PrintaProduto.exibeProdutoCriado(produtoCreateDTO);
+            if (produtoCreateDTO != null) {
+                PrintaProduto.exibeProdutoCriado(produtoCreateDTO);
             }
 
         }
     }
 
-    /*
+    private void listarCategorias() {
+        Object[] categorias = categoriaService.retornaCategorias();
+        Categorias.exibirCategorias(categorias);
+    }
+
+/*
     private void editarProduto() {
 
-        Object[] opcoes = {"Nome", "Preco", "Quantidade", "Categoria", "Voltar"};
+        int opcaoEditar = EditarProduto.opcaoEditar();
 
-        int opcaoEditar = JOptionPane.showOptionDialog(null, "Escolha uma opcao para modificar: ", "Modificar",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+        if (opcaoEditar != 2) {
+            String codigo = LeDadosProduto.leCodigoBarraProduto();
 
-        if (opcaoEditar != 4) {
-            String codigo = JOptionPane.showInputDialog("Digite o codigo do produto: ");
+            if (produtoService.haProdutoComMesmoCodigoBarra(codigo)) {
 
-            Produto produto = produtoService.retornaProdutoPorCodigo(codigo);
+                ProdutoDTO produto = produtoService.retornaProdutoPorCodigo(codigo);
 
-            if (produtoService.retornaProdutoPorCodigo(codigo) != null) {
+
                 if (opcaoEditar == 0) {
-                    String novoNome = JOptionPane.showInputDialog("Digite o novo nome: ");
-                    produto.setNome(novoNome);
-                    produtoService.atualizaProduto(produto);
-                } else if (opcaoEditar == 1) {
-                    Double novoPreco = Double.valueOf(JOptionPane.showInputDialog("Digite o novo preco: "));
+                    Double novoPreco = EditarProduto.leNovoPreco();
                     produto.setPreco(novoPreco);
-                    produtoService.atualizaProduto(produto);
-                } else if (opcaoEditar == 2) {
-                    Integer novaQuantidade = Integer
-                            .parseInt(JOptionPane.showInputDialog("Digite a nova quantidade: "));
+
+                    produtoModificado = produtoService.atualizaProduto(produto);
+
+                } else if (opcaoEditar == 1) {
+                    Integer novaQuantidade = EditarProduto.leNovaQuantidade();
                     produto.setQuantidade(novaQuantidade);
-                    produtoService.atualizaProduto(produto);
-                } else if (opcaoEditar == 3) {
-                    Integer novaCategoria = Integer.parseInt(JOptionPane.showInputDialog("Digite a nova categoria: "));
-                    produto.setCategoria(novaCategoria);
                     produtoService.atualizaProduto(produto);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Produto nao cadastrado ainda. Tente outro!");
+                EditarProduto.alertaProdutoNaoCadastradoAinda();
             }
         }
 
     }
 
+
     private void listarProdutos() {
 
+        // utilizar um dto especifico(o mesmo que o de listar produtos com estoque baixo)
+
+        // separar front
         if (produtoService.tabelaProdutoEstaVazia()) {
             JOptionPane.showMessageDialog(null, "Lista de produtos vazia.");
         } else {
 
+            // agora retorna a categoria em si
             int categoria = categoriaService.retornaIdCategoria();
 
             String resultado = produtoService.geraRelatotioProdutos(categoria);
 
+
+            // mudar pro front
             JOptionPane.showMessageDialog(null, resultado);
         }
 
@@ -178,31 +183,23 @@ public class EstoqueController {
 
     private void listaProdutosEstoqueBaixo() {
 
+        // criar um dto especifico
+
+        // esse de gerar relatorio deve ta na parte de front
         String resultado = produtoService.geraRelatorioProdutosEstoqueBaixo();
 
         if (resultado.equals("")) {
+            // mudar pro front
             JOptionPane.showMessageDialog(null, "Sem produtos com baixo estoque!");
         } else {
+            // mudar pro front
             JOptionPane.showMessageDialog(null, resultado);
         }
 
     }
 
-    private void listarCategorias() {
 
-        Object resultado = categoriaService.categorias();
-
-        JOptionPane.showMessageDialog(null, resultado);
-
-    }
-
-    private void removerProduto() {
-
-        String codigoProdutoParaRemover = JOptionPane
-                .showInputDialog("Digite o codigo do produto que voce deseja remover:");
-
-        produtoService.removeProduto(codigoProdutoParaRemover);
-    }
+    /*
 
     private void ativadorNotaFiscal(NotaFiscal notaFiscal) {
         Object[] opcoes = {"Sim", "Nao"};
@@ -311,4 +308,13 @@ public class EstoqueController {
         }
     }
      */
+
+    private CategoriaResponseDTO selecionaCategoria() {
+        Object[] categorias = categoriaService.retornaCategorias();
+
+        Object resultadoCategoria = Categorias.categoriaEscolhida(categorias);
+
+        return categoriaService.converteResultadoParaCategoriaDTO(resultadoCategoria);
+    }
+
 }
