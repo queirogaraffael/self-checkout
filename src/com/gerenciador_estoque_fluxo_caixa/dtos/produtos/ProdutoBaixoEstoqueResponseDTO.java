@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProdutoBaixoEstoqueResponse {
+public class ProdutoBaixoEstoqueResponseDTO {
 
     private String codigoDeBarra;
     private String nome;

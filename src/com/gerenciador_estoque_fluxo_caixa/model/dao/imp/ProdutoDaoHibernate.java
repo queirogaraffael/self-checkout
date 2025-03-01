@@ -1,208 +1,204 @@
 package com.gerenciador_estoque_fluxo_caixa.model.dao.imp;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
-import javax.swing.JOptionPane;
-
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoBaixoEstoqueResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ProdutoDao;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.swing.*;
+import java.util.Collections;
+import java.util.List;
+
 public class ProdutoDaoHibernate implements ProdutoDao {
 
-	private EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory;
 
-	public ProdutoDaoHibernate(EntityManagerFactory entityManagerFactory) {
-		this.entityManagerFactory = entityManagerFactory;
-	}
+    public ProdutoDaoHibernate(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
 
-	public ProdutoCreateDTO adicionaProduto(ProdutoCreateDTO produtoCreateDTO) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
+    public ProdutoCreateDTO adicionaProduto(ProdutoCreateDTO produtoCreateDTO) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
 
-		try {
-			Produto produto = new Produto();
+        try {
+            Produto produto = new Produto();
 
-			produto.setCodigoDeBarra(produtoCreateDTO.getCodigoDeBarra());
-			produto.setNome(produtoCreateDTO.getNome());
-			produto.setPreco(produtoCreateDTO.getPreco());
-			produto.setQuantidade(produtoCreateDTO.getQuantidade());
-			produto.setCategoria(produtoCreateDTO.getCategoria());
+            produto.setCodigoDeBarra(produtoCreateDTO.getCodigoDeBarra());
+            produto.setNome(produtoCreateDTO.getNome());
+            produto.setPreco(produtoCreateDTO.getPreco());
+            produto.setQuantidade(produtoCreateDTO.getQuantidade());
+            produto.setCategoria(produtoCreateDTO.getCategoria());
 
-			entityManager.persist(produto);
-			entityManager.getTransaction().commit();
-			return new ProdutoCreateDTO(produto.getCodigoDeBarra(), produto.getNome(), produto.getPreco(), produto.getQuantidade(), produto.getCategoria());
+            entityManager.persist(produto);
+            entityManager.getTransaction().commit();
+            return new ProdutoCreateDTO(produto.getCodigoDeBarra(), produto.getNome(), produto.getPreco(), produto.getQuantidade(), produto.getCategoria());
 
-		} catch (Exception erro) {
-			entityManager.getTransaction().rollback();
-			JOptionPane.showMessageDialog(null, "Problemas em adicionar o produto: " + erro.getMessage());
-			return null;
-		} finally {
-			entityManager.close();
-		}
-	}
-
-
-
-	public void atualizaProduto(Produto produto) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
-
-		try {
-			entityManager.merge(produto);
-			entityManager.getTransaction().commit();
-		} catch (Exception erro) {
-			entityManager.getTransaction().rollback();
-			JOptionPane.showMessageDialog(null, "Problema na atualizacao do produto." + erro);
-		} finally {
-			entityManager.close();
-		}
-
-	}
-
-	public void removeProduto(String codigo) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
-
-		try {
-			Produto produto = entityManager.find(Produto.class, codigo);
-
-			if (produto != null) {
-				entityManager.remove(produto);
-				entityManager.getTransaction().commit();
-			} else {
-				JOptionPane.showMessageDialog(null, "Produto nao existe");
-			}
-
-		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Problemas ao remover produto" + erro);
-		} finally {
-			entityManager.close();
-		}
-
-	}
-
-	public ProdutoDTO retornaProdutoPorCodigo(String codigo) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-		try {
-			String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO(p.codigoDeBarra, p.nome, p.preco) " +
-					"FROM Produto p " +
-					"WHERE p.codigoDeBarra = :codigoDeBarra";
-
-			List<ProdutoDTO> produtos = entityManager.createQuery(jpql, ProdutoDTO.class)
-					.setParameter("codigoDeBarra", codigo)
-					.getResultList();
-
-			if (produtos.isEmpty()) {
-				return null;
-			}
-
-			return produtos.get(0);
+        } catch (Exception erro) {
+            entityManager.getTransaction().rollback();
+            JOptionPane.showMessageDialog(null, "Problemas em adicionar o produto: " + erro.getMessage());
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
 
 
-		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Problemas ao buscar por produto" + erro);
-			return null;
-		} finally {
-			entityManager.close();
-		}
-	}
+    public void atualizaProduto(Produto produto) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
 
-	public String retornaProdutosPorCategoria(Integer idCategoria) {
+        try {
+            entityManager.merge(produto);
+            entityManager.getTransaction().commit();
+        } catch (Exception erro) {
+            entityManager.getTransaction().rollback();
+            JOptionPane.showMessageDialog(null, "Problema na atualizacao do produto." + erro);
+        } finally {
+            entityManager.close();
+        }
 
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
+    }
 
-		try {
+    public void removeProduto(String codigo) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
 
-			// nao retorna todos os produtos
+        try {
+            Produto produto = entityManager.find(Produto.class, codigo);
 
-			List<Produto> produtos = entityManager
-					.createQuery("SELECT p FROM Produto p WHERE p.categoria = :categoria", Produto.class)
-					.setParameter("categoria", idCategoria).getResultList();
+            if (produto != null) {
+                entityManager.remove(produto);
+                entityManager.getTransaction().commit();
+            } else {
+                JOptionPane.showMessageDialog(null, "Produto nao existe");
+            }
 
-			return produtos;
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, "Problemas ao remover produto" + erro);
+        } finally {
+            entityManager.close();
+        }
 
+    }
 
-		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Erro ao tentar gerar relatorio dos produtos: " + erro);
-		} finally {
-			entityManager.close();
-		}
-		return "";
-	}
+    public ProdutoDTO retornaProdutoPorCodigo(String codigo) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-	public boolean tabelaProdutoEstaVazia() {
+        try {
+            String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO(p.codigoDeBarra, p.nome, p.preco) " +
+                    "FROM Produto p " +
+                    "WHERE p.codigoDeBarra = :codigoDeBarra";
 
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+            List<ProdutoDTO> produtos = entityManager.createQuery(jpql, ProdutoDTO.class)
+                    .setParameter("codigoDeBarra", codigo)
+                    .getResultList();
 
-		entityManager.getTransaction().begin();
+            if (produtos.isEmpty()) {
+                return null;
+            }
 
-		try {
-			Long quantidade = entityManager.createQuery("SELECT COUNT(*) FROM Produto", Long.class).getSingleResult();
-
-			if (quantidade == 0) {
-				return true;
-			} else {
-				return false;
-			}
-
-		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Erro ao tentar verificar se tabela de produtos esta vazia: " + erro);
-			return false;
-		} finally {
-			entityManager.close();
-		}
-
-	}
+            return produtos.get(0);
 
 
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, "Problemas ao buscar por produto" + erro);
+            return null;
+        } finally {
+            entityManager.close();
+        }
+    }
 
-	public String retornaProdutosEstoqueBaixo() {
+    public List<ProdutoResponseDTO> retornaProdutosPorCategoria(Integer idCategoria) {
 
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-		try {
+        try {
+            String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoResponseDTO(p.codigoDeBarra, p.nome) "
+                    + "FROM Produto p WHERE p.categoria.id = :categoria";
 
-			return entityManager
-					.createQuery("SELECT p FROM Produto p WHERE p.quantidade <= 10", Produto.class).getResultList();
+            return entityManager
+                    .createQuery(jpql, ProdutoResponseDTO.class)
+                    .setParameter("categoria", idCategoria).getResultList();
 
-		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Erro ao gerar relatorio de produtos com baixo estoque: " + erro);
-			return "";
-		} finally {
-			entityManager.close();
-		}
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, "Erro ao tentar gerar relatorio dos produtos: " + erro);
+            return Collections.emptyList();
+        } finally {
+            entityManager.close();
+        }
+    }
 
-	}
+    public boolean tabelaProdutoEstaVazia() {
 
-	@Override
-	public Boolean haProdutoComMesmoCodigoBarra(String codigo) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-		try {
+        entityManager.getTransaction().begin();
 
-			String jpql = "SELECT COUNT(p) FROM Produto p " +
-					"WHERE p.codigoDeBarra = :codigoDeBarra";
+        try {
+            Long quantidade = entityManager.createQuery("SELECT COUNT(*) FROM Produto", Long.class).getSingleResult();
 
-			Long quantidade = entityManager.createQuery(jpql, Long.class)
-					.setParameter("codigoDeBarra", codigo)
-					.getSingleResult();
+            if (quantidade == 0) {
+                return true;
+            } else {
+                return false;
+            }
 
-			return quantidade > 0;
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, "Erro ao tentar verificar se tabela de produtos esta vazia: " + erro);
+            return false;
+        } finally {
+            entityManager.close();
+        }
 
-		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Problemas ao buscar por produto" + erro);
-			return false;
-		} finally {
-			entityManager.close();
-		}
-	}
+    }
+
+
+    public List<ProdutoBaixoEstoqueResponseDTO> retornaProdutosEstoqueBaixo() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoBaixoEstoqueResponseDTO(p.codigoDeBarra, p.nome, p.quantidade) "
+                    + "FROM Produto p WHERE p.quantidade <= :quantidade";
+
+            return entityManager
+                    .createQuery(jpql, ProdutoBaixoEstoqueResponseDTO.class)
+                    .setParameter("quantidade", 10).getResultList();
+
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, "Erro ao gerar relatorio de produtos com baixo estoque: " + erro);
+            return Collections.emptyList();
+        } finally {
+            entityManager.close();
+        }
+
+    }
+
+    @Override
+    public Boolean haProdutoComMesmoCodigoBarra(String codigo) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+
+            String jpql = "SELECT COUNT(p) FROM Produto p " +
+                    "WHERE p.codigoDeBarra = :codigoDeBarra";
+
+            Long quantidade = entityManager.createQuery(jpql, Long.class)
+                    .setParameter("codigoDeBarra", codigo)
+                    .getSingleResult();
+
+            return quantidade > 0;
+
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, "Problemas ao buscar por produto" + erro);
+            return false;
+        } finally {
+            entityManager.close();
+        }
+    }
 
 }
