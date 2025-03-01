@@ -17,4 +17,9 @@ public class PrintaProduto {
 
         JOptionPane.showMessageDialog(null, mensagem.toString(), "Detalhes do Produto Criado", JOptionPane.INFORMATION_MESSAGE);
     }
+
+
+    public static void printaProdutos(String produtos){
+        JOptionPane.showMessageDialog(null, produtos);
+    }
 }

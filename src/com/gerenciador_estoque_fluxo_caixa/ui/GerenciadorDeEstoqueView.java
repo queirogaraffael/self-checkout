@@ -18,4 +18,9 @@ public class GerenciadorDeEstoqueView {
 		return "";
 
 	}
+
+	public static void alertaEntradasInvalida(){
+		JOptionPane.showMessageDialog(null,
+				"Entrada invalida. Por favor, insira um numero correspondente a opcao desejada.");
+	}
 }

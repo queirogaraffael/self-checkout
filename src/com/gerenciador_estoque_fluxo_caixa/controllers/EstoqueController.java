@@ -12,10 +12,10 @@ import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 import com.gerenciador_estoque_fluxo_caixa.ui.Categorias;
 import com.gerenciador_estoque_fluxo_caixa.ui.GerenciadorDeEstoqueView;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoView;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.EditarProduto;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProduto;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProduto;
 
-import javax.swing.*;
 
 public class EstoqueController {
 
@@ -68,11 +68,6 @@ public class EstoqueController {
                         listarCategorias();
                         break;
 
-                    case (ConstantesMenuEstoque.REMOVER):
-
-                        //removerProduto();
-                        break;
-
                     case (ConstantesMenuEstoque.CONFIGURAR_NOTA_FICAL):
 
                         // ativadorNotaFiscal(notaFiscal);
@@ -93,8 +88,7 @@ public class EstoqueController {
 
                 }
             } catch (NumberFormatException erro) {
-                JOptionPane.showMessageDialog(null,
-                        "Entrada invalida. Por favor, insira um numero correspondente a opcao desejada.");
+                GerenciadorDeEstoqueView.alertaEntradasInvalida();
             }
 
         } while (!opcao.equals(ConstantesMenuEstoque.MENU_PRINCIPAL));
@@ -123,12 +117,7 @@ public class EstoqueController {
         }
     }
 
-    private void listarCategorias() {
-        Object[] categorias = categoriaService.retornaCategorias();
-        Categorias.exibirCategorias(categorias);
-    }
 
-/*
     private void editarProduto() {
 
         int opcaoEditar = EditarProduto.opcaoEditar();
@@ -164,19 +153,21 @@ public class EstoqueController {
 
         // utilizar um dto especifico(o mesmo que o de listar produtos com estoque baixo)
 
-        // separar front
         if (produtoService.tabelaProdutoEstaVazia()) {
-            JOptionPane.showMessageDialog(null, "Lista de produtos vazia.");
+            AlertasProdutoView.alertaListaProdutoVazia();
         } else {
 
             // agora retorna a categoria em si
-            int categoria = categoriaService.retornaIdCategoria();
+            // usa o metodo que retorna o DTO
+            // parseia o id para integer
+            int categoria = 2;
+
+            // o relatorio deve passar a retornar uma lista de produtos DTO
 
             String resultado = produtoService.geraRelatotioProdutos(categoria);
 
 
-            // mudar pro front
-            JOptionPane.showMessageDialog(null, resultado);
+            PrintaProduto.printaProdutos(resultado);
         }
 
     }
@@ -189,17 +180,21 @@ public class EstoqueController {
         String resultado = produtoService.geraRelatorioProdutosEstoqueBaixo();
 
         if (resultado.equals("")) {
-            // mudar pro front
-            JOptionPane.showMessageDialog(null, "Sem produtos com baixo estoque!");
+            AlertasProdutoView.alertaProdutoEstoqueBaixo();
         } else {
-            // mudar pro front
-            JOptionPane.showMessageDialog(null, resultado);
+            PrintaProduto.printaProdutos(resultado);
         }
 
     }
 
+    private void listarCategorias() {
+        Object[] categorias = categoriaService.retornaCategorias();
+        Categorias.exibirCategorias(categorias);
+    }
 
     /*
+
+    // metodo para ver um unico produto
 
     private void ativadorNotaFiscal(NotaFiscal notaFiscal) {
         Object[] opcoes = {"Sim", "Nao"};

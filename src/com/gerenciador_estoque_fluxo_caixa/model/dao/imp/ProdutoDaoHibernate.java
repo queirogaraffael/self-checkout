@@ -113,23 +113,21 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 		}
 	}
 
-	public String geraRelatotioProdutos(Integer categoria) {
+	public String retornaProdutosPorCategoria(Integer idCategoria) {
 
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 
 		try {
 
+			// nao retorna todos os produtos
+
 			List<Produto> produtos = entityManager
 					.createQuery("SELECT p FROM Produto p WHERE p.categoria = :categoria", Produto.class)
-					.setParameter("categoria", categoria).getResultList();
+					.setParameter("categoria", idCategoria).getResultList();
 
-			StringBuilder sb = new StringBuilder();
+			return produtos;
 
-			for (Produto elemento : produtos) {
-				sb.append(elemento + "\n");
-			}
-			return sb.toString();
 
 		} catch (Exception erro) {
 			JOptionPane.showMessageDialog(null, "Erro ao tentar gerar relatorio dos produtos: " + erro);
@@ -163,22 +161,17 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 
 	}
 
-	public String geraRelatorioProdutosEstoqueBaixo() {
+
+
+	public String retornaProdutosEstoqueBaixo() {
 
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 
 		try {
 
-			List<Produto> produtos = entityManager
+			return entityManager
 					.createQuery("SELECT p FROM Produto p WHERE p.quantidade <= 10", Produto.class).getResultList();
-
-			StringBuilder sb = new StringBuilder();
-
-			for (Produto produto : produtos) {
-				sb.append(produto + "\n");
-			}
-			return sb.toString();
 
 		} catch (Exception erro) {
 			JOptionPane.showMessageDialog(null, "Erro ao gerar relatorio de produtos com baixo estoque: " + erro);

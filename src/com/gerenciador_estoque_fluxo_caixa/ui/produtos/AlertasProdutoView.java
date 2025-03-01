@@ -11,4 +11,12 @@ public class AlertasProdutoView {
     public static void alertaProdutoCriadoComSucesso(){
         JOptionPane.showMessageDialog(null, "Produto criado com sucesso!");
     }
+
+    public static void alertaListaProdutoVazia(){
+        JOptionPane.showMessageDialog(null, "Lista de produtos vazia.");
+    }
+
+    public static void alertaProdutoEstoqueBaixo(){
+        JOptionPane.showMessageDialog(null, "Sem produtos com baixo estoque!");
+    }
 }

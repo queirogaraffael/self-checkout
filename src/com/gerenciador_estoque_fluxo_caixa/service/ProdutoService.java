@@ -36,9 +36,6 @@ public class ProdutoService {
         return "";
     }
 
-    public void removeProduto(String codigoProdutoParaRemover) {
-    }
-
     public boolean haProdutoComMesmoCodigoBarra(String codigoBarra) {
         return produtoDao.haProdutoComMesmoCodigoBarra(codigoBarra);
 
