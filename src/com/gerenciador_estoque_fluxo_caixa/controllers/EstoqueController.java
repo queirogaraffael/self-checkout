@@ -56,12 +56,11 @@ public class EstoqueController {
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM):
-
-                        // listarProdutos();
+                        listarProdutos();
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_ESTOQUE_BAIXO):
-                        //listaProdutosEstoqueBaixo();
+                        listaProdutosEstoqueBaixo();
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_CATEGORIAS):
@@ -117,7 +116,7 @@ public class EstoqueController {
         }
     }
 
-
+/*
     private void editarProduto() {
 
         int opcaoEditar = EditarProduto.opcaoEditar();
@@ -148,38 +147,30 @@ public class EstoqueController {
 
     }
 
+   */
 
     private void listarProdutos() {
-
-        // utilizar um dto especifico(o mesmo que o de listar produtos com estoque baixo)
 
         if (produtoService.tabelaProdutoEstaVazia()) {
             AlertasProdutoView.alertaListaProdutoVazia();
         } else {
+            CategoriaResponseDTO categoria = selecionaCategoria();
 
-            // agora retorna a categoria em si
-            // usa o metodo que retorna o DTO
-            // parseia o id para integer
-            int categoria = 2;
+            int idCategoria = categoria.getId();
 
-            // o relatorio deve passar a retornar uma lista de produtos DTO
-
-            String resultado = produtoService.geraRelatotioProdutos(categoria);
-
+            String resultado = produtoService.geraRelatotioProdutos(idCategoria);
 
             PrintaProduto.printaProdutos(resultado);
         }
 
     }
 
+
     private void listaProdutosEstoqueBaixo() {
 
-        // criar um dto especifico
-
-        // esse de gerar relatorio deve ta na parte de front
         String resultado = produtoService.geraRelatorioProdutosEstoqueBaixo();
 
-        if (resultado.equals("")) {
+        if (resultado.isEmpty()) {
             AlertasProdutoView.alertaProdutoEstoqueBaixo();
         } else {
             PrintaProduto.printaProdutos(resultado);

@@ -1,9 +1,13 @@
 package com.gerenciador_estoque_fluxo_caixa.service;
 
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoBaixoEstoqueResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ProdutoDao;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
+
+import java.util.List;
 
 public class ProdutoService {
 
@@ -28,16 +32,30 @@ public class ProdutoService {
         return false;
     }
 
-    public String geraRelatotioProdutos(int categoria) {
-        return "";
+    public String geraRelatotioProdutos(int idCategoria) {
+
+        List<ProdutoResponseDTO> produtos = produtoDao.retornaProdutosPorCategoria(idCategoria);
+
+        return geraRelatorio(produtos);
+
     }
 
     public String geraRelatorioProdutosEstoqueBaixo() {
-        return "";
+        List<ProdutoBaixoEstoqueResponseDTO> produtos = produtoDao.retornaProdutosEstoqueBaixo();
+        return geraRelatorio(produtos);
     }
 
     public boolean haProdutoComMesmoCodigoBarra(String codigoBarra) {
         return produtoDao.haProdutoComMesmoCodigoBarra(codigoBarra);
 
+    }
+
+    private String geraRelatorio(List<?> produtos){
+        StringBuilder sb = new StringBuilder();
+
+        for (Object produto : produtos) {
+            sb.append(produto).append("\n");
+        }
+        return sb.toString();
     }
 }
