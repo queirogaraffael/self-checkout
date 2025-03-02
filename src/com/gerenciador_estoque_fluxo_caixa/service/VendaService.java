@@ -1,11 +1,10 @@
 package com.gerenciador_estoque_fluxo_caixa.service;
 
+import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.VendaDao;
-import com.gerenciador_estoque_fluxo_caixa.model.dao.imp.VendaDaoHibernate;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 
-import javax.persistence.EntityManagerFactory;
 import java.time.LocalDate;
+import java.util.List;
 
 public class VendaService {
 
@@ -15,26 +14,42 @@ public class VendaService {
         this.vendaDao = vendaDao;
     }
 
-    public boolean tabelaVendaEstaVazia() {
-        return false;
+    public boolean haVenda() {
+        return vendaDao.haVenda();
     }
 
-    public String geraRelatioVendas() {
-        return null;
+    public String retornaRelatorioVendas() {
+        List<VendaResponseDTO> vendas = vendaDao.retornaVendas();
+        return geraRelatorio(vendas);
     }
 
-    public Venda retornaVendaPorCodigo(Integer codigo) {
-        return null;
+    public String retornaRelatorioVendasPorData(LocalDate data) {
+        List<VendaResponseDTO> vendas = vendaDao.retornaVendasPorData(data);
+        return geraRelatorioVendaComPrecoTotal(vendas);
     }
 
-    public void adicionaVenda(Venda venda) {
+    private String geraRelatorio(List<?> vendas){
+        StringBuilder sb = new StringBuilder();
+
+        for (Object venda : vendas) {
+            sb.append(venda).append("\n");
+        }
+        return sb.toString();
     }
 
-    public void atualizaVenda(Venda venda) {
+    private String geraRelatorioVendaComPrecoTotal(List<VendaResponseDTO> vendas){
+        Double total = 0.0;
 
+        StringBuilder sb = new StringBuilder();
+
+        for (VendaResponseDTO venda : vendas) {
+            sb.append(venda + "\n");
+            total += venda.getTotal();
+        }
+
+        sb.append("Total: ").append(total);
+
+        return sb.toString();
     }
 
-    public String geraRelatiorioVendasPorData(LocalDate data) {
-        return null;
-    }
 }

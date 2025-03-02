@@ -2,19 +2,35 @@ package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuEstoque;
 import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarPrecoDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarQuantidadeDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Categoria;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
-import com.gerenciador_estoque_fluxo_caixa.ui.Categorias;
 import com.gerenciador_estoque_fluxo_caixa.ui.GerenciadorDeEstoqueView;
+import com.gerenciador_estoque_fluxo_caixa.ui.NotaFiscalUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.categorias.Categorias;
+import com.gerenciador_estoque_fluxo_caixa.ui.datas.AlertasData;
+import com.gerenciador_estoque_fluxo_caixa.ui.datas.LeData;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoView;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.EditarProduto;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProduto;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProduto;
+import com.gerenciador_estoque_fluxo_caixa.ui.vendas.AlertasVenda;
+import com.gerenciador_estoque_fluxo_caixa.ui.vendas.LeDadosVenda;
+import com.gerenciador_estoque_fluxo_caixa.ui.vendas.PrintarVenda;
+import com.gerenciador_estoque_fluxo_caixa.ui.vendas.VendaUI;
+import com.gerenciador_estoque_fluxo_caixa.utils.ManipulacaoData;
+import com.gerenciador_estoque_fluxo_caixa.utils.VerificaDiretorio;
+
+import java.time.LocalDate;
+import java.util.Set;
 
 
 public class EstoqueController {
@@ -52,7 +68,7 @@ public class EstoqueController {
 
                     case (ConstantesMenuEstoque.EDITAR):
 
-                        //editarProduto();
+                        editarProduto();
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM):
@@ -69,17 +85,17 @@ public class EstoqueController {
 
                     case (ConstantesMenuEstoque.CONFIGURAR_NOTA_FICAL):
 
-                        // ativadorNotaFiscal(notaFiscal);
+                        ativadorNotaFiscal(notaFiscal);
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_VENDAS):
 
-                        //listarVendas();
+                        listarVendas();
                         break;
 
                     case (ConstantesMenuEstoque.DETALHES_VENDA):
 
-                        // detalharVenda();
+                        detalharVenda();
                         break;
 
                     case (ConstantesMenuEstoque.MENU_PRINCIPAL):
@@ -116,7 +132,7 @@ public class EstoqueController {
         }
     }
 
-/*
+
     private void editarProduto() {
 
         int opcaoEditar = EditarProduto.opcaoEditar();
@@ -125,40 +141,43 @@ public class EstoqueController {
             String codigo = LeDadosProduto.leCodigoBarraProduto();
 
             if (produtoService.haProdutoComMesmoCodigoBarra(codigo)) {
-
-                ProdutoDTO produto = produtoService.retornaProdutoPorCodigo(codigo);
-
+                boolean statusAtualizacao;
 
                 if (opcaoEditar == 0) {
+                    ProdutoAtualizarPrecoDTO atualizarPrecoDTO = new ProdutoAtualizarPrecoDTO();
                     Double novoPreco = EditarProduto.leNovoPreco();
-                    produto.setPreco(novoPreco);
+                    atualizarPrecoDTO.setPreco(novoPreco);
 
-                    produtoModificado = produtoService.atualizaProduto(produto);
+                  statusAtualizacao = produtoService.atualizaPrecoProduto(codigo, atualizarPrecoDTO);
 
-                } else if (opcaoEditar == 1) {
+                } else {
+                    ProdutoAtualizarQuantidadeDTO atualizarQuantidadeDTO = new ProdutoAtualizarQuantidadeDTO();
                     Integer novaQuantidade = EditarProduto.leNovaQuantidade();
-                    produto.setQuantidade(novaQuantidade);
-                    produtoService.atualizaProduto(produto);
+                    atualizarQuantidadeDTO.setQuantidade(novaQuantidade);
+
+                    statusAtualizacao = produtoService.atualizaQuantidadeProduto(codigo,atualizarQuantidadeDTO);
                 }
+
+                AlertasProdutoView.alertaAtualizacaoProduto(statusAtualizacao);
             } else {
                 EditarProduto.alertaProdutoNaoCadastradoAinda();
             }
+
         }
+
 
     }
 
-   */
-
     private void listarProdutos() {
 
-        if (produtoService.tabelaProdutoEstaVazia()) {
+        if (produtoService.haProduto()) {
             AlertasProdutoView.alertaListaProdutoVazia();
         } else {
             CategoriaResponseDTO categoria = selecionaCategoria();
 
             int idCategoria = categoria.getId();
 
-            String resultado = produtoService.geraRelatotioProdutos(idCategoria);
+            String resultado = produtoService.geraRelatorioProdutosPorCategoria(idCategoria);
 
             PrintaProduto.printaProdutos(resultado);
         }
@@ -183,38 +202,24 @@ public class EstoqueController {
         Categorias.exibirCategorias(categorias);
     }
 
-    /*
-
-    // metodo para ver um unico produto
 
     private void ativadorNotaFiscal(NotaFiscal notaFiscal) {
-        Object[] opcoes = {"Sim", "Nao"};
+        String mensagem = NotaFiscalUI.verificarAcao(notaFiscal);
 
-        String mensagem = notaFiscal.getStatusNotaFiscal() ? "Deseja modificar o diret�rio?"
-                : "Ativar gerador de nota fiscal ?";
-
-        int opcao = JOptionPane.showOptionDialog(null, mensagem, "Opcoes", JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+        int opcao = NotaFiscalUI.opcaoNotaFiscal(mensagem);
 
         if (opcao == 0) {
-            String path = JOptionPane.showInputDialog("Caminho do diretorio: ");
+            String path = NotaFiscalUI.leCaminhoNotaFiscal();
 
             if (VerificaDiretorio.verificarDiretorio(path)) {
-
                 notaFiscal.setCaminhoNotaFiscal(path);
                 notaFiscal.setStatusNotaFiscal(true);
 
-                String msg = notaFiscal.getStatusNotaFiscal()
-                        ? "Gerador de notas fiscais com novo diret�rio ativado com sucesso!"
-                        : "Gerador de notas fiscais ativado com sucesso!";
-                JOptionPane.showMessageDialog(null, msg);
+                String msg = NotaFiscalUI.mensagemSucesso(notaFiscal);
+                NotaFiscalUI.printaMensagem(msg);
             } else {
-
-                String msg = notaFiscal.getStatusNotaFiscal()
-                        ? "Falha ao tentar ativar o novo diretorio do gerador de notas fiscais."
-                        : "Falha ao tentar ativar gerador de notas fiscais.";
-                JOptionPane.showMessageDialog(null, msg);
-
+                String msg = NotaFiscalUI.mensagemFalha(notaFiscal);
+                NotaFiscalUI.printaMensagem(msg);
             }
 
         }
@@ -223,59 +228,58 @@ public class EstoqueController {
 
     private void listarVendas() {
 
-        if (!vendaService.tabelaVendaEstaVazia()) {
+        if (!vendaService.haVenda()) {
 
-            Object[] opcoes = {"Listar todas as vendas", "Listar venda por data especifica", "Voltar"};
-
-            int opcaoListagem = JOptionPane.showOptionDialog(null, "Escolha uma opcao: ", "Listagem de vendas",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+            int opcaoListagem = VendaUI.listarVendasOpcoes();
 
             if (opcaoListagem == 0) {
 
-                String resultadoListagemVendas = vendaService.geraRelatioVendas();
-                JOptionPane.showMessageDialog(null, resultadoListagemVendas);
+                String resultadoListagemVendas = vendaService.retornaRelatorioVendas();
+                PrintarVenda.printarVenda(resultadoListagemVendas);
 
             } else if (opcaoListagem == 1) {
-                String formatoData = "dd/MM/yyyy";
-                String dataString = JOptionPane.showInputDialog("Digite uma data no formato dd/MM/yyyy");
 
-                boolean formatoAprovado = ManipulacaoData.verificaFormatoData(dataString, formatoData);
+                String dataString = LeData.leData();
+                boolean formatoAprovado = ManipulacaoData.verificaFormatoData(dataString);
 
                 if (formatoAprovado) {
 
                     LocalDate data = ManipulacaoData.retornaLocalDate(dataString);
                     if (!ManipulacaoData.verificaSeADataEPosterior(dataString)) {
 
-                        String resultadoListagemVendasPorData = vendaService.geraRelatiorioVendasPorData(data);
+                        String resultadoListagemVendasPorData = vendaService.retornaRelatorioVendasPorData(data);
 
-                        if (resultadoListagemVendasPorData.equals("")) {
-                            JOptionPane.showMessageDialog(null, "Sem resultado de vendas para esta data");
+                        if (resultadoListagemVendasPorData.isEmpty()) {
+                            AlertasVenda.semResultadoVendaParaData();
                         } else {
-                            JOptionPane.showMessageDialog(null, resultadoListagemVendasPorData);
+                            PrintarVenda.printarVenda(resultadoListagemVendasPorData);
                         }
 
                     } else {
-                        JOptionPane.showMessageDialog(null, "Data posterior a data atual. Tente novamente!");
+                        AlertasData.alertaDataPosteriorAtual();
                     }
 
                 } else {
-                    JOptionPane.showMessageDialog(null, "Problema no formato da data. Tente novamente!");
+                    AlertasData.alertaProblemaFormatoData();
                 }
 
             } else {
-                JOptionPane.showMessageDialog(null, "Sem venda registrada.");
+                AlertasVenda.alertaSemVendaRegistrada();
             }
         }
     }
 
     private void detalharVenda() {
-        if (!vendaService.tabelaVendaEstaVazia()) {
+        if (!vendaService.haVenda()) {
 
-            Integer codigo = Integer.parseInt(JOptionPane.showInputDialog("Codigo de venda: "));
+            int codigo = LeDadosVenda.leCodigoVenda();
+
+            // retorna itemvenda(venda, produto, quantidade) (produtos) pelo codigo da venda
             Venda venda = vendaService.retornaVendaPorCodigo(codigo);
 
             if (venda != null) {
 
+                // retorna item venda dto
                 Set<ItemVenda> itens = itemVendaService.retornaItensVenda(venda);
 
                 String itensVenda = ItemVendaService.geraRelatorioItemVenda(itens);
@@ -283,17 +287,16 @@ public class EstoqueController {
                 String resultado = venda.toStringSemPreco() + "\n" + itensVenda
                         + String.format("Total: %.2f", venda.getTotal());
 
-                JOptionPane.showMessageDialog(null, resultado);
+                PrintarVenda.printarVenda(resultado);
 
             } else {
-                JOptionPane.showMessageDialog(null, "Venda invalida. Tente outra!");
+                AlertasVenda.alertaVendaInvalida();
             }
 
         } else {
-            JOptionPane.showMessageDialog(null, "Sem venda registrada ainda.");
+            AlertasVenda.alertaSemVendaRegistrada();
         }
     }
-     */
 
     private CategoriaResponseDTO selecionaCategoria() {
         Object[] categorias = categoriaService.retornaCategorias();

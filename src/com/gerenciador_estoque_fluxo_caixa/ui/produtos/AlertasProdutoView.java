@@ -19,4 +19,21 @@ public class AlertasProdutoView {
     public static void alertaProdutoEstoqueBaixo(){
         JOptionPane.showMessageDialog(null, "Sem produtos com baixo estoque!");
     }
+
+    private static void alertaProdutoAtualizadoComSucesso(){
+        JOptionPane.showMessageDialog(null, "Produto atualizado com sucesso!");
+    }
+
+    private static void alertaErroAtualizarProduto(){
+        JOptionPane.showMessageDialog(null, "Problema ao atualizar produto");
+    }
+
+    public static void alertaAtualizacaoProduto(boolean status) {
+        if (status) {
+            alertaProdutoAtualizadoComSucesso();
+        } else {
+            alertaErroAtualizarProduto();
+        }
+    }
+
 }

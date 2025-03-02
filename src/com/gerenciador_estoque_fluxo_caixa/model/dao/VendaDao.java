@@ -1,20 +1,20 @@
 package com.gerenciador_estoque_fluxo_caixa.model.dao;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 
 public interface VendaDao {
 	void adicionaVenda(Venda vendaInterface);
 
-	void atualizaVenda(Venda vendaInterface);
+	VendaResponseDTO retornaVendaDTOPorCodigo(Integer codigo);
 
-	Venda retornaVendaPorCodigo(Integer codigo);
+	List<VendaResponseDTO> retornaVendas();
 
-	String geraRelatioVendas();
+	List<VendaResponseDTO> retornaVendasPorData(LocalDate data);
 
-	boolean tabelaVendaEstaVazia();
-
-	String geraRelatiorioVendasPorData(LocalDate data);
+	boolean haVenda();
 
 }

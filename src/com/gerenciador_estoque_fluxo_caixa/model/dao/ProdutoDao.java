@@ -11,15 +11,15 @@ import java.util.List;
 public interface ProdutoDao {
     ProdutoCreateDTO adicionaProduto(ProdutoCreateDTO produtoCreateDTO);
 
-    void atualizaProduto(Produto produto);
+    boolean atualizaProduto(Produto produto);
 
-    void removeProduto(String codigo);
+    ProdutoDTO retornaProdutoDTOPorCodigo(String codigo);
 
-    ProdutoDTO retornaProdutoPorCodigo(String codigo);
+    Produto retornaProdutoPorCodigo(String codigo);
 
     List<ProdutoResponseDTO> retornaProdutosPorCategoria(Integer idCategoria);
 
-    boolean tabelaProdutoEstaVazia();
+    boolean haProduto();
 
     List<ProdutoBaixoEstoqueResponseDTO> retornaProdutosEstoqueBaixo();
 

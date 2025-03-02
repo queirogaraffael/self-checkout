@@ -1,9 +1,6 @@
 package com.gerenciador_estoque_fluxo_caixa.service;
 
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoBaixoEstoqueResponseDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoResponseDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.*;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ProdutoDao;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 
@@ -21,23 +18,13 @@ public class ProdutoService {
         return produtoDao.adicionaProduto(produtoCreateDTO);
     }
 
-    public ProdutoDTO retornaProdutoPorCodigo(String codigoBarra) {
-        return produtoDao.retornaProdutoPorCodigo(codigoBarra);
+    public boolean haProduto() {
+        return produtoDao.haProduto();
     }
 
-    public void atualizaProduto(Produto produto) {
-    }
-
-    public boolean tabelaProdutoEstaVazia() {
-        return false;
-    }
-
-    public String geraRelatotioProdutos(int idCategoria) {
-
+    public String geraRelatorioProdutosPorCategoria(int idCategoria) {
         List<ProdutoResponseDTO> produtos = produtoDao.retornaProdutosPorCategoria(idCategoria);
-
         return geraRelatorio(produtos);
-
     }
 
     public String geraRelatorioProdutosEstoqueBaixo() {
@@ -47,8 +34,25 @@ public class ProdutoService {
 
     public boolean haProdutoComMesmoCodigoBarra(String codigoBarra) {
         return produtoDao.haProdutoComMesmoCodigoBarra(codigoBarra);
+    }
+
+    public boolean atualizaPrecoProduto(String codigo, ProdutoAtualizarPrecoDTO atualizarPrecoDTO) {
+        Produto produto = produtoDao.retornaProdutoPorCodigo(codigo);
+        produto.setPreco(atualizarPrecoDTO.getPreco());
+
+        return produtoDao.atualizaProduto(produto);
 
     }
+
+
+    public boolean atualizaQuantidadeProduto(String codigo, ProdutoAtualizarQuantidadeDTO atualizarQuantidadeDTO) {
+        Produto produto = produtoDao.retornaProdutoPorCodigo(codigo);
+        produto.setQuantidade(atualizarQuantidadeDTO.getQuantidade());
+
+        return produtoDao.atualizaProduto(produto);
+
+    }
+
 
     private String geraRelatorio(List<?> produtos){
         StringBuilder sb = new StringBuilder();
@@ -58,4 +62,5 @@ public class ProdutoService {
         }
         return sb.toString();
     }
+
 }

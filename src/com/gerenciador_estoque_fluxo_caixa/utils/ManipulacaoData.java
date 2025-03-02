@@ -6,9 +6,11 @@ import java.time.format.DateTimeParseException;
 
 public class ManipulacaoData {
 
+	public static String formatoData = "dd/MM/yyyy";
+
 	public static boolean verificaSeADataEPosterior(String data) {
 		try {
-			DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			DateTimeFormatter formato = DateTimeFormatter.ofPattern(formatoData);
 			LocalDate dataFormatada = LocalDate.parse(data, formato);
 			LocalDate dataAtual = LocalDate.now();
 
@@ -19,7 +21,7 @@ public class ManipulacaoData {
 
 	}
 
-	public static boolean verificaFormatoData(String stringData, String formatoData) {
+	public static boolean verificaFormatoData(String stringData) {
 		try {
 			DateTimeFormatter formato = DateTimeFormatter.ofPattern(formatoData);
 			LocalDate.parse(stringData, formato);
@@ -32,7 +34,7 @@ public class ManipulacaoData {
 	}
 
 	public static LocalDate retornaLocalDate(String data) {
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern(formatoData);
 
 		return LocalDate.parse(data, formato);
 	}
