@@ -4,15 +4,18 @@ import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuFluxoCaixa;
 import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
+import com.gerenciador_estoque_fluxo_caixa.ui.ValidaSenha;
 import com.gerenciador_estoque_fluxo_caixa.ui.caixaController.*;
 import com.gerenciador_estoque_fluxo_caixa.ui.fluxoDeCaixa.FluxoDeCaixaView;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoView;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProduto;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProduto;
+import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -190,7 +193,7 @@ public class CaixaController {
         String subtotalFormatado = String.format("Subtotal: %.2f R$", subtotal);
         String resultado = "Produtos da sacola de compras: \n" + compras + "\n" + subtotalFormatado;
 
-        JOptionPane.showMessageDialog(null, resultado);
+        ListarSacola.listaSacola();
 
     }
 
@@ -219,9 +222,7 @@ public class CaixaController {
             String codigoProdutoParaRemover = LeDadosProduto.leCodigoBarraProduto();
 
             if (!ItemVendaService.contemProduto(listaCompras, codigoProdutoParaRemover)) {
-                JOptionPane.showMessageDialog(null,
-                        "Produto ja nao constava na sacola. Tente novamente com uma produto existente.");
-
+                RemoverProduto.alertaProdutoJaNaoConstava();
             } else {
 
                 ItemVenda ItemListaCompras = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras,
@@ -235,7 +236,7 @@ public class CaixaController {
                 produtoService.atualizaProduto(produtoDoEstoque);
                 listaCompras.remove(ItemListaCompras);
 
-                JOptionPane.showMessageDialog(null, "Produto removida com sucesso!");
+                RemoverProduto.alertaProdutoRemovidoComSucesso();
             }
         }
     }
@@ -247,8 +248,7 @@ public class CaixaController {
             String codigo = LeDadosProduto.leCodigoBarraProduto();
 
             if (ItemVendaService.contemProduto(listaCompras, codigo)) {
-                Integer novaQuantidade = Integer
-                        .parseInt(JOptionPane.showInputDialog("Digite a nova quantidade do produto: "));
+                Integer novaQuantidade = LeDadosProduto.leQuantidadeProduto();
 
                 ItemVenda prod = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
 
@@ -264,14 +264,10 @@ public class CaixaController {
                     produtoService.atualizaProduto(produtoEstoque);
 
                 } else if (quantidadeRealProduto <= 0) {
-                    JOptionPane.showMessageDialog(null, "Produto indisponivel. Tente outro!");
+                    ModificarQuantidade.alertaProdutoInvalido();
                 } else {
 
-                    Object[] opcoes = {"Sim", "Nao"};
-
-                    int opcao = JOptionPane.showOptionDialog(null, "Deseja adicionar todos os itens restantes ?",
-                            "Quantidade desejada menor do que em estoque.", JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+                    int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
 
                     if (opcao == 0) {
 
@@ -281,13 +277,12 @@ public class CaixaController {
                         produtoService.atualizaProduto(produtoEstoque);
 
                     } else {
-                        JOptionPane.showMessageDialog(null, "Compra de produto cancelada.");
+                        AdicionarProduto.alertaCompraProdutoCancelada();
                     }
                 }
-
-                JOptionPane.showMessageDialog(null, "Quantidade modificada com sucesso!");
+                ModificarQuantidade.alertaQuantidadeProdutoModifica();
             } else {
-                JOptionPane.showMessageDialog(null, "Produto invalido, tente outro!");
+                ModificarQuantidade.alertaProdutoInvalido();
             }
         }
     }
@@ -318,7 +313,7 @@ public class CaixaController {
 
             listaCompras.clear();
 
-            JOptionPane.showMessageDialog(null, "Obrigado, volte sempre!");
+            FinalizarCompra.mensagemAgracedimentoCompra();
         }
     }
 
@@ -342,12 +337,11 @@ public class CaixaController {
     }
 
     private String sair() {
-
-        String senhaDigitada = JOptionPane.showInputDialog(null, "Digite a senha: ");
+        String senhaDigitada = ValidaSenha.exibirValidaSenha();
         boolean autenticacao = AutenticadorDeSenha.autenticacaoSenha(senhaDigitada);
 
         if (!autenticacao) {
-            JOptionPane.showMessageDialog(null, "Senha incorreta. Tente novamente!");
+            ValidaSenha.exibirSenhaIncorreta();
             return ConstantesMenuFluxoCaixa.CONTINUAR_NO_PROGRAMA;
         }
         return ConstantesMenuFluxoCaixa.MENU_PRINCIPAL;
