@@ -8,13 +8,15 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import com.gerenciador_estoque_fluxo_caixa.dtos.itemvenda.ItemVendaDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 
 public class GeradorNotaFiscal {
 
-	public static void geradorNotaFiscal(Venda venda, Set<ItemVenda> listaCompras, String caminho) {
+	public static void geradorNotaFiscal(VendaResponseDTO venda, Set<ItemVendaDTO> listaCompras, String caminho) {
 		String codigo = String.valueOf(venda.getCodigo()) + ".txt";
 
 		StringBuilder sb = new StringBuilder();

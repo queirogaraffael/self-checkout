@@ -18,6 +18,14 @@ public class VendaService {
         return vendaDao.haVenda();
     }
 
+    public boolean haVendaComEsseCodigo(Integer codigo){
+        return vendaDao.haVendaComEsseCodigo(codigo);
+    }
+
+    public VendaResponseDTO retornaVenda(Integer codigo){
+        return vendaDao.retornaVendaDTOPorCodigo(codigo);
+    }
+
     public String retornaRelatorioVendas() {
         List<VendaResponseDTO> vendas = vendaDao.retornaVendas();
         return geraRelatorio(vendas);
@@ -50,6 +58,12 @@ public class VendaService {
         sb.append("Total: ").append(total);
 
         return sb.toString();
+    }
+
+    public String gerarResumoVenda(VendaResponseDTO venda, String itensVenda) {
+        return venda.toStringSemPreco() + "\n"
+                + itensVenda
+                + String.format("Total: %.2f", venda.getTotal());
     }
 
 }

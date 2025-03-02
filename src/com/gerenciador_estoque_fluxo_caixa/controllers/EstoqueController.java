@@ -2,13 +2,13 @@ package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuEstoque;
 import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.itemvenda.ItemVendaDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarPrecoDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarQuantidadeDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Categoria;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
@@ -126,7 +126,7 @@ public class EstoqueController {
             ProdutoCreateDTO produtoCreateDTO = produtoService.adicionaProduto(new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, new Categoria(categoria.getId(), categoria.getNome())));
 
             if (produtoCreateDTO != null) {
-                PrintaProduto.exibeProdutoCriado(produtoCreateDTO);
+                PrintaProduto.printaProdutoCriado(produtoCreateDTO);
             }
 
         }
@@ -271,21 +271,17 @@ public class EstoqueController {
 
     private void detalharVenda() {
         if (!vendaService.haVenda()) {
-
             int codigo = LeDadosVenda.leCodigoVenda();
 
-            // retorna itemvenda(venda, produto, quantidade) (produtos) pelo codigo da venda
-            Venda venda = vendaService.retornaVendaPorCodigo(codigo);
+            if (vendaService.haVendaComEsseCodigo(codigo)) {
 
-            if (venda != null) {
+                VendaResponseDTO vendaDTO = vendaService.retornaVenda(codigo);
 
-                // retorna item venda dto
-                Set<ItemVenda> itens = itemVendaService.retornaItensVenda(venda);
+                Set<ItemVendaDTO> itens = itemVendaService.retornaItensVenda(codigo);
 
-                String itensVenda = ItemVendaService.geraRelatorioItemVenda(itens);
+                String relatorioItensVenda = ItemVendaService.geraRelatorioItemVenda(itens);
 
-                String resultado = venda.toStringSemPreco() + "\n" + itensVenda
-                        + String.format("Total: %.2f", venda.getTotal());
+                String resultado = vendaService.gerarResumoVenda(vendaDTO, relatorioItensVenda);
 
                 PrintarVenda.printarVenda(resultado);
 

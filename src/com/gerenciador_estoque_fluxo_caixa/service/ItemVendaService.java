@@ -1,12 +1,9 @@
 package com.gerenciador_estoque_fluxo_caixa.service;
 
-import com.gerenciador_estoque_fluxo_caixa.hibernateConnection.EntityManagerFactoryService;
+import com.gerenciador_estoque_fluxo_caixa.dtos.itemvenda.ItemVendaDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ItemVendaDao;
-import com.gerenciador_estoque_fluxo_caixa.model.dao.imp.ItemVendaDaoHibernate;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.Set;
 
 public class ItemVendaService {
@@ -43,25 +40,25 @@ public class ItemVendaService {
         return null;
     }
 
-    public static String geraRelatorioItemVenda(Set<ItemVenda> itens) {
-
-        StringBuilder sb = new StringBuilder();
-        for (ItemVenda p : itens) {
-            sb.append("Codigo: ").append(p.getProduto().getCodigoDeBarra()).append(", nome = ")
-                    .append(p.getProduto().getNome()).append(", Preco: ").append(p.getProduto().getPreco())
-                    .append(" R$").append(", Quantidade: ").append(p.getQuantidade()).append(", Total: ")
-                    .append(p.subTotal()).append("\n");
-
-        }
-
-        return sb.toString();
-    }
-
-    public Set<ItemVenda> retornaItensVenda(Venda venda) {
-        return null;
+    public Set<ItemVendaDTO> retornaItensVenda(Integer codigoVenda) {
+        return itemVendaDao.retornaItensVenda(codigoVenda);
     }
 
     public void adicionaItemVenda(ItemVenda itemVenda) {
 
+    }
+
+    public static String geraRelatorioItemVenda(Set<ItemVendaDTO> itens) {
+        StringBuilder sb = new StringBuilder();
+
+        for (ItemVendaDTO p : itens) {
+            sb.append("Codigo: ").append(p.getProduto().getCodigoDeBarra()).append(", nome = ")
+                    .append(p.getProduto().getNome()).append(", Preco: ").append(p.getProduto().getPreco())
+                    .append(" R$").append(", Quantidade: ").append(p.getQuantidade()).append(", Total: ")
+                    .append(p.getSubTotal()).append("\n");
+
+        }
+
+        return sb.toString();
     }
 }

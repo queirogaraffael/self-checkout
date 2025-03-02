@@ -6,20 +6,11 @@ import javax.swing.*;
 
 public class PrintaProduto {
 
-    public static void exibeProdutoCriado(ProdutoCreateDTO produtoCreateDTO) {
-        StringBuilder mensagem = new StringBuilder();
-
-        mensagem.append("Codigo de Barra: ").append(produtoCreateDTO.getCodigoDeBarra()).append("\n")
-                .append("Nome: ").append(produtoCreateDTO.getNome()).append("\n")
-                .append("Preco: ").append(produtoCreateDTO.getPreco()).append("\n")
-                .append("Quantidade: ").append(produtoCreateDTO.getQuantidade()).append("\n")
-                .append("\nCategoria: ").append(produtoCreateDTO.getCategoria().getNome());
-
-        JOptionPane.showMessageDialog(null, mensagem.toString(), "Detalhes do Produto Criado", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-
     public static void printaProdutos(String produtos){
         JOptionPane.showMessageDialog(null, produtos);
+    }
+
+    public static void printaProdutoCriado(ProdutoCreateDTO produtoCreateDTO){
+        JOptionPane.showMessageDialog(null, "Detalhes do Produto:\n\n" + produtoCreateDTO.toString(), "Produto Criado", JOptionPane.INFORMATION_MESSAGE);
     }
 }

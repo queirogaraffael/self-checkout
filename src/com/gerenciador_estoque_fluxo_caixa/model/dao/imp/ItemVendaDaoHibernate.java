@@ -1,16 +1,16 @@
 package com.gerenciador_estoque_fluxo_caixa.model.dao.imp;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.gerenciador_estoque_fluxo_caixa.dtos.itemvenda.ItemVendaDTO;
+import com.gerenciador_estoque_fluxo_caixa.model.dao.ItemVendaDao;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.swing.JOptionPane;
-
-import com.gerenciador_estoque_fluxo_caixa.model.dao.ItemVendaDao;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
+import javax.swing.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ItemVendaDaoHibernate implements ItemVendaDao {
 
@@ -36,27 +36,30 @@ public class ItemVendaDaoHibernate implements ItemVendaDao {
 
 	}
 
-	public Set<ItemVenda> retornaItensVenda(Venda venda) {
+	public Set<ItemVendaDTO> retornaItensVenda(Integer codigoVenda) {
 
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 
 		try {
+			String jpql = "SELECT p FROM ItemVenda p WHERE p.id.venda.codigo = :codigoVenda";
 
 			List<ItemVenda> itens = entityManager
-					.createQuery("SELECT p FROM ItemVenda p WHERE p.id.venda = :venda", ItemVenda.class)
-					.setParameter("venda", venda).getResultList();
+					.createQuery(jpql, ItemVenda.class)
+					.setParameter("codigoVenda", codigoVenda)
+					.getResultList();
 
-			Set<ItemVenda> itensVenda = new HashSet<>(itens);
-			return itensVenda;
+			return itens.stream()
+					.map(ItemVendaDTO::new)
+					.collect(Collectors.toSet());
 
 		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Erro ao retornar itens venda." + erro);
-			return null;
+			JOptionPane.showMessageDialog(null, "Erro ao retornar itens venda. " + erro);
+			return Collections.emptySet();
 		} finally {
 			entityManager.close();
 		}
-
 	}
+
 
 }

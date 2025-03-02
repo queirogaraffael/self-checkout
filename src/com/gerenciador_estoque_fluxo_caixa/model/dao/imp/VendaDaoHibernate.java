@@ -87,7 +87,7 @@ public class VendaDaoHibernate implements VendaDao {
 
 
 
-	public List<VendaResponseDTO>retornaVendasPorData(LocalDate data) {
+	public List<VendaResponseDTO> retornaVendasPorData(LocalDate data) {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 
 		try {
@@ -112,7 +112,7 @@ public class VendaDaoHibernate implements VendaDao {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 
 		try {
-			Long quantidade = entityManager.createQuery("SELECT COUNT(*) FROM Venda", Long.class).getSingleResult();
+			Long quantidade = entityManager.createQuery("SELECT COUNT(v) FROM Venda v", Long.class).getSingleResult();
 
 			if (quantidade == 0) {
 				return false;
@@ -128,5 +128,26 @@ public class VendaDaoHibernate implements VendaDao {
 		}
 
 	}
+
+	@Override
+	public boolean haVendaComEsseCodigo(Integer codigo) {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+		try {
+			String jpql = "SELECT COUNT(*) FROM Venda v WHERE v.codigo = :codigo";
+
+			Long quantidade = entityManager.createQuery(jpql, Long.class)
+					.setParameter("codigo", codigo)
+					.getSingleResult();
+
+			return quantidade > 0;
+		} catch (Exception erro) {
+			JOptionPane.showMessageDialog(null, "Erro ao verificar se existe venda com o código informado: " + erro);
+			return false;
+		} finally {
+			entityManager.close();
+		}
+	}
+
 
 }

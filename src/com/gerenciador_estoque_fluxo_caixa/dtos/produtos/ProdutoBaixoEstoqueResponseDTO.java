@@ -15,6 +15,6 @@ public class ProdutoBaixoEstoqueResponseDTO {
 
     @Override
     public String toString() {
-        return "Produto: Codigo de barra = " + codigoDeBarra + ", Nome = " + nome + ", Quantidade = " + quantidade;
+        return "Produto = Codigo de barra: " + codigoDeBarra + ", Nome: " + nome + ", Quantidade: " + quantidade;
     }
 }

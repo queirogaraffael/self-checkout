@@ -18,6 +18,10 @@ public class ProdutoService {
         return produtoDao.adicionaProduto(produtoCreateDTO);
     }
 
+    public ProdutoDTO retornaProdutoDTO(String codigo){
+        return produtoDao.retornaProdutoDTOPorCodigo(codigo);
+    }
+
     public boolean haProduto() {
         return produtoDao.haProduto();
     }

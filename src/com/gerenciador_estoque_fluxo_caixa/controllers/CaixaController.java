@@ -1,370 +1,357 @@
 package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuFluxoCaixa;
+import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
+import com.gerenciador_estoque_fluxo_caixa.ui.caixaController.*;
 import com.gerenciador_estoque_fluxo_caixa.ui.fluxoDeCaixa.FluxoDeCaixaView;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoView;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProduto;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProduto;
 
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CaixaController {
 
-	private final NotaFiscal notaFiscal;
-	private final CategoriaService categoriaService;
-	private final ItemVendaService itemVendaService;
-	private final ProdutoService produtoService;
-	private final VendaService vendaService;
+    private final NotaFiscal notaFiscal;
+    private final CategoriaService categoriaService;
+    private final ItemVendaService itemVendaService;
+    private final ProdutoService produtoService;
+    private final VendaService vendaService;
 
-	public CaixaController(NotaFiscal notaFiscal,
-						   ItemVendaService itemVendaService,
-						   CategoriaService categoriaService,
-						   ProdutoService produtoService,
-						   VendaService vendaService) {
-		this.notaFiscal = notaFiscal;
-		this.itemVendaService = itemVendaService;
-		this.categoriaService = categoriaService;
-		this.produtoService = produtoService;
-		this.vendaService = vendaService;
-	}
+    public CaixaController(NotaFiscal notaFiscal,
+                           ItemVendaService itemVendaService,
+                           CategoriaService categoriaService,
+                           ProdutoService produtoService,
+                           VendaService vendaService) {
+        this.notaFiscal = notaFiscal;
+        this.itemVendaService = itemVendaService;
+        this.categoriaService = categoriaService;
+        this.produtoService = produtoService;
+        this.vendaService = vendaService;
+    }
 
-	public void fluxoDeCaixa() {
+    public void fluxoDeCaixa() {
 
-		String opcaoMenuFluxoDeCaixa = "";
+        String opcaoMenuFluxoDeCaixa = "";
 
-		Set<ItemVenda> listaCompras = new HashSet<>();
+        Set<ItemVenda> listaCompras = new HashSet<>();
 
-		do {
-			try {
-				opcaoMenuFluxoDeCaixa = FluxoDeCaixaView.exibirMenuFluxoDeCaixa();
+        do {
+            try {
+                opcaoMenuFluxoDeCaixa = FluxoDeCaixaView.exibirMenuFluxoDeCaixa();
 
-				switch (opcaoMenuFluxoDeCaixa) {
+                switch (opcaoMenuFluxoDeCaixa) {
 
-				case (ConstantesMenuFluxoCaixa.ADICIONAR_PRODUTO):
-					//adicionaProduto(listaCompras);
-					break;
+                    case (ConstantesMenuFluxoCaixa.ADICIONAR_PRODUTO):
+                        //adicionaProduto(listaCompras);
+                        break;
 
-				case (ConstantesMenuFluxoCaixa.SACOLA_COMPRAS):
-					//listarSacola(listaCompras);
+                    case (ConstantesMenuFluxoCaixa.SACOLA_COMPRAS):
+                        //listarSacola(listaCompras);
 
-					break;
+                        break;
 
-				case (ConstantesMenuFluxoCaixa.PRODUTOS_EM_ESTOQUE):
-					//listarEstoque();
+                    case (ConstantesMenuFluxoCaixa.PRODUTOS_EM_ESTOQUE):
+                        //listarEstoque();
 
-					break;
+                        break;
 
-				case (ConstantesMenuFluxoCaixa.REMOVER_DA_SACOLA):
+                    case (ConstantesMenuFluxoCaixa.REMOVER_DA_SACOLA):
 
-					//removerProduto(listaCompras);
+                        //removerProduto(listaCompras);
 
-					break;
+                        break;
 
-				case (ConstantesMenuFluxoCaixa.ALTERAR_QUANTIDADE):
+                    case (ConstantesMenuFluxoCaixa.ALTERAR_QUANTIDADE):
 
-					//modificarQuantidade(listaCompras);
+                        //modificarQuantidade(listaCompras);
 
-					break;
+                        break;
 
-				case (ConstantesMenuFluxoCaixa.FINALIZAR_COMPRA):
+                    case (ConstantesMenuFluxoCaixa.FINALIZAR_COMPRA):
 
-					//finalizarCompra(listaCompras, notaFiscal);
-					break;
+                        //finalizarCompra(listaCompras, notaFiscal);
+                        break;
 
-				case (ConstantesMenuFluxoCaixa.LIMPAR_SACOLA):
+                    case (ConstantesMenuFluxoCaixa.LIMPAR_SACOLA):
 
-					//limparCarrinho(listaCompras);
-					break;
+                        //limparCarrinho(listaCompras);
+                        break;
 
-				case (ConstantesMenuFluxoCaixa.MENU_PRINCIPAL):
+                    case (ConstantesMenuFluxoCaixa.MENU_PRINCIPAL):
 
-					//opcaoMenuFluxoDeCaixa = sair();
+                        //opcaoMenuFluxoDeCaixa = sair();
 
-					break;
+                        break;
 
-				}
-			} catch (NumberFormatException erro) {
-				JOptionPane.showMessageDialog(null,
-						"Entrada invalida. Por favor, insira um numero correspondente a� opcao desejada.");
-			}
+                }
+            } catch (NumberFormatException erro) {
+                MenuCaixaController.alertaEntradaInvalida();
+            }
 
-		} while (!opcaoMenuFluxoDeCaixa.equals(ConstantesMenuFluxoCaixa.MENU_PRINCIPAL));
-	}
+        } while (!opcaoMenuFluxoDeCaixa.equals(ConstantesMenuFluxoCaixa.MENU_PRINCIPAL));
+    }
 
 
-	/*private void adicionaProduto(Set<ItemVenda> listaCompras) {
-		String codigoProduto = JOptionPane
-				.showInputDialog("Digite o codigo do produto que voce deseja adicionar a lista de compras");
+    private void adicionaProduto(Set<ItemVenda> listaCompras) {
 
-		if (ItemVendaService.contemProduto(listaCompras, codigoProduto)) {
+        String codigoProduto = AdicionarProduto.leCodigoProduto();
 
-			Integer novaQuantidade = Integer.parseInt(JOptionPane.showInputDialog(
-					"Produto ja adicionado anteriormente, digite a nova quantidade que voce deseja: "));
+        if (ItemVendaService.contemProduto(listaCompras, codigoProduto)) {
 
-			ItemVenda prod = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
+            Integer novaQuantidade = AdicionarProduto.leNovamenteQuantidade();
 
-			Produto produtoEstoque = produtoService.retornaProdutoPorCodigo(codigoProduto);
+            ItemVenda prod = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
 
-			int quantidadeRealProduto = prod.getQuantidade() + produtoEstoque.getQuantidade();
+            Produto produtoEstoque = produtoService.retornaProdutoPorCodigo(codigoProduto);
 
-			if (quantidadeRealProduto >= novaQuantidade) {
+            int quantidadeRealProduto = prod.getQuantidade() + produtoEstoque.getQuantidade();
 
-				prod.setQuantidade(novaQuantidade);
-				produtoEstoque.setQuantidade(quantidadeRealProduto - novaQuantidade);
+            if (quantidadeRealProduto >= novaQuantidade) {
 
-				produtoService.atualizaProduto(produtoEstoque);
+                prod.setQuantidade(novaQuantidade);
+                produtoEstoque.setQuantidade(quantidadeRealProduto - novaQuantidade);
 
-			} else if (quantidadeRealProduto <= 0) {
-				JOptionPane.showMessageDialog(null, "Produto indisponivel. Tente outro!");
-			}
+                produtoService.atualizaProduto(produtoEstoque);
 
-			else {
+            } else if (quantidadeRealProduto <= 0) {
+                AdicionarProduto.alertaProdutoIndisponivel();
+            } else {
 
-				Object[] opcoes = { "Sim", "Nao" };
+                int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
 
-				int opcao = JOptionPane.showOptionDialog(null, "Deseja adicionar todos os itens restantes ?",
-						"Quantidade desejada menor do que em estoque.", JOptionPane.DEFAULT_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+                if (opcao == 0) {
 
-				if (opcao == 0) {
+                    prod.setQuantidade(quantidadeRealProduto);
+                    produtoEstoque.setQuantidade(0);
 
-					prod.setQuantidade(quantidadeRealProduto);
-					produtoEstoque.setQuantidade(0);
+                    produtoService.atualizaProduto(produtoEstoque);
 
-					produtoService.atualizaProduto(produtoEstoque);
+                } else {
+                    AdicionarProduto.alertaCompraProdutoCancelada();
+                }
+            }
 
-				} else {
-					JOptionPane.showMessageDialog(null, "Compra de produto cancelada.");
-				}
-			}
+        } else {
 
-		} else {
+            Produto produto = produtoService.retornaProdutoPorCodigo(codigoProduto);
 
-			Produto produto = produtoService.retornaProdutoPorCodigo(codigoProduto);
+            if (produto != null) {
+                Integer quantidade = LeDadosProduto.leQuantidadeProduto();
 
-			if (produto != null) {
-				Integer quantidade = Integer.parseInt(JOptionPane.showInputDialog("Quantidade: "));
+                if (produto.getQuantidade() >= quantidade) {
 
-				if (produto.getQuantidade() >= quantidade) {
+                    ItemVenda item = new ItemVenda(produto, quantidade);
 
-					ItemVenda item = new ItemVenda(produto, quantidade);
+                    listaCompras.add(item);
 
-					listaCompras.add(item);
+                    produto.setQuantidade(produto.getQuantidade() - quantidade);
 
-					produto.setQuantidade(produto.getQuantidade() - quantidade);
+                    produtoService.atualizaProduto(produto);
 
-					produtoService.atualizaProduto(produto);
+                } else if (produto.getQuantidade() == 0) {
+                    AdicionarProduto.alertaProdutoSemEstoque();
+                } else {
 
-				} else if (produto.getQuantidade() == 0) {
-					JOptionPane.showMessageDialog(null, "Quantidade em estoque do produto igual a 0. Tente outro!");
-				}
+                    int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
 
-				else {
+                    if (opcao == 0) {
 
-					Object[] opcoes = { "Sim", "Nao" };
+                        ItemVenda item = new ItemVenda(produto, produto.getQuantidade());
 
-					int opcao = JOptionPane.showOptionDialog(null, "Deseja adicionar todos os itens restantes ?",
-							"Quantidade desejada menor do que em estoque.", JOptionPane.DEFAULT_OPTION,
-							JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+                        listaCompras.add(item);
 
-					if (opcao == 0) {
+                        produto.setQuantidade(0);
+                        produtoService.atualizaProduto(produto);
 
-						ItemVenda item = new ItemVenda(produto, produto.getQuantidade());
+                    } else {
+                        AdicionarProduto.alertaCompraProdutoCancelada();
+                    }
+                }
+            } else {
+                AdicionarProduto.alertaProdutoSemEstoque();
 
-						listaCompras.add(item);
+            }
+        }
+    }
 
-						produto.setQuantidade(0);
-						produtoService.atualizaProduto(produto);
+    private void listarSacola(Set<ItemVenda> listaCompras) {
 
-					} else {
-						JOptionPane.showMessageDialog(null, "Compra de produto cancelada.");
-					}
-				}
-			} else {
-				JOptionPane.showMessageDialog(null, "Produto nao consta no estoque. Tente outro!");
+        String compras = ItemVendaService.geraRelatorioItemVenda(listaCompras);
 
-			}
-		}
-	}
+        double subtotal = ItemVendaService.somaPrecos(listaCompras);
+        String subtotalFormatado = String.format("Subtotal: %.2f R$", subtotal);
+        String resultado = "Produtos da sacola de compras: \n" + compras + "\n" + subtotalFormatado;
 
-	private void listarSacola(Set<ItemVenda> listaCompras) {
+        JOptionPane.showMessageDialog(null, resultado);
 
-		String compras = ItemVendaService.geraRelatorioItemVenda(listaCompras);
+    }
 
-		double subtotal = ItemVendaService.somaPrecos(listaCompras);
-		String subtotalFormatado = String.format("Subtotal: %.2f R$", subtotal);
-		String resultado = "Produtos da sacola de compras: \n" + compras + "\n" + subtotalFormatado;
 
-		JOptionPane.showMessageDialog(null, resultado);
+    private void listarEstoque() {
 
-	}
+        if (produtoService.haProduto()) {
+            AlertasProdutoView.alertaListaProdutoVazia();
+        } else {
+            CategoriaResponseDTO categoria = selecionaCategoria();
 
-	private void listarEstoque() {
+            int idCategoria = categoria.getId();
 
-		if (produtoService.tabelaProdutoEstaVazia()) {
-			JOptionPane.showMessageDialog(null, "Lista de produtos vazia.");
-		} else {
+            String resultado = produtoService.geraRelatorioProdutosPorCategoria(idCategoria);
 
-			int categoria = categoriaService.retornaIdCategoria();
+            PrintaProduto.printaProdutos(resultado);
+        }
 
-			String resultado = produtoService.geraRelatotioProdutos(categoria);
+    }
 
-			JOptionPane.showMessageDialog(null, resultado);
-		}
+    private void removerProduto(Set<ItemVenda> listaCompras) {
 
-	}
+        if (listaCompras.isEmpty()) {
+            RemoverProduto.alertaSacolaVazia();
+        } else {
+            String codigoProdutoParaRemover = LeDadosProduto.leCodigoBarraProduto();
 
-	private void removerProduto(Set<ItemVenda> listaCompras) {
+            if (!ItemVendaService.contemProduto(listaCompras, codigoProdutoParaRemover)) {
+                JOptionPane.showMessageDialog(null,
+                        "Produto ja nao constava na sacola. Tente novamente com uma produto existente.");
 
-		if (listaCompras.isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Adicione primeiro um produto a sua sacola para poder remover.");
-		} else {
-			String codigoProdutoParaRemover = JOptionPane
-					.showInputDialog("Digite o codigo do produto que voce seja remover:");
+            } else {
 
-			if (!ItemVendaService.contemProduto(listaCompras, codigoProdutoParaRemover)) {
-				JOptionPane.showMessageDialog(null,
-						"Produto ja nao constava na sacola. Tente novamente com uma produto existente.");
+                ItemVenda ItemListaCompras = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras,
+                        codigoProdutoParaRemover);
 
-			} else {
+                Produto produtoDoEstoque = produtoService.retornaProdutoPorCodigo(codigoProdutoParaRemover);
+                int quantidadeRealProduto = ItemListaCompras.getQuantidade() + produtoDoEstoque.getQuantidade();
 
-				ItemVenda ItemListaCompras = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras,
-						codigoProdutoParaRemover);
+                produtoDoEstoque.setQuantidade(quantidadeRealProduto);
 
-				Produto produtoDoEstoque = produtoService.retornaProdutoPorCodigo(codigoProdutoParaRemover);
-				int quantidadeRealProduto = ItemListaCompras.getQuantidade() + produtoDoEstoque.getQuantidade();
+                produtoService.atualizaProduto(produtoDoEstoque);
+                listaCompras.remove(ItemListaCompras);
 
-				produtoDoEstoque.setQuantidade(quantidadeRealProduto);
+                JOptionPane.showMessageDialog(null, "Produto removida com sucesso!");
+            }
+        }
+    }
 
-				produtoService.atualizaProduto(produtoDoEstoque);
-				listaCompras.remove(ItemListaCompras);
+    private void modificarQuantidade(Set<ItemVenda> listaCompras) {
+        if (listaCompras.isEmpty()) {
+            ModificarQuantidade.alertaCarrinhoVazio();
+        } else {
+            String codigo = LeDadosProduto.leCodigoBarraProduto();
 
-				JOptionPane.showMessageDialog(null, "Produto removida com sucesso!");
-			}
-		}
-	}
+            if (ItemVendaService.contemProduto(listaCompras, codigo)) {
+                Integer novaQuantidade = Integer
+                        .parseInt(JOptionPane.showInputDialog("Digite a nova quantidade do produto: "));
 
-	private void modificarQuantidade(Set<ItemVenda> listaCompras) {
-		if (listaCompras.isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Carrinho de compras vazio.");
-		} else {
-			String codigo = JOptionPane.showInputDialog("Digite o codigo do produto: ");
+                ItemVenda prod = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
 
-			if (ItemVendaService.contemProduto(listaCompras, codigo)) {
-				Integer novaQuantidade = Integer
-						.parseInt(JOptionPane.showInputDialog("Digite a nova quantidade do produto: "));
+                Produto produtoEstoque = produtoService.retornaProdutoPorCodigo(codigo);
 
-				ItemVenda prod = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
+                int quantidadeRealProduto = prod.getQuantidade() + produtoEstoque.getQuantidade();
 
-				Produto produtoEstoque = produtoService.retornaProdutoPorCodigo(codigo);
+                if (quantidadeRealProduto >= novaQuantidade) {
 
-				int quantidadeRealProduto = prod.getQuantidade() + produtoEstoque.getQuantidade();
+                    prod.setQuantidade(novaQuantidade);
+                    produtoEstoque.setQuantidade(quantidadeRealProduto - novaQuantidade);
 
-				if (quantidadeRealProduto >= novaQuantidade) {
+                    produtoService.atualizaProduto(produtoEstoque);
 
-					prod.setQuantidade(novaQuantidade);
-					produtoEstoque.setQuantidade(quantidadeRealProduto - novaQuantidade);
+                } else if (quantidadeRealProduto <= 0) {
+                    JOptionPane.showMessageDialog(null, "Produto indisponivel. Tente outro!");
+                } else {
 
-					produtoService.atualizaProduto(produtoEstoque);
+                    Object[] opcoes = {"Sim", "Nao"};
 
-				} else if (quantidadeRealProduto <= 0) {
-					JOptionPane.showMessageDialog(null, "Produto indisponivel. Tente outro!");
-				}
+                    int opcao = JOptionPane.showOptionDialog(null, "Deseja adicionar todos os itens restantes ?",
+                            "Quantidade desejada menor do que em estoque.", JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
 
-				else {
+                    if (opcao == 0) {
 
-					Object[] opcoes = { "Sim", "Nao" };
+                        prod.setQuantidade(quantidadeRealProduto);
+                        produtoEstoque.setQuantidade(0);
 
-					int opcao = JOptionPane.showOptionDialog(null, "Deseja adicionar todos os itens restantes ?",
-							"Quantidade desejada menor do que em estoque.", JOptionPane.DEFAULT_OPTION,
-							JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+                        produtoService.atualizaProduto(produtoEstoque);
 
-					if (opcao == 0) {
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Compra de produto cancelada.");
+                    }
+                }
 
-						prod.setQuantidade(quantidadeRealProduto);
-						produtoEstoque.setQuantidade(0);
+                JOptionPane.showMessageDialog(null, "Quantidade modificada com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Produto invalido, tente outro!");
+            }
+        }
+    }
 
-						produtoService.atualizaProduto(produtoEstoque);
+    private void finalizarCompra(Set<ItemVenda> listaCompras, NotaFiscal notaFiscal) {
+        if (!listaCompras.isEmpty()) {
 
-					} else {
-						JOptionPane.showMessageDialog(null, "Compra de produto cancelada.");
-					}
-				}
+            Venda venda = new Venda();
+            venda.setDataHora(LocalDateTime.now());
 
-				JOptionPane.showMessageDialog(null, "Quantidade modificada com sucesso!");
-			} else {
-				JOptionPane.showMessageDialog(null, "Produto invalido, tente outro!");
-			}
-		}
-	}
+            vendaService.adicionaVenda(venda);
 
-	private void finalizarCompra(Set<ItemVenda> listaCompras, NotaFiscal notaFiscal) {
-		if (!listaCompras.isEmpty()) {
+            Double total = 0.0;
 
-			Venda venda = new Venda();
-			venda.setDataHora(LocalDateTime.now());
+            for (ItemVenda itemVenda : listaCompras) {
+                itemVenda.setVenda(venda);
+                total += itemVenda.subTotal();
+                itemVendaService.adicionaItemVenda(itemVenda);
+            }
 
-			vendaService.adicionaVenda(venda);
+            venda.setTotal(total);
 
-			Double total = 0.0;
+            vendaService.atualizaVenda(venda);
 
-			for (ItemVenda itemVenda : listaCompras) {
-				itemVenda.setVenda(venda);
-				total += itemVenda.subTotal();
-				itemVendaService.adicionaItemVenda(itemVenda);
-			}
+            if (notaFiscal.getStatusNotaFiscal()) {
+                GeradorNotaFiscal.geradorNotaFiscal(venda, listaCompras, notaFiscal.getCaminhoNotaFiscal());
+            }
 
-			venda.setTotal(total);
+            listaCompras.clear();
 
-			vendaService.atualizaVenda(venda);
+            JOptionPane.showMessageDialog(null, "Obrigado, volte sempre!");
+        }
+    }
 
-			if (notaFiscal.getStatusNotaFiscal()) {
-				GeradorNotaFiscal.geradorNotaFiscal(venda, listaCompras, notaFiscal.getCaminhoNotaFiscal());
-			}
+    private void limparCarrinho(Set<ItemVenda> listaCompras) {
+        if (!listaCompras.isEmpty()) {
+            for (ItemVenda item : listaCompras) {
 
-			listaCompras.clear();
+                Produto produtoEmEstoque = produtoService.retornaProdutoPorCodigo(item.getProduto().getCodigoDeBarra());
 
-			JOptionPane.showMessageDialog(null, "Obrigado, volte sempre!");
-		}
-	}
+                int quantidadeReal = item.getQuantidade() + produtoEmEstoque.getQuantidade();
 
-	private void limparCarrinho(Set<ItemVenda> listaCompras) {
-		if (!listaCompras.isEmpty()) {
-			for (ItemVenda item : listaCompras) {
+                produtoEmEstoque.setQuantidade(quantidadeReal);
 
-				Produto produtoEmEstoque = produtoService.retornaProdutoPorCodigo(item.getProduto().getCodigoDeBarra());
+                produtoService.atualizaProduto(produtoEmEstoque);
 
-				int quantidadeReal = item.getQuantidade() + produtoEmEstoque.getQuantidade();
+            }
+            listaCompras.clear();
 
-				produtoEmEstoque.setQuantidade(quantidadeReal);
+            LimparCarrinho.alertaSacolaLimpaSucesso();
+        }
+    }
 
-				produtoService.atualizaProduto(produtoEmEstoque);
+    private String sair() {
 
-			}
-			listaCompras.clear();
-			JOptionPane.showMessageDialog(null, "Sacola de compras limpada com sucesso.");
+        String senhaDigitada = JOptionPane.showInputDialog(null, "Digite a senha: ");
+        boolean autenticacao = AutenticadorDeSenha.autenticacaoSenha(senhaDigitada);
 
-		}
-	}
+        if (!autenticacao) {
+            JOptionPane.showMessageDialog(null, "Senha incorreta. Tente novamente!");
+            return ConstantesMenuFluxoCaixa.CONTINUAR_NO_PROGRAMA;
+        }
+        return ConstantesMenuFluxoCaixa.MENU_PRINCIPAL;
 
-	private String sair() {
-
-		String senhaDigitada = JOptionPane.showInputDialog(null, "Digite a senha: ");
-		boolean autenticacao = AutenticadorDeSenha.autenticacaoSenha(senhaDigitada);
-
-		if (!autenticacao) {
-			JOptionPane.showMessageDialog(null, "Senha incorreta. Tente novamente!");
-			return ConstantesMenuFluxoCaixa.CONTINUAR_NO_PROGRAMA;
-		}
-		return ConstantesMenuFluxoCaixa.MENU_PRINCIPAL;
-
-	}
-
-	 */
+    }
 
 }

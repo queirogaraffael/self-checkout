@@ -7,7 +7,7 @@ import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 
 public interface VendaDao {
-	void adicionaVenda(Venda vendaInterface);
+	void adicionaVenda(Venda venda);
 
 	VendaResponseDTO retornaVendaDTOPorCodigo(Integer codigo);
 
@@ -17,4 +17,5 @@ public interface VendaDao {
 
 	boolean haVenda();
 
+	boolean haVendaComEsseCodigo(Integer codigo);
 }
