@@ -6,7 +6,6 @@ import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +28,7 @@ public class ItemVendaDaoHibernate implements ItemVendaDao {
 			entityManager.getTransaction().commit();
 
 		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Problemas em adicionar item." + erro);
+			System.err.println("Problemas em adicionar item." + erro);
 		} finally {
 			entityManager.close();
 		}
@@ -54,7 +53,7 @@ public class ItemVendaDaoHibernate implements ItemVendaDao {
 					.collect(Collectors.toSet());
 
 		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Erro ao retornar itens venda. " + erro);
+			System.err.println("Erro ao retornar itens venda. " + erro);
 			return Collections.emptySet();
 		} finally {
 			entityManager.close();

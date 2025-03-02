@@ -6,7 +6,6 @@ import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.swing.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -29,7 +28,7 @@ public class VendaDaoHibernate implements VendaDao {
 			entityManager.getTransaction().commit();
 
 		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Problemas em adicionar a venda" + erro);
+			System.err.println("Problemas em adicionar a venda" + erro.getMessage());
 		} finally {
 			entityManager.close();
 		}
@@ -100,7 +99,7 @@ public class VendaDaoHibernate implements VendaDao {
 					.setParameter("data", Date.valueOf(data)).getResultList();
 
 		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Erro em buscar vendas por data: " + erro);
+			System.err.println("Erro em buscar vendas por data: " + erro.getMessage());
 			return Collections.emptyList();
 		} finally {
 			entityManager.close();
@@ -121,7 +120,7 @@ public class VendaDaoHibernate implements VendaDao {
 			}
 
 		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Erro ao tentar verificar se tabela de vendas esta vazia: " + erro);
+			System.err.println("Erro ao tentar verificar se tabela de vendas esta vazia: " + erro.getMessage());
 			return false;
 		} finally {
 			entityManager.close();
@@ -142,7 +141,7 @@ public class VendaDaoHibernate implements VendaDao {
 
 			return quantidade > 0;
 		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Erro ao verificar se existe venda com o código informado: " + erro);
+			System.err.println("Erro ao verificar se existe venda com o código informado: " + erro.getMessage());
 			return false;
 		} finally {
 			entityManager.close();

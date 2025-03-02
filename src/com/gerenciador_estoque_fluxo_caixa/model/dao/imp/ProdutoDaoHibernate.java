@@ -9,7 +9,6 @@ import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 
         } catch (Exception erro) {
             entityManager.getTransaction().rollback();
-            JOptionPane.showMessageDialog(null, "Problemas em adicionar o produto: " + erro.getMessage());
+            System.err.println("Problemas em adicionar o produto: " + erro.getMessage());
             return null;
         } finally {
             entityManager.close();
@@ -59,7 +58,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 
         } catch (Exception erro) {
             entityManager.getTransaction().rollback();
-            JOptionPane.showMessageDialog(null, "Problema na atualizacao do produto." + erro);
+            System.err.println("Problema na atualizacao do produto." + erro.getMessage());
             return false;
         } finally {
             entityManager.close();
@@ -88,7 +87,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
 
 
         } catch (Exception erro) {
-            JOptionPane.showMessageDialog(null, "Problemas ao buscar por produto" + erro);
+            System.err.println("Problemas ao buscar por produto" + erro.getMessage());
             return null;
         } finally {
             entityManager.close();
@@ -113,7 +112,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
             return produtos.get(0);
 
         } catch (Exception erro) {
-            JOptionPane.showMessageDialog(null, "Problemas ao buscar por produto" + erro);
+            System.err.println("Problemas ao buscar por produto" + erro.getMessage());
             return null;
         } finally {
             entityManager.close();
@@ -133,7 +132,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
                     .setParameter("categoria", idCategoria).getResultList();
 
         } catch (Exception erro) {
-            JOptionPane.showMessageDialog(null, "Erro ao tentar gerar relatorio dos produtos: " + erro);
+            System.err.println("Erro ao tentar gerar relatorio dos produtos: " + erro.getMessage());
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -156,7 +155,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
             }
 
         } catch (Exception erro) {
-            JOptionPane.showMessageDialog(null, "Erro ao tentar verificar se tabela de produtos esta vazia: " + erro);
+            System.err.println("Erro ao tentar verificar se tabela de produtos esta vazia: " + erro.getMessage());
             return false;
         } finally {
             entityManager.close();
@@ -177,7 +176,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
                     .setParameter("quantidade", 10).getResultList();
 
         } catch (Exception erro) {
-            JOptionPane.showMessageDialog(null, "Erro ao gerar relatorio de produtos com baixo estoque: " + erro);
+            System.err.println("Erro ao gerar relatorio de produtos com baixo estoque: " + erro.getMessage());
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -201,7 +200,7 @@ public class ProdutoDaoHibernate implements ProdutoDao {
             return quantidade > 0;
 
         } catch (Exception erro) {
-            JOptionPane.showMessageDialog(null, "Problemas ao buscar por produto" + erro);
+            System.err.println("Problemas ao buscar por produto" + erro.getMessage());
             return false;
         } finally {
             entityManager.close();

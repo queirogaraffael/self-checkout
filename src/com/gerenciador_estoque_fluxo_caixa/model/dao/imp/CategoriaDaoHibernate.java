@@ -5,7 +5,6 @@ import com.gerenciador_estoque_fluxo_caixa.model.dao.CategoriaDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class CategoriaDaoHibernate implements CategoriaDao {
 			return entityManager.createQuery(jpql, CategoriaResponseDTO.class).getResultList();
 
 		} catch (Exception erro) {
-			JOptionPane.showMessageDialog(null, "Erro ao recuperar categorias: " + erro.getMessage());
+			System.err.println("Erro ao recuperar categorias: " + erro.getMessage());
 			return Collections.emptyList();
 
 		} finally {
