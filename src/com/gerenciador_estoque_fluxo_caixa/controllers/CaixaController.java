@@ -2,22 +2,30 @@ package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuFluxoCaixa;
 import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.itemvenda.ItemVendaDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarQuantidadeDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 import com.gerenciador_estoque_fluxo_caixa.ui.ValidaSenha;
 import com.gerenciador_estoque_fluxo_caixa.ui.caixaController.*;
+import com.gerenciador_estoque_fluxo_caixa.ui.categorias.Categorias;
 import com.gerenciador_estoque_fluxo_caixa.ui.fluxoDeCaixa.FluxoDeCaixaView;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoView;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProduto;
 import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProduto;
 import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
+import com.gerenciador_estoque_fluxo_caixa.utils.GeradorNotaFiscal;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class CaixaController {
@@ -53,45 +61,36 @@ public class CaixaController {
                 switch (opcaoMenuFluxoDeCaixa) {
 
                     case (ConstantesMenuFluxoCaixa.ADICIONAR_PRODUTO):
-                        //adicionaProduto(listaCompras);
+                        adicionaProduto(listaCompras);
                         break;
 
                     case (ConstantesMenuFluxoCaixa.SACOLA_COMPRAS):
-                        //listarSacola(listaCompras);
+                        listarSacola(listaCompras);
 
                         break;
 
                     case (ConstantesMenuFluxoCaixa.PRODUTOS_EM_ESTOQUE):
-                        //listarEstoque();
-
+                        listarEstoque();
                         break;
 
                     case (ConstantesMenuFluxoCaixa.REMOVER_DA_SACOLA):
-
-                        //removerProduto(listaCompras);
-
+                        removerProduto(listaCompras);
                         break;
 
                     case (ConstantesMenuFluxoCaixa.ALTERAR_QUANTIDADE):
-
-                        //modificarQuantidade(listaCompras);
-
+                        modificarQuantidade(listaCompras);
                         break;
 
                     case (ConstantesMenuFluxoCaixa.FINALIZAR_COMPRA):
-
-                        //finalizarCompra(listaCompras, notaFiscal);
+                        finalizarCompra(listaCompras, notaFiscal);
                         break;
 
                     case (ConstantesMenuFluxoCaixa.LIMPAR_SACOLA):
-
-                        //limparCarrinho(listaCompras);
+                        limparCarrinho(listaCompras);
                         break;
 
                     case (ConstantesMenuFluxoCaixa.MENU_PRINCIPAL):
-
-                        //opcaoMenuFluxoDeCaixa = sair();
-
+                        opcaoMenuFluxoDeCaixa = sair();
                         break;
 
                 }
@@ -186,14 +185,11 @@ public class CaixaController {
     }
 
     private void listarSacola(Set<ItemVenda> listaCompras) {
-
-        String compras = ItemVendaService.geraRelatorioItemVenda(listaCompras);
-
         double subtotal = ItemVendaService.somaPrecos(listaCompras);
-        String subtotalFormatado = String.format("Subtotal: %.2f R$", subtotal);
-        String resultado = "Produtos da sacola de compras: \n" + compras + "\n" + subtotalFormatado;
 
-        ListarSacola.listaSacola();
+        String relatorioListaCompras = ItemVendaService.geraRelatorioItemVenda(listaCompras);
+
+        ListarSacola.exibirSacola(subtotal, relatorioListaCompras);
 
     }
 
@@ -216,125 +212,119 @@ public class CaixaController {
 
     private void removerProduto(Set<ItemVenda> listaCompras) {
 
-        if (listaCompras.isEmpty()) {
+        if (Objects.isNull(listaCompras) || listaCompras.isEmpty()) {
             RemoverProduto.alertaSacolaVazia();
-        } else {
-            String codigoProdutoParaRemover = LeDadosProduto.leCodigoBarraProduto();
-
-            if (!ItemVendaService.contemProduto(listaCompras, codigoProdutoParaRemover)) {
-                RemoverProduto.alertaProdutoJaNaoConstava();
-            } else {
-
-                ItemVenda ItemListaCompras = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras,
-                        codigoProdutoParaRemover);
-
-                Produto produtoDoEstoque = produtoService.retornaProdutoPorCodigo(codigoProdutoParaRemover);
-                int quantidadeRealProduto = ItemListaCompras.getQuantidade() + produtoDoEstoque.getQuantidade();
-
-                produtoDoEstoque.setQuantidade(quantidadeRealProduto);
-
-                produtoService.atualizaProduto(produtoDoEstoque);
-                listaCompras.remove(ItemListaCompras);
-
-                RemoverProduto.alertaProdutoRemovidoComSucesso();
-            }
+            return;
         }
+
+        String codigoProduto = LeDadosProduto.leCodigoBarraProduto();
+
+        if (!ItemVendaService.contemProduto(listaCompras, codigoProduto)) {
+            RemoverProduto.alertaProdutoJaNaoConstava();
+            return;
+        }
+
+        ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
+        ProdutoAtualizarQuantidadeDTO produtoEstoque = produtoService.retornaProdutoAtualizarQuantidadeDTO(codigoProduto);
+
+        assert itemVenda != null;
+        produtoEstoque.setQuantidade(produtoEstoque.getQuantidade() + itemVenda.getQuantidade());
+        produtoService.atualizaQuantidadeProduto(codigoProduto, produtoEstoque);
+        listaCompras.remove(itemVenda);
+
+        RemoverProduto.alertaProdutoRemovidoComSucesso();
     }
+
 
     private void modificarQuantidade(Set<ItemVenda> listaCompras) {
         if (listaCompras.isEmpty()) {
             ModificarQuantidade.alertaCarrinhoVazio();
+            return;
+        }
+
+        String codigo = LeDadosProduto.leCodigoBarraProduto();
+        if (!ItemVendaService.contemProduto(listaCompras, codigo)) {
+            ModificarQuantidade.alertaProdutoInvalido();
+            return;
+        }
+
+        ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
+        ProdutoAtualizarQuantidadeDTO estoqueAtual = produtoService.retornaProdutoAtualizarQuantidadeDTO(codigo);
+        int quantidadeTotalDisponivel = itemVenda.getQuantidade() + estoqueAtual.getQuantidade();
+
+        Integer novaQuantidade = LeDadosProduto.leQuantidadeProduto();
+
+        if (novaQuantidade <= 0) {
+            ModificarQuantidade.alertaProdutoInvalido();
+            return;
+        }
+
+        if (quantidadeTotalDisponivel >= novaQuantidade) {
+            itemVenda.setQuantidade(novaQuantidade);
+            estoqueAtual.setQuantidade(quantidadeTotalDisponivel - novaQuantidade);
         } else {
-            String codigo = LeDadosProduto.leCodigoBarraProduto();
-
-            if (ItemVendaService.contemProduto(listaCompras, codigo)) {
-                Integer novaQuantidade = LeDadosProduto.leQuantidadeProduto();
-
-                ItemVenda prod = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
-
-                Produto produtoEstoque = produtoService.retornaProdutoPorCodigo(codigo);
-
-                int quantidadeRealProduto = prod.getQuantidade() + produtoEstoque.getQuantidade();
-
-                if (quantidadeRealProduto >= novaQuantidade) {
-
-                    prod.setQuantidade(novaQuantidade);
-                    produtoEstoque.setQuantidade(quantidadeRealProduto - novaQuantidade);
-
-                    produtoService.atualizaProduto(produtoEstoque);
-
-                } else if (quantidadeRealProduto <= 0) {
-                    ModificarQuantidade.alertaProdutoInvalido();
-                } else {
-
-                    int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
-
-                    if (opcao == 0) {
-
-                        prod.setQuantidade(quantidadeRealProduto);
-                        produtoEstoque.setQuantidade(0);
-
-                        produtoService.atualizaProduto(produtoEstoque);
-
-                    } else {
-                        AdicionarProduto.alertaCompraProdutoCancelada();
-                    }
-                }
-                ModificarQuantidade.alertaQuantidadeProdutoModifica();
+            int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
+            if (opcao == 0) {
+                itemVenda.setQuantidade(quantidadeTotalDisponivel);
+                estoqueAtual.setQuantidade(0);
             } else {
-                ModificarQuantidade.alertaProdutoInvalido();
+                AdicionarProduto.alertaCompraProdutoCancelada();
+                return;
             }
         }
+
+        produtoService.atualizaQuantidadeProduto(codigo, estoqueAtual);
+        ModificarQuantidade.alertaQuantidadeProdutoModifica();
     }
+
 
     private void finalizarCompra(Set<ItemVenda> listaCompras, NotaFiscal notaFiscal) {
-        if (!listaCompras.isEmpty()) {
-
-            Venda venda = new Venda();
-            venda.setDataHora(LocalDateTime.now());
-
-            vendaService.adicionaVenda(venda);
-
-            Double total = 0.0;
-
-            for (ItemVenda itemVenda : listaCompras) {
-                itemVenda.setVenda(venda);
-                total += itemVenda.subTotal();
-                itemVendaService.adicionaItemVenda(itemVenda);
-            }
-
-            venda.setTotal(total);
-
-            vendaService.atualizaVenda(venda);
-
-            if (notaFiscal.getStatusNotaFiscal()) {
-                GeradorNotaFiscal.geradorNotaFiscal(venda, listaCompras, notaFiscal.getCaminhoNotaFiscal());
-            }
-
-            listaCompras.clear();
-
-            FinalizarCompra.mensagemAgracedimentoCompra();
+        if (Objects.isNull(listaCompras) || listaCompras.isEmpty()) {
+            return;
         }
+
+        Venda venda = new Venda();
+        venda.setDataHora(LocalDateTime.now());
+        vendaService.adicionaVenda(venda);
+
+        double total = listaCompras.stream()
+                .peek(item -> item.setVenda(venda))
+                .mapToDouble(ItemVenda::subTotal)
+                .sum();
+
+        listaCompras.forEach(itemVendaService::adicionaItemVenda);
+
+        venda.setTotal(total);
+        vendaService.atualizaVenda(venda);
+
+        if (Boolean.TRUE.equals(notaFiscal.getStatusNotaFiscal())) {
+            GeradorNotaFiscal.geradorNotaFiscal(venda, listaCompras, notaFiscal.getCaminhoNotaFiscal());
+        }
+
+        listaCompras.clear();
+        FinalizarCompra.mensagemAgracedimentoCompra();
     }
+
 
     private void limparCarrinho(Set<ItemVenda> listaCompras) {
-        if (!listaCompras.isEmpty()) {
-            for (ItemVenda item : listaCompras) {
 
-                Produto produtoEmEstoque = produtoService.retornaProdutoPorCodigo(item.getProduto().getCodigoDeBarra());
-
-                int quantidadeReal = item.getQuantidade() + produtoEmEstoque.getQuantidade();
-
-                produtoEmEstoque.setQuantidade(quantidadeReal);
-
-                produtoService.atualizaProduto(produtoEmEstoque);
-
-            }
-            listaCompras.clear();
-
-            LimparCarrinho.alertaSacolaLimpaSucesso();
+        if (listaCompras == null || listaCompras.isEmpty()) {
+            return;
         }
+
+        listaCompras.forEach(item -> {
+            String codigo = item.getProduto().getCodigoDeBarra();
+
+            ProdutoAtualizarQuantidadeDTO quantidadeEmEstoque = produtoService.retornaProdutoAtualizarQuantidadeDTO(codigo);
+            quantidadeEmEstoque.setQuantidade(item.getQuantidade() + quantidadeEmEstoque.getQuantidade());
+
+            produtoService.atualizaQuantidadeProduto(codigo, quantidadeEmEstoque);
+        });
+
+        listaCompras.clear();
+        LimparCarrinho.alertaSacolaLimpaSucesso();
     }
+
 
     private String sair() {
         String senhaDigitada = ValidaSenha.exibirValidaSenha();
@@ -347,5 +337,14 @@ public class CaixaController {
         return ConstantesMenuFluxoCaixa.MENU_PRINCIPAL;
 
     }
+
+    private CategoriaResponseDTO selecionaCategoria() {
+        Object[] categorias = categoriaService.retornaCategorias();
+
+        Object resultadoCategoria = Categorias.categoriaEscolhida(categorias);
+
+        return categoriaService.converteResultadoParaCategoriaDTO(resultadoCategoria);
+    }
+
 
 }

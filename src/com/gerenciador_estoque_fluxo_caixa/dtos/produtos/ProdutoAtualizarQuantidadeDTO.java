@@ -6,6 +6,10 @@ public class ProdutoAtualizarQuantidadeDTO {
     public ProdutoAtualizarQuantidadeDTO() {
     }
 
+    public ProdutoAtualizarQuantidadeDTO(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
     public Integer getQuantidade() {
         return quantidade;
     }

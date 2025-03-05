@@ -1,9 +1,6 @@
 package com.gerenciador_estoque_fluxo_caixa.model.dao;
 
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoBaixoEstoqueResponseDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoResponseDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.*;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 
 import java.util.List;
@@ -14,6 +11,8 @@ public interface ProdutoDao {
     boolean atualizaProduto(Produto produto);
 
     ProdutoDTO retornaProdutoDTOPorCodigo(String codigo);
+
+    ProdutoAtualizarQuantidadeDTO retornaProdutoAtualizarQuantidadeDTO(String codigo);
 
     Produto retornaProdutoPorCodigo(String codigo);
 

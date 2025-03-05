@@ -1,9 +1,6 @@
 package com.gerenciador_estoque_fluxo_caixa.model.dao.imp;
 
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoBaixoEstoqueResponseDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoResponseDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.*;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.ProdutoDao;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 
@@ -92,6 +89,38 @@ public class ProdutoDaoHibernate implements ProdutoDao {
         } finally {
             entityManager.close();
         }
+    }
+
+    @Override
+    public ProdutoAtualizarQuantidadeDTO retornaProdutoAtualizarQuantidadeDTO(String codigo) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarQuantidadeDTO(p.quantidade) " +
+                    "FROM Produto p " +
+                    "WHERE p.codigoDeBarra = :codigoDeBarra";
+
+            List<ProdutoAtualizarQuantidadeDTO> produtos = entityManager.createQuery(jpql, ProdutoAtualizarQuantidadeDTO.class)
+                    .setParameter("codigoDeBarra", codigo)
+                    .getResultList();
+
+            if (produtos.isEmpty()) {
+                return null;
+            }
+
+            return produtos.stream().findFirst().orElse(null);
+
+
+        } catch (Exception erro) {
+            System.err.println("Problemas ao buscar por produto" + erro.getMessage());
+            return null;
+        } finally {
+            entityManager.close();
+        }
+
+
+
+
     }
 
     public Produto retornaProdutoPorCodigo(String codigo) {

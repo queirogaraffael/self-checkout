@@ -1,7 +1,9 @@
 package com.gerenciador_estoque_fluxo_caixa.service;
 
+import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.dao.VendaDao;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +14,14 @@ public class VendaService {
 
     public VendaService(VendaDao vendaDao) {
         this.vendaDao = vendaDao;
+    }
+
+    public void adicionaVenda(Venda venda){
+        vendaDao.adicionaVenda(venda);
+    }
+
+    public void atualizaVenda(Venda venda){
+        vendaDao.atualizarVenda(venda);
     }
 
     public boolean haVenda() {

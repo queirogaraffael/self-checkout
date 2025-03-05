@@ -9,6 +9,8 @@ import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 public interface VendaDao {
 	void adicionaVenda(Venda venda);
 
+	void atualizarVenda(Venda venda);
+
 	VendaResponseDTO retornaVendaDTOPorCodigo(Integer codigo);
 
 	List<VendaResponseDTO> retornaVendas();

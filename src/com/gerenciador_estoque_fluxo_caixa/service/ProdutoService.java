@@ -48,6 +48,9 @@ public class ProdutoService {
 
     }
 
+    public ProdutoAtualizarQuantidadeDTO retornaProdutoAtualizarQuantidadeDTO(String codigoBarra){
+        return produtoDao.retornaProdutoAtualizarQuantidadeDTO(codigoBarra);
+    }
 
     public boolean atualizaQuantidadeProduto(String codigo, ProdutoAtualizarQuantidadeDTO atualizarQuantidadeDTO) {
         Produto produto = produtoDao.retornaProdutoPorCodigo(codigo);

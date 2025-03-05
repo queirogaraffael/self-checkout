@@ -2,7 +2,7 @@ package com.gerenciador_estoque_fluxo_caixa.model.domain;
 
 public class NotaFiscal {
 
-	private Boolean statusNotaFiscal;
+	private boolean statusNotaFiscal;
 	private String caminhoNotaFiscal;
 
 	public NotaFiscal() {
@@ -10,7 +10,7 @@ public class NotaFiscal {
 		this.caminhoNotaFiscal = "";
 	}
 
-	public Boolean getStatusNotaFiscal() {
+	public boolean getStatusNotaFiscal() {
 		return statusNotaFiscal;
 	}
 

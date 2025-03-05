@@ -13,140 +13,156 @@ import java.util.List;
 
 public class VendaDaoHibernate implements VendaDao {
 
-	private EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory;
 
-	public VendaDaoHibernate(EntityManagerFactory entityManagerFactory) {
-		this.entityManagerFactory = entityManagerFactory;
-	}
+    public VendaDaoHibernate(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
 
-	public void adicionaVenda(Venda venda) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
+    public void adicionaVenda(Venda venda) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
 
-		try {
-			entityManager.persist(venda);
-			entityManager.getTransaction().commit();
+        try {
+            entityManager.persist(venda);
+            entityManager.getTransaction().commit();
 
-		} catch (Exception erro) {
-			System.err.println("Problemas em adicionar a venda" + erro.getMessage());
-		} finally {
-			entityManager.close();
-		}
+        } catch (Exception erro) {
+            System.err.println("Problemas em adicionar a venda" + erro.getMessage());
+        } finally {
+            entityManager.close();
+        }
 
-	}
+    }
 
-	public VendaResponseDTO retornaVendaDTOPorCodigo(Integer codigo) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+    @Override
+    public void atualizarVenda(Venda venda) {
 
-		try {
-			String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
-					"FROM Venda v WHERE v.codigo = :codigo";
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
 
-			List<VendaResponseDTO> vendas = entityManager.createQuery(jpql, VendaResponseDTO.class)
-					.setParameter("codigo", codigo)
-					.getResultList();
+        try {
+            entityManager.merge(venda);
+            entityManager.getTransaction().commit();
+        } catch (Exception erro) {
+            entityManager.getTransaction().rollback();
+            System.err.println("Problema na atualizacao da venda." + erro.getMessage());
+        } finally {
+            entityManager.close();
+        }
 
-			if (vendas.isEmpty()) {
-				return null;
-			}
+    }
 
-			return vendas.stream().findFirst().orElse(null);
+    public VendaResponseDTO retornaVendaDTOPorCodigo(Integer codigo) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-		} catch (Exception erro) {
-			System.err.println("Problemas ao buscar por venda: " + erro.getMessage());
-			return null;
+        try {
+            String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
+                    "FROM Venda v WHERE v.codigo = :codigo";
 
-		} finally {
-			if (entityManager.isOpen()) {
-				entityManager.close();
-			}
-		}
-	}
+            List<VendaResponseDTO> vendas = entityManager.createQuery(jpql, VendaResponseDTO.class)
+                    .setParameter("codigo", codigo)
+                    .getResultList();
 
+            if (vendas.isEmpty()) {
+                return null;
+            }
 
+            return vendas.stream().findFirst().orElse(null);
 
-	public List<VendaResponseDTO> retornaVendas() {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+        } catch (Exception erro) {
+            System.err.println("Problemas ao buscar por venda: " + erro.getMessage());
+            return null;
 
-		try {
-			String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
-					"FROM Venda v";
-
-			return entityManager.createQuery(jpql, VendaResponseDTO.class).getResultList();
-
-		} catch (Exception erro) {
-			System.err.println("Erro ao tentar gerar relatório de vendas: " + erro.getMessage());
-			return Collections.emptyList();
-		} finally {
-			if (entityManager.isOpen()) {
-				entityManager.close();
-			}
-		}
-	}
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
 
 
+    public List<VendaResponseDTO> retornaVendas() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-	public List<VendaResponseDTO> retornaVendasPorData(LocalDate data) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
+                    "FROM Venda v";
 
-		try {
+            return entityManager.createQuery(jpql, VendaResponseDTO.class).getResultList();
 
-			String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
-					"FROM Venda v WHERE CAST(v.dataHora AS date) = :data";
+        } catch (Exception erro) {
+            System.err.println("Erro ao tentar gerar relatório de vendas: " + erro.getMessage());
+            return Collections.emptyList();
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
 
-			return entityManager
-					.createQuery(jpql, VendaResponseDTO.class)
-					.setParameter("data", Date.valueOf(data)).getResultList();
 
-		} catch (Exception erro) {
-			System.err.println("Erro em buscar vendas por data: " + erro.getMessage());
-			return Collections.emptyList();
-		} finally {
-			entityManager.close();
-		}
+    public List<VendaResponseDTO> retornaVendasPorData(LocalDate data) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-	}
+        try {
 
-	public boolean haVenda() {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+            String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
+                    "FROM Venda v WHERE CAST(v.dataHora AS date) = :data";
 
-		try {
-			Long quantidade = entityManager.createQuery("SELECT COUNT(v) FROM Venda v", Long.class).getSingleResult();
+            return entityManager
+                    .createQuery(jpql, VendaResponseDTO.class)
+                    .setParameter("data", Date.valueOf(data)).getResultList();
 
-			if (quantidade == 0) {
-				return false;
-			} else {
-				return true;
-			}
+        } catch (Exception erro) {
+            System.err.println("Erro em buscar vendas por data: " + erro.getMessage());
+            return Collections.emptyList();
+        } finally {
+            entityManager.close();
+        }
 
-		} catch (Exception erro) {
-			System.err.println("Erro ao tentar verificar se tabela de vendas esta vazia: " + erro.getMessage());
-			return false;
-		} finally {
-			entityManager.close();
-		}
+    }
 
-	}
+    public boolean haVenda() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-	@Override
-	public boolean haVendaComEsseCodigo(Integer codigo) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            Long quantidade = entityManager.createQuery("SELECT COUNT(v) FROM Venda v", Long.class).getSingleResult();
 
-		try {
-			String jpql = "SELECT COUNT(*) FROM Venda v WHERE v.codigo = :codigo";
+            if (quantidade == 0) {
+                return false;
+            } else {
+                return true;
+            }
 
-			Long quantidade = entityManager.createQuery(jpql, Long.class)
-					.setParameter("codigo", codigo)
-					.getSingleResult();
+        } catch (Exception erro) {
+            System.err.println("Erro ao tentar verificar se tabela de vendas esta vazia: " + erro.getMessage());
+            return false;
+        } finally {
+            entityManager.close();
+        }
 
-			return quantidade > 0;
-		} catch (Exception erro) {
-			System.err.println("Erro ao verificar se existe venda com o código informado: " + erro.getMessage());
-			return false;
-		} finally {
-			entityManager.close();
-		}
-	}
+    }
+
+    @Override
+    public boolean haVendaComEsseCodigo(Integer codigo) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            String jpql = "SELECT COUNT(*) FROM Venda v WHERE v.codigo = :codigo";
+
+            Long quantidade = entityManager.createQuery(jpql, Long.class)
+                    .setParameter("codigo", codigo)
+                    .getSingleResult();
+
+            return quantidade > 0;
+        } catch (Exception erro) {
+            System.err.println("Erro ao verificar se existe venda com o código informado: " + erro.getMessage());
+            return false;
+        } finally {
+            entityManager.close();
+        }
+    }
 
 
 }

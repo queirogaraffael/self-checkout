@@ -18,16 +18,16 @@ public class ItemVendaService {
         return listaCompras.stream().anyMatch(p -> p.getProduto().getCodigoDeBarra().equals(codigo));
     }
 
-    public static Double somaPrecos(Set<ItemVenda> listaCompras) {
+    public static Double somaPrecos(Set<ItemVendaDTO> listaCompras) {
         double total = 0;
 
-        for (ItemVenda p : listaCompras) {
+        for (ItemVendaDTO p : listaCompras) {
             total += p.getProduto().getPreco() * p.getQuantidade();
         }
         return total;
     }
 
-    public void removeProduto(Set<ItemVenda> listaCompras, String codigo) {
+    public void removeProduto(Set<ItemVendaDTO> listaCompras, String codigo) {
         listaCompras.removeIf(p -> p.getProduto().getCodigoDeBarra().equals(codigo));
     }
 
@@ -45,7 +45,7 @@ public class ItemVendaService {
     }
 
     public void adicionaItemVenda(ItemVenda itemVenda) {
-
+        itemVendaDao.adicionaItemVenda(itemVenda);
     }
 
     public static String geraRelatorioItemVenda(Set<ItemVendaDTO> itens) {

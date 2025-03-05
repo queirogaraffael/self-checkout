@@ -29,12 +29,20 @@ public class ItemVendaDTO {
         return venda;
     }
 
+    public void setVenda(VendaDTO venda) {
+        this.venda = venda;
+    }
+
     public Integer getQuantidade() {
         return quantidade;
     }
 
     public Double getSubTotal() {
         return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
     }
 }
 

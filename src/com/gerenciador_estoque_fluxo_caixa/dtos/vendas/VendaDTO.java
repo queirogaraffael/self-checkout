@@ -27,7 +27,15 @@ public class VendaDTO {
         return dataHora;
     }
 
+    public void setDataHora(LocalDateTime dataHora) {
+        this.dataHora = dataHora;
+    }
+
     public Double getTotal() {
         return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
     }
 }
