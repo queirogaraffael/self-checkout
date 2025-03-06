@@ -16,7 +16,7 @@ import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 
 public class GeradorNotaFiscal {
 
-	public static void geradorNotaFiscal(VendaResponseDTO venda, Set<ItemVendaDTO> listaCompras, String caminho) {
+	public static void geradorNotaFiscal(Venda venda, Set<ItemVenda> listaCompras, String caminho) {
 		String codigo = String.valueOf(venda.getCodigo()) + ".txt";
 
 		StringBuilder sb = new StringBuilder();

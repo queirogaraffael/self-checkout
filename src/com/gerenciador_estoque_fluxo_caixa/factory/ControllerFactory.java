@@ -31,7 +31,7 @@ public class ControllerFactory {
 
     public ItemVendaService createItemVendaService() {
         if (itemVendaService == null) {
-            itemVendaService = new ItemVendaService(daoFactory.createItemVendaDao());
+            itemVendaService = new ItemVendaService(daoFactory.createItemVendaDao(), daoFactory.createProdutoDao());
         }
         return itemVendaService;
     }

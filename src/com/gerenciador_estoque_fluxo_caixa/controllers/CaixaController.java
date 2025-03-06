@@ -2,12 +2,9 @@ package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuFluxoCaixa;
 import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.itemvenda.ItemVendaDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarQuantidadeDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
-import com.gerenciador_estoque_fluxo_caixa.model.entities.Produto;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
@@ -102,92 +99,83 @@ public class CaixaController {
     }
 
 
-    private void adicionaProduto(Set<ItemVenda> listaCompras) {
+    private boolean processarAtualizacaoQuantidade(String codigoProduto, ItemVenda item, int quantidadeAtualNoCarrinho, int quantidadeDesejadaTotal) {
+        ProdutoAtualizarQuantidadeDTO estoque = produtoService.retornaProdutoAtualizarQuantidadeDTO(codigoProduto);
+        if (estoque == null) {
+            AdicionarProduto.alertaProdutoSemEstoque();
+            return false;
+        }
 
+        int totalDisponivel = quantidadeAtualNoCarrinho + estoque.getQuantidade();
+
+        if (quantidadeDesejadaTotal > totalDisponivel) {
+            int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
+            if (opcao == 0) {
+                quantidadeDesejadaTotal = totalDisponivel;
+            } else {
+                AdicionarProduto.alertaCompraProdutoCancelada();
+                return false;
+            }
+        }
+
+        if (item != null) {
+            item.setQuantidade(quantidadeDesejadaTotal);
+        }
+        estoque.setQuantidade(totalDisponivel - quantidadeDesejadaTotal);
+        produtoService.atualizaQuantidadeProduto(codigoProduto, estoque);
+        return true;
+    }
+
+
+    private void adicionaProduto(Set<ItemVenda> listaCompras) {
         String codigoProduto = AdicionarProduto.leCodigoProduto();
 
         if (ItemVendaService.contemProduto(listaCompras, codigoProduto)) {
-
-            Integer novaQuantidade = AdicionarProduto.leNovamenteQuantidade();
-
-            ItemVenda prod = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
-
-            Produto produtoEstoque = produtoService.retornaProdutoPorCodigo(codigoProduto);
-
-            int quantidadeRealProduto = prod.getQuantidade() + produtoEstoque.getQuantidade();
-
-            if (quantidadeRealProduto >= novaQuantidade) {
-
-                prod.setQuantidade(novaQuantidade);
-                produtoEstoque.setQuantidade(quantidadeRealProduto - novaQuantidade);
-
-                produtoService.atualizaProduto(produtoEstoque);
-
-            } else if (quantidadeRealProduto <= 0) {
-                AdicionarProduto.alertaProdutoIndisponivel();
-            } else {
-
-                int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
-
-                if (opcao == 0) {
-
-                    prod.setQuantidade(quantidadeRealProduto);
-                    produtoEstoque.setQuantidade(0);
-
-                    produtoService.atualizaProduto(produtoEstoque);
-
-                } else {
-                    AdicionarProduto.alertaCompraProdutoCancelada();
-                }
-            }
-
+            ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
+            int quantidadeAtual = itemVenda.getQuantidade();
+            int quantidadeAdicionar = LeDadosProduto.leQuantidadeProduto();
+            int novaQuantidade = quantidadeAtual + quantidadeAdicionar;
+            processarAtualizacaoQuantidade(codigoProduto, itemVenda, quantidadeAtual, novaQuantidade);
         } else {
-
-            Produto produto = produtoService.retornaProdutoPorCodigo(codigoProduto);
-
-            if (produto != null) {
-                Integer quantidade = LeDadosProduto.leQuantidadeProduto();
-
-                if (produto.getQuantidade() >= quantidade) {
-
-                    ItemVenda item = new ItemVenda(produto, quantidade);
-
-                    listaCompras.add(item);
-
-                    produto.setQuantidade(produto.getQuantidade() - quantidade);
-
-                    produtoService.atualizaProduto(produto);
-
-                } else if (produto.getQuantidade() == 0) {
-                    AdicionarProduto.alertaProdutoSemEstoque();
-                } else {
-
-                    int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
-
-                    if (opcao == 0) {
-
-                        ItemVenda item = new ItemVenda(produto, produto.getQuantidade());
-
-                        listaCompras.add(item);
-
-                        produto.setQuantidade(0);
-                        produtoService.atualizaProduto(produto);
-
-                    } else {
-                        AdicionarProduto.alertaCompraProdutoCancelada();
-                    }
-                }
-            } else {
-                AdicionarProduto.alertaProdutoSemEstoque();
-
+            int quantidade = LeDadosProduto.leQuantidadeProduto();
+            ItemVenda item = itemVendaService.criaItemVendaPorCodigoProduto(codigoProduto, 0);
+            if (processarAtualizacaoQuantidade(codigoProduto, item, 0, quantidade)) {
+                listaCompras.add(item);
             }
         }
     }
 
+    private void modificarQuantidade(Set<ItemVenda> listaCompras) {
+        if (listaCompras.isEmpty()) {
+            ModificarQuantidade.alertaCarrinhoVazio();
+            return;
+        }
+
+        String codigo = LeDadosProduto.leCodigoBarraProduto();
+        if (!ItemVendaService.contemProduto(listaCompras, codigo)) {
+            ModificarQuantidade.alertaProdutoInvalido();
+            return;
+        }
+
+        ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
+        int quantidadeAtual = itemVenda.getQuantidade();
+        Integer novaQuantidade = LeDadosProduto.leQuantidadeProduto();
+
+        if (novaQuantidade <= 0) {
+            ModificarQuantidade.alertaProdutoInvalido();
+            return;
+        }
+
+        if (processarAtualizacaoQuantidade(codigo, itemVenda, quantidadeAtual, novaQuantidade)) {
+            ModificarQuantidade.alertaQuantidadeProdutoModifica();
+        }
+    }
+
+
     private void listarSacola(Set<ItemVenda> listaCompras) {
         double subtotal = ItemVendaService.somaPrecos(listaCompras);
 
-        String relatorioListaCompras = ItemVendaService.geraRelatorioItemVenda(listaCompras);
+        String relatorioListaCompras = ItemVendaService.geraRelatorioItemVenda(listaCompras );
 
         ListarSacola.exibirSacola(subtotal, relatorioListaCompras);
 
@@ -233,48 +221,6 @@ public class CaixaController {
         listaCompras.remove(itemVenda);
 
         RemoverProduto.alertaProdutoRemovidoComSucesso();
-    }
-
-
-    private void modificarQuantidade(Set<ItemVenda> listaCompras) {
-        if (listaCompras.isEmpty()) {
-            ModificarQuantidade.alertaCarrinhoVazio();
-            return;
-        }
-
-        String codigo = LeDadosProduto.leCodigoBarraProduto();
-        if (!ItemVendaService.contemProduto(listaCompras, codigo)) {
-            ModificarQuantidade.alertaProdutoInvalido();
-            return;
-        }
-
-        ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
-        ProdutoAtualizarQuantidadeDTO estoqueAtual = produtoService.retornaProdutoAtualizarQuantidadeDTO(codigo);
-        int quantidadeTotalDisponivel = itemVenda.getQuantidade() + estoqueAtual.getQuantidade();
-
-        Integer novaQuantidade = LeDadosProduto.leQuantidadeProduto();
-
-        if (novaQuantidade <= 0) {
-            ModificarQuantidade.alertaProdutoInvalido();
-            return;
-        }
-
-        if (quantidadeTotalDisponivel >= novaQuantidade) {
-            itemVenda.setQuantidade(novaQuantidade);
-            estoqueAtual.setQuantidade(quantidadeTotalDisponivel - novaQuantidade);
-        } else {
-            int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
-            if (opcao == 0) {
-                itemVenda.setQuantidade(quantidadeTotalDisponivel);
-                estoqueAtual.setQuantidade(0);
-            } else {
-                AdicionarProduto.alertaCompraProdutoCancelada();
-                return;
-            }
-        }
-
-        produtoService.atualizaQuantidadeProduto(codigo, estoqueAtual);
-        ModificarQuantidade.alertaQuantidadeProdutoModifica();
     }
 
 

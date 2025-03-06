@@ -7,6 +7,7 @@ import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,10 +36,8 @@ public class ItemVendaDaoHibernate implements ItemVendaDao {
 
 	}
 
-	public Set<ItemVendaDTO> retornaItensVenda(Integer codigoVenda) {
-
+	public Set<ItemVenda> retornaItensVenda(Integer codigoVenda) {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
 
 		try {
 			String jpql = "SELECT p FROM ItemVenda p WHERE p.id.venda.codigo = :codigoVenda";
@@ -48,17 +47,16 @@ public class ItemVendaDaoHibernate implements ItemVendaDao {
 					.setParameter("codigoVenda", codigoVenda)
 					.getResultList();
 
-			return itens.stream()
-					.map(ItemVendaDTO::new)
-					.collect(Collectors.toSet());
+			return new HashSet<>(itens);
 
 		} catch (Exception erro) {
-			System.err.println("Erro ao retornar itens venda. " + erro);
+			System.err.println("Erro ao retornar itens venda: " + erro);
 			return Collections.emptySet();
 		} finally {
 			entityManager.close();
 		}
 	}
+
 
 
 }

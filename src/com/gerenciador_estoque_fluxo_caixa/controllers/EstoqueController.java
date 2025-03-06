@@ -2,13 +2,13 @@ package com.gerenciador_estoque_fluxo_caixa.controllers;
 
 import com.gerenciador_estoque_fluxo_caixa.constantes.ConstantesMenuEstoque;
 import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
-import com.gerenciador_estoque_fluxo_caixa.dtos.itemvenda.ItemVendaDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarPrecoDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarQuantidadeDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Categoria;
+import com.gerenciador_estoque_fluxo_caixa.model.entities.ItemVenda;
 import com.gerenciador_estoque_fluxo_caixa.service.CategoriaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ItemVendaService;
 import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
@@ -277,7 +277,7 @@ public class EstoqueController {
 
                 VendaResponseDTO vendaDTO = vendaService.retornaVenda(codigo);
 
-                Set<ItemVendaDTO> itens = itemVendaService.retornaItensVenda(codigo);
+                Set<ItemVenda> itens = itemVendaService.retornaItensVenda(codigo);
 
                 String relatorioItensVenda = ItemVendaService.geraRelatorioItemVenda(itens);
 

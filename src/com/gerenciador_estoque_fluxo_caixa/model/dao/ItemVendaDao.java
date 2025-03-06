@@ -9,6 +9,6 @@ import com.gerenciador_estoque_fluxo_caixa.model.entities.Venda;
 public interface ItemVendaDao {
 	void adicionaItemVenda(ItemVenda itemVenda);
 
-	Set<ItemVendaDTO> retornaItensVenda(Integer codigoVenda);
+	Set<ItemVenda> retornaItensVenda(Integer codigoVenda);
 
 }
