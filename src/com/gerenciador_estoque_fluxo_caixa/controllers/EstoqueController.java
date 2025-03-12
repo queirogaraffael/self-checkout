@@ -15,16 +15,16 @@ import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 import com.gerenciador_estoque_fluxo_caixa.ui.GerenciadorDeEstoqueView;
 import com.gerenciador_estoque_fluxo_caixa.ui.NotaFiscalUI;
-import com.gerenciador_estoque_fluxo_caixa.ui.categorias.Categorias;
-import com.gerenciador_estoque_fluxo_caixa.ui.datas.AlertasData;
-import com.gerenciador_estoque_fluxo_caixa.ui.datas.LeData;
-import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoView;
-import com.gerenciador_estoque_fluxo_caixa.ui.produtos.EditarProduto;
-import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProduto;
-import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProduto;
-import com.gerenciador_estoque_fluxo_caixa.ui.vendas.AlertasVenda;
-import com.gerenciador_estoque_fluxo_caixa.ui.vendas.LeDadosVenda;
-import com.gerenciador_estoque_fluxo_caixa.ui.vendas.PrintarVenda;
+import com.gerenciador_estoque_fluxo_caixa.ui.categorias.CategoriasUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.datas.AlertasDataUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.datas.LeDataUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.EditarProdutoUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProdutoUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProdutoUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.vendas.AlertasVendaUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.vendas.LeDadosVendaUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.vendas.PrintarVendaUI;
 import com.gerenciador_estoque_fluxo_caixa.ui.vendas.VendaUI;
 import com.gerenciador_estoque_fluxo_caixa.utils.ManipulacaoData;
 import com.gerenciador_estoque_fluxo_caixa.utils.VerificaDiretorio;
@@ -111,22 +111,22 @@ public class EstoqueController {
 
     private void cadastrarProduto() {
 
-        String codigoBarra = LeDadosProduto.leCodigoBarraProduto();
+        String codigoBarra = LeDadosProdutoUI.leCodigoBarraProduto();
 
         if (produtoService.haProdutoComMesmoCodigoBarra(codigoBarra)) {
-            AlertasProdutoView.alertaProdutoJaCadastrado();
+            AlertasProdutoUI.alertaProdutoJaCadastrado();
         } else {
 
-            String nome = LeDadosProduto.leNomeProduto();
-            Double valor = LeDadosProduto.leValorProduto();
-            Integer quantidade = LeDadosProduto.leQuantidadeProduto();
+            String nome = LeDadosProdutoUI.leNomeProduto();
+            Double valor = LeDadosProdutoUI.leValorProduto();
+            Integer quantidade = LeDadosProdutoUI.leQuantidadeProduto();
 
             CategoriaResponseDTO categoria = selecionaCategoria();
 
             ProdutoCreateDTO produtoCreateDTO = produtoService.adicionaProduto(new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, new Categoria(categoria.getId(), categoria.getNome())));
 
             if (produtoCreateDTO != null) {
-                PrintaProduto.printaProdutoCriado(produtoCreateDTO);
+                PrintaProdutoUI.printaProdutoCriado(produtoCreateDTO);
             }
 
         }
@@ -135,32 +135,32 @@ public class EstoqueController {
 
     private void editarProduto() {
 
-        int opcaoEditar = EditarProduto.opcaoEditar();
+        int opcaoEditar = EditarProdutoUI.opcaoEditar();
 
         if (opcaoEditar != 2) {
-            String codigo = LeDadosProduto.leCodigoBarraProduto();
+            String codigo = LeDadosProdutoUI.leCodigoBarraProduto();
 
             if (produtoService.haProdutoComMesmoCodigoBarra(codigo)) {
                 boolean statusAtualizacao;
 
                 if (opcaoEditar == 0) {
                     ProdutoAtualizarPrecoDTO atualizarPrecoDTO = new ProdutoAtualizarPrecoDTO();
-                    Double novoPreco = EditarProduto.leNovoPreco();
+                    Double novoPreco = EditarProdutoUI.leNovoPreco();
                     atualizarPrecoDTO.setPreco(novoPreco);
 
                   statusAtualizacao = produtoService.atualizaPrecoProduto(codigo, atualizarPrecoDTO);
 
                 } else {
                     ProdutoAtualizarQuantidadeDTO atualizarQuantidadeDTO = new ProdutoAtualizarQuantidadeDTO();
-                    Integer novaQuantidade = EditarProduto.leNovaQuantidade();
+                    Integer novaQuantidade = EditarProdutoUI.leNovaQuantidade();
                     atualizarQuantidadeDTO.setQuantidade(novaQuantidade);
 
                     statusAtualizacao = produtoService.atualizaQuantidadeProduto(codigo,atualizarQuantidadeDTO);
                 }
 
-                AlertasProdutoView.alertaAtualizacaoProduto(statusAtualizacao);
+                AlertasProdutoUI.alertaAtualizacaoProduto(statusAtualizacao);
             } else {
-                EditarProduto.alertaProdutoNaoCadastradoAinda();
+                EditarProdutoUI.alertaProdutoNaoCadastradoAinda();
             }
 
         }
@@ -171,7 +171,7 @@ public class EstoqueController {
     private void listarProdutos() {
 
         if (produtoService.haProduto()) {
-            AlertasProdutoView.alertaListaProdutoVazia();
+            AlertasProdutoUI.alertaListaProdutoVazia();
         } else {
             CategoriaResponseDTO categoria = selecionaCategoria();
 
@@ -179,7 +179,7 @@ public class EstoqueController {
 
             String resultado = produtoService.geraRelatorioProdutosPorCategoria(idCategoria);
 
-            PrintaProduto.printaProdutos(resultado);
+            PrintaProdutoUI.printaProdutos(resultado);
         }
 
     }
@@ -190,16 +190,16 @@ public class EstoqueController {
         String resultado = produtoService.geraRelatorioProdutosEstoqueBaixo();
 
         if (resultado.isEmpty()) {
-            AlertasProdutoView.alertaProdutoEstoqueBaixo();
+            AlertasProdutoUI.alertaProdutoEstoqueBaixo();
         } else {
-            PrintaProduto.printaProdutos(resultado);
+            PrintaProdutoUI.printaProdutos(resultado);
         }
 
     }
 
     private void listarCategorias() {
         Object[] categorias = categoriaService.retornaCategorias();
-        Categorias.exibirCategorias(categorias);
+        CategoriasUI.exibirCategorias(categorias);
     }
 
 
@@ -235,11 +235,11 @@ public class EstoqueController {
             if (opcaoListagem == 0) {
 
                 String resultadoListagemVendas = vendaService.retornaRelatorioVendas();
-                PrintarVenda.printarVenda(resultadoListagemVendas);
+                PrintarVendaUI.printarVenda(resultadoListagemVendas);
 
             } else if (opcaoListagem == 1) {
 
-                String dataString = LeData.leData();
+                String dataString = LeDataUI.leData();
                 boolean formatoAprovado = ManipulacaoData.verificaFormatoData(dataString);
 
                 if (formatoAprovado) {
@@ -250,28 +250,28 @@ public class EstoqueController {
                         String resultadoListagemVendasPorData = vendaService.retornaRelatorioVendasPorData(data);
 
                         if (resultadoListagemVendasPorData.isEmpty()) {
-                            AlertasVenda.semResultadoVendaParaData();
+                            AlertasVendaUI.semResultadoVendaParaData();
                         } else {
-                            PrintarVenda.printarVenda(resultadoListagemVendasPorData);
+                            PrintarVendaUI.printarVenda(resultadoListagemVendasPorData);
                         }
 
                     } else {
-                        AlertasData.alertaDataPosteriorAtual();
+                        AlertasDataUI.alertaDataPosteriorAtual();
                     }
 
                 } else {
-                    AlertasData.alertaProblemaFormatoData();
+                    AlertasDataUI.alertaProblemaFormatoData();
                 }
 
             } else {
-                AlertasVenda.alertaSemVendaRegistrada();
+                AlertasVendaUI.alertaSemVendaRegistrada();
             }
         }
     }
 
     private void detalharVenda() {
         if (!vendaService.haVenda()) {
-            int codigo = LeDadosVenda.leCodigoVenda();
+            int codigo = LeDadosVendaUI.leCodigoVenda();
 
             if (vendaService.haVendaComEsseCodigo(codigo)) {
 
@@ -283,21 +283,21 @@ public class EstoqueController {
 
                 String resultado = vendaService.gerarResumoVenda(vendaDTO, relatorioItensVenda);
 
-                PrintarVenda.printarVenda(resultado);
+                PrintarVendaUI.printarVenda(resultado);
 
             } else {
-                AlertasVenda.alertaVendaInvalida();
+                AlertasVendaUI.alertaVendaInvalida();
             }
 
         } else {
-            AlertasVenda.alertaSemVendaRegistrada();
+            AlertasVendaUI.alertaSemVendaRegistrada();
         }
     }
 
     private CategoriaResponseDTO selecionaCategoria() {
         Object[] categorias = categoriaService.retornaCategorias();
 
-        Object resultadoCategoria = Categorias.categoriaEscolhida(categorias);
+        Object resultadoCategoria = CategoriasUI.categoriaEscolhida(categorias);
 
         return categoriaService.converteResultadoParaCategoriaDTO(resultadoCategoria);
     }

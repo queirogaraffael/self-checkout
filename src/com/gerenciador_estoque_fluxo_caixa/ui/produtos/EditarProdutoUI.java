@@ -2,7 +2,7 @@ package com.gerenciador_estoque_fluxo_caixa.ui.produtos;
 
 import javax.swing.*;
 
-public class EditarProduto {
+public class EditarProdutoUI {
 
     private static Object[] opcoes = {"Preco", "Quantidade", "Voltar"};
 

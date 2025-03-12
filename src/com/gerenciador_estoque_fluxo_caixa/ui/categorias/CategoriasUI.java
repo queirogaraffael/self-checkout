@@ -2,7 +2,7 @@ package com.gerenciador_estoque_fluxo_caixa.ui.categorias;
 
 import javax.swing.*;
 
-public class Categorias {
+public class CategoriasUI {
     public static void exibirCategorias(Object[] categorias){
         JOptionPane.showMessageDialog(null, categorias);
     }

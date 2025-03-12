@@ -12,11 +12,11 @@ import com.gerenciador_estoque_fluxo_caixa.service.ProdutoService;
 import com.gerenciador_estoque_fluxo_caixa.service.VendaService;
 import com.gerenciador_estoque_fluxo_caixa.ui.ValidaSenha;
 import com.gerenciador_estoque_fluxo_caixa.ui.caixaController.*;
-import com.gerenciador_estoque_fluxo_caixa.ui.categorias.Categorias;
-import com.gerenciador_estoque_fluxo_caixa.ui.fluxoDeCaixa.FluxoDeCaixaView;
-import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoView;
-import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProduto;
-import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProduto;
+import com.gerenciador_estoque_fluxo_caixa.ui.categorias.CategoriasUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.fluxoDeCaixa.FluxoDeCaixaUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.AlertasProdutoUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.LeDadosProdutoUI;
+import com.gerenciador_estoque_fluxo_caixa.ui.produtos.PrintaProdutoUI;
 import com.gerenciador_estoque_fluxo_caixa.utils.AutenticadorDeSenha;
 import com.gerenciador_estoque_fluxo_caixa.utils.GeradorNotaFiscal;
 
@@ -53,7 +53,7 @@ public class CaixaController {
 
         do {
             try {
-                opcaoMenuFluxoDeCaixa = FluxoDeCaixaView.exibirMenuFluxoDeCaixa();
+                opcaoMenuFluxoDeCaixa = FluxoDeCaixaUI.exibirMenuFluxoDeCaixa();
 
                 switch (opcaoMenuFluxoDeCaixa) {
 
@@ -92,7 +92,7 @@ public class CaixaController {
 
                 }
             } catch (NumberFormatException erro) {
-                MenuCaixaController.alertaEntradaInvalida();
+                MenuCaixaControllerUI.alertaEntradaInvalida();
             }
 
         } while (!opcaoMenuFluxoDeCaixa.equals(ConstantesMenuFluxoCaixa.MENU_PRINCIPAL));
@@ -102,18 +102,18 @@ public class CaixaController {
     private boolean processarAtualizacaoQuantidade(String codigoProduto, ItemVenda item, int quantidadeAtualNoCarrinho, int quantidadeDesejadaTotal) {
         ProdutoAtualizarQuantidadeDTO estoque = produtoService.retornaProdutoAtualizarQuantidadeDTO(codigoProduto);
         if (estoque == null) {
-            AdicionarProduto.alertaProdutoSemEstoque();
+            AdicionarProdutoUi.alertaProdutoSemEstoque();
             return false;
         }
 
         int totalDisponivel = quantidadeAtualNoCarrinho + estoque.getQuantidade();
 
         if (quantidadeDesejadaTotal > totalDisponivel) {
-            int opcao = AdicionarProduto.exibirDialogoConfirmacaoAdicionarItensRestantes();
+            int opcao = AdicionarProdutoUi.exibirDialogoConfirmacaoAdicionarItensRestantes();
             if (opcao == 0) {
                 quantidadeDesejadaTotal = totalDisponivel;
             } else {
-                AdicionarProduto.alertaCompraProdutoCancelada();
+                AdicionarProdutoUi.alertaCompraProdutoCancelada();
                 return false;
             }
         }
@@ -128,16 +128,16 @@ public class CaixaController {
 
 
     private void adicionaProduto(Set<ItemVenda> listaCompras) {
-        String codigoProduto = AdicionarProduto.leCodigoProduto();
+        String codigoProduto = AdicionarProdutoUi.leCodigoProduto();
 
         if (ItemVendaService.contemProduto(listaCompras, codigoProduto)) {
             ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
             int quantidadeAtual = itemVenda.getQuantidade();
-            int quantidadeAdicionar = LeDadosProduto.leQuantidadeProduto();
+            int quantidadeAdicionar = LeDadosProdutoUI.leQuantidadeProduto();
             int novaQuantidade = quantidadeAtual + quantidadeAdicionar;
             processarAtualizacaoQuantidade(codigoProduto, itemVenda, quantidadeAtual, novaQuantidade);
         } else {
-            int quantidade = LeDadosProduto.leQuantidadeProduto();
+            int quantidade = LeDadosProdutoUI.leQuantidadeProduto();
             ItemVenda item = itemVendaService.criaItemVendaPorCodigoProduto(codigoProduto, 0);
             if (processarAtualizacaoQuantidade(codigoProduto, item, 0, quantidade)) {
                 listaCompras.add(item);
@@ -147,27 +147,27 @@ public class CaixaController {
 
     private void modificarQuantidade(Set<ItemVenda> listaCompras) {
         if (listaCompras.isEmpty()) {
-            ModificarQuantidade.alertaCarrinhoVazio();
+            ModificarQuantidadeUI.alertaCarrinhoVazio();
             return;
         }
 
-        String codigo = LeDadosProduto.leCodigoBarraProduto();
+        String codigo = LeDadosProdutoUI.leCodigoBarraProduto();
         if (!ItemVendaService.contemProduto(listaCompras, codigo)) {
-            ModificarQuantidade.alertaProdutoInvalido();
+            ModificarQuantidadeUI.alertaProdutoInvalido();
             return;
         }
 
         ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
         int quantidadeAtual = itemVenda.getQuantidade();
-        Integer novaQuantidade = LeDadosProduto.leQuantidadeProduto();
+        Integer novaQuantidade = LeDadosProdutoUI.leQuantidadeProduto();
 
         if (novaQuantidade <= 0) {
-            ModificarQuantidade.alertaProdutoInvalido();
+            ModificarQuantidadeUI.alertaProdutoInvalido();
             return;
         }
 
         if (processarAtualizacaoQuantidade(codigo, itemVenda, quantidadeAtual, novaQuantidade)) {
-            ModificarQuantidade.alertaQuantidadeProdutoModifica();
+            ModificarQuantidadeUI.alertaQuantidadeProdutoModifica();
         }
     }
 
@@ -177,7 +177,7 @@ public class CaixaController {
 
         String relatorioListaCompras = ItemVendaService.geraRelatorioItemVenda(listaCompras );
 
-        ListarSacola.exibirSacola(subtotal, relatorioListaCompras);
+        ListarSacolaUi.exibirSacola(subtotal, relatorioListaCompras);
 
     }
 
@@ -185,7 +185,7 @@ public class CaixaController {
     private void listarEstoque() {
 
         if (produtoService.haProduto()) {
-            AlertasProdutoView.alertaListaProdutoVazia();
+            AlertasProdutoUI.alertaListaProdutoVazia();
         } else {
             CategoriaResponseDTO categoria = selecionaCategoria();
 
@@ -193,7 +193,7 @@ public class CaixaController {
 
             String resultado = produtoService.geraRelatorioProdutosPorCategoria(idCategoria);
 
-            PrintaProduto.printaProdutos(resultado);
+            PrintaProdutoUI.printaProdutos(resultado);
         }
 
     }
@@ -201,14 +201,14 @@ public class CaixaController {
     private void removerProduto(Set<ItemVenda> listaCompras) {
 
         if (Objects.isNull(listaCompras) || listaCompras.isEmpty()) {
-            RemoverProduto.alertaSacolaVazia();
+            RemoverProdutoUI.alertaSacolaVazia();
             return;
         }
 
-        String codigoProduto = LeDadosProduto.leCodigoBarraProduto();
+        String codigoProduto = LeDadosProdutoUI.leCodigoBarraProduto();
 
         if (!ItemVendaService.contemProduto(listaCompras, codigoProduto)) {
-            RemoverProduto.alertaProdutoJaNaoConstava();
+            RemoverProdutoUI.alertaProdutoJaNaoConstava();
             return;
         }
 
@@ -220,7 +220,7 @@ public class CaixaController {
         produtoService.atualizaQuantidadeProduto(codigoProduto, produtoEstoque);
         listaCompras.remove(itemVenda);
 
-        RemoverProduto.alertaProdutoRemovidoComSucesso();
+        RemoverProdutoUI.alertaProdutoRemovidoComSucesso();
     }
 
 
@@ -248,7 +248,7 @@ public class CaixaController {
         }
 
         listaCompras.clear();
-        FinalizarCompra.mensagemAgracedimentoCompra();
+        FinalizarCompraUi.mensagemAgracedimentoCompra();
     }
 
 
@@ -268,7 +268,7 @@ public class CaixaController {
         });
 
         listaCompras.clear();
-        LimparCarrinho.alertaSacolaLimpaSucesso();
+        LimparCarrinhoUi.alertaSacolaLimpaSucesso();
     }
 
 
@@ -287,7 +287,7 @@ public class CaixaController {
     private CategoriaResponseDTO selecionaCategoria() {
         Object[] categorias = categoriaService.retornaCategorias();
 
-        Object resultadoCategoria = Categorias.categoriaEscolhida(categorias);
+        Object resultadoCategoria = CategoriasUI.categoriaEscolhida(categorias);
 
         return categoriaService.converteResultadoParaCategoriaDTO(resultadoCategoria);
     }

@@ -2,7 +2,7 @@ package com.gerenciador_estoque_fluxo_caixa.ui.fluxoDeCaixa;
 
 import javax.swing.JOptionPane;
 
-public class FluxoDeCaixaView {
+public class FluxoDeCaixaUI {
     public static String exibirMenuFluxoDeCaixa() {
 
         Object[] opcoesMenu = { "Adicionar Produto", "Sacola de Compras", "Produtos em Estoque",

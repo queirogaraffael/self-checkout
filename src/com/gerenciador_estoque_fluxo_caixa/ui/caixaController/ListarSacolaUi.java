@@ -2,7 +2,7 @@ package com.gerenciador_estoque_fluxo_caixa.ui.caixaController;
 
 import javax.swing.*;
 
-public class ListarSacola {
+public class ListarSacolaUi {
 
     public static void exibirSacola(double subtotal, String compras) {
         String subtotalFormatado = String.format("Subtotal: R$ %.2f", subtotal);

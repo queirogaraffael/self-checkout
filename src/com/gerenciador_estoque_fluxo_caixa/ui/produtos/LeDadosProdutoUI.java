@@ -2,7 +2,7 @@ package com.gerenciador_estoque_fluxo_caixa.ui.produtos;
 
 import javax.swing.*;
 
-public class LeDadosProduto {
+public class LeDadosProdutoUI {
 
     public static String leCodigoBarraProduto(){
         return JOptionPane.showInputDialog("Digite o codigo de barra do produto: ");

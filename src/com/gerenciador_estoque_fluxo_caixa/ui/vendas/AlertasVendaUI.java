@@ -2,7 +2,7 @@ package com.gerenciador_estoque_fluxo_caixa.ui.vendas;
 
 import javax.swing.*;
 
-public class AlertasVenda {
+public class AlertasVendaUI {
 
     public static void semResultadoVendaParaData(){
         JOptionPane.showMessageDialog(null, "Sem resultado de vendas para esta data");

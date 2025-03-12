@@ -4,7 +4,7 @@ import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
 
 import javax.swing.*;
 
-public class PrintaProduto {
+public class PrintaProdutoUI {
 
     public static void printaProdutos(String produtos){
         JOptionPane.showMessageDialog(null, produtos);
