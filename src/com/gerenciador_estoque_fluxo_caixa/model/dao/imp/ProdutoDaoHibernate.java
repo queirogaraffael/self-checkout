@@ -68,7 +68,8 @@ public class ProdutoDaoHibernate implements ProdutoDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO(p.codigoDeBarra, p.nome, p.preco) " +
+            String jpql = "SELECT new com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO(" +
+                    "p.codigoDeBarra, p.nome, p.preco, p.quantidade, p.categoria) " +
                     "FROM Produto p " +
                     "WHERE p.codigoDeBarra = :codigoDeBarra";
 
@@ -76,20 +77,17 @@ public class ProdutoDaoHibernate implements ProdutoDao {
                     .setParameter("codigoDeBarra", codigo)
                     .getResultList();
 
-            if (produtos.isEmpty()) {
-                return null;
-            }
-
             return produtos.stream().findFirst().orElse(null);
 
-
         } catch (Exception erro) {
-            System.err.println("Problemas ao buscar por produto" + erro.getMessage());
+            System.err.println("Erro ao buscar produto por código: " + codigo);
+            erro.printStackTrace();
             return null;
         } finally {
             entityManager.close();
         }
     }
+
 
     @Override
     public ProdutoAtualizarQuantidadeDTO retornaProdutoAtualizarQuantidadeDTO(String codigo) {

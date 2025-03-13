@@ -5,6 +5,7 @@ import com.gerenciador_estoque_fluxo_caixa.dtos.categorias.CategoriaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarPrecoDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoAtualizarQuantidadeDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoCreateDTO;
+import com.gerenciador_estoque_fluxo_caixa.dtos.produtos.ProdutoDTO;
 import com.gerenciador_estoque_fluxo_caixa.dtos.vendas.VendaResponseDTO;
 import com.gerenciador_estoque_fluxo_caixa.model.domain.NotaFiscal;
 import com.gerenciador_estoque_fluxo_caixa.model.entities.Categoria;
@@ -74,6 +75,10 @@ public class EstoqueController {
                     case (ConstantesMenuEstoque.LISTAGEM):
                         listarProdutos();
                         break;
+                        
+                    case (ConstantesMenuEstoque.VISUALIZAR_PRODUTO):
+                        visualizarProduto();
+                        break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_ESTOQUE_BAIXO):
                         listaProdutosEstoqueBaixo();
@@ -107,6 +112,21 @@ public class EstoqueController {
             }
 
         } while (!opcao.equals(ConstantesMenuEstoque.MENU_PRINCIPAL));
+    }
+
+    private void visualizarProduto() {
+
+        String codigo = LeDadosProdutoUI.leCodigoBarraProduto();
+
+        if (produtoService.haProdutoComMesmoCodigoBarra(codigo)){
+            ProdutoDTO produto = produtoService.retornaProdutoDTO(codigo);
+
+            PrintaProdutoUI.printaProdutos(produto.toString());
+
+        }else{
+           AlertasProdutoUI.alertaProdutoNaoEncontrado();
+        }
+        
     }
 
     private void cadastrarProduto() {

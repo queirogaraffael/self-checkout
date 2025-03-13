@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 public class GerenciadorDeEstoqueView {
 	public static String exibirMenuGerenciadorDeEstoque() {
 
-		Object[] opcoesMenu = { "Cadastrar Produto", "Editar Produto", "Estoque",
+		Object[] opcoesMenu = { "Cadastrar Produto", "Editar Produto", "Estoque", "Visualizar Produto",
 				"Estoque Baixo", "Categorias", "Remover Produto",
 				"Configurar Nota Fiscal", "Vendas", "Detalhes Venda", "Menu Principal" };
 

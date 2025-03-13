@@ -36,4 +36,7 @@ public class AlertasProdutoUI {
         }
     }
 
+    public static void alertaProdutoNaoEncontrado() {
+        JOptionPane.showMessageDialog(null, "Produto nao encontrado.");
+    }
 }

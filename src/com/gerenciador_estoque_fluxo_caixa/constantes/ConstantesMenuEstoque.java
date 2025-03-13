@@ -5,6 +5,7 @@ public class ConstantesMenuEstoque {
 	public static final String CADASTRAR = "Cadastrar Produto";
 	public static final String EDITAR = "Editar Produto";
 	public static final String LISTAGEM = "Estoque";
+	public static final String VISUALIZAR_PRODUTO = "Visualizar Produto";
 	public static final String LISTAGEM_ESTOQUE_BAIXO = "Estoque Baixo";
 	public static final String LISTAGEM_CATEGORIAS = "Categorias";
 	public static final String CONFIGURAR_NOTA_FICAL = "Configurar Nota Fiscal";
