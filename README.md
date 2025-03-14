@@ -5,7 +5,7 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 ## Funcionalidades:
 
 ### Gerenciador de Estoque:
-* Cadastro, edição, remoção e listagem de produtos.
+* Cadastro, edição, remoção e listagem de produto(s).
 * Visualização de produtos com estoque baixo.
 * Ativação do gerador de nota fiscal.
 * Listagem de todas as vendas realizadas.
@@ -15,12 +15,13 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 ### Fluxo de Caixa:
 * Adição e remoção de produtos em uma sacola de compras.
 * Modificação de quantidades na sacola de compras.
+* Visualização de estoque
 * Listagem dos produtos no carrinho de compras.
 * Limpeza do carrinho de compras.
 * Finalização da compra e geração de nota fiscal.
 
 ## Tecnologias Utilizadas
-* Java: Linguagem de programação utilizada para o desenvolvimento do sistema.
+* Java 8: Linguagem de programação utilizada para o desenvolvimento do sistema.
 * Hibernate: Framework utilizado como implementação do JPA (Java Persistence API) para a persistência de dados em um banco de dados relacional (MySQL).
 * Swing: Biblioteca gráfica utilizada para a interface do usuário.
 
@@ -31,6 +32,8 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 * Model: Representado pelas classes Produto, Venda, ItemVenda e Categoria, responsáveis pela representação dos dados e regras de negócio.
 * View: Representada pelas interfaces gráficas do sistema, como os menus de interação com o usuário.
 * Controller: Representado pelas classes MenuPrincipalController, EstoqueController e CaixaController, responsáveis por intermediar as interações entre a View e o Model, executando as operações necessárias.
+
+Além disso, o projeto utiliza o padrão de projeto Factory para a criação de instâncias dos controllers e serviços, garantindo a centralização da lógica de instância e promovendo a reutilização de objetos.
 
 ## Pré-Requisitos
 * Java Development Kit (JDK) instalado na máquina.
@@ -51,4 +54,4 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 Contribuições são bem-vindas! Sinta-se à vontade para propor melhorias e reportar problemas do projeto.
 
 ## Licença
-Este projeto está licenciado sob a [Licença MIT](https://github.com/queirogaraffael/Inventory-managing-cash-register-system/blob/main/LICENSE).
+Este projeto está licenciado sob a [Licença MIT](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/LICENSE).
