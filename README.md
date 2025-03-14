@@ -21,9 +21,11 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 * Finalização da compra e geração de nota fiscal.
 
 ## Tecnologias Utilizadas
-* Java 8: Linguagem de programação utilizada para o desenvolvimento do sistema.
-* Hibernate: Framework utilizado como implementação do JPA (Java Persistence API) para a persistência de dados em um banco de dados relacional (MySQL).
-* Swing: Biblioteca gráfica utilizada para a interface do usuário.
+* Java 8: Linguagem de programação utilizada no desenvolvimento do sistema.
+* Hibernate: Framework ORM usado como implementação do JPA (Java Persistence API) para gerenciar a persistência de dados em um banco de dados relacional (MySQL).
+* SQL: Linguagem utilizada para manipulação e consulta de dados no banco.
+* JPQL: Linguagem de consultas orientada a objetos para interagir com entidades JPA.
+* Swing: Biblioteca gráfica empregada na criação da interface do usuário.
 
 ## Imagens do Sistema
 
