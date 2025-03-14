@@ -25,6 +25,22 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 * Hibernate: Framework utilizado como implementação do JPA (Java Persistence API) para a persistência de dados em um banco de dados relacional (MySQL).
 * Swing: Biblioteca gráfica utilizada para a interface do usuário.
 
+## Imagens do Sistema
+
+### Tela Principal
+![Menu Principal](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Menu%20Principal.png?raw=true)
+
+### Gerenciador de Estoque
+![Gerenciador de Estoque](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Gerenciador%20Estoque%201.png?raw=true)
+![Gerenciador de Estoque](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Gerenciador%20Estoque%202.png?raw=true)
+
+### Fluxo de Caixa
+![Fluxo de Caixa](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Fluxo%20Caixa.png?raw=true)
+
+### Validação de Senha
+![Validação de Senha](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Validacao%20Senha.png?raw=true)
+
+
 ## Estrutura do Projeto
 
 ### O projeto segue a estrutura padrão MVC (Model-View-Controller), onde:
@@ -34,6 +50,9 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 * Controller: Representado pelas classes MenuPrincipalController, EstoqueController e CaixaController, responsáveis por intermediar as interações entre a View e o Model, executando as operações necessárias.
 
 Além disso, o projeto utiliza o padrão de projeto Factory para a criação de instâncias dos controllers e serviços, garantindo a centralização da lógica de instância e promovendo a reutilização de objetos.
+
+### Diagrama UML
+![Diagrama UML](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/UML.png?raw=true)
 
 ## Pré-Requisitos
 * Java Development Kit (JDK) instalado na máquina.
