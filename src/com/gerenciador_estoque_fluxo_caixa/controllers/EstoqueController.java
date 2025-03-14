@@ -30,9 +30,9 @@ import com.gerenciador_estoque_fluxo_caixa.ui.vendas.VendaUI;
 import com.gerenciador_estoque_fluxo_caixa.utils.ManipulacaoData;
 import com.gerenciador_estoque_fluxo_caixa.utils.VerificaDiretorio;
 
+import javax.sound.midi.SysexMessage;
 import java.time.LocalDate;
 import java.util.Set;
-
 
 public class EstoqueController {
 
@@ -94,7 +94,6 @@ public class EstoqueController {
                         break;
 
                     case (ConstantesMenuEstoque.LISTAGEM_VENDAS):
-
                         listarVendas();
                         break;
 
@@ -248,7 +247,7 @@ public class EstoqueController {
 
     private void listarVendas() {
 
-        if (!vendaService.haVenda()) {
+        if (vendaService.haVenda()) {
 
             int opcaoListagem = VendaUI.listarVendasOpcoes();
 
@@ -290,7 +289,7 @@ public class EstoqueController {
     }
 
     private void detalharVenda() {
-        if (!vendaService.haVenda()) {
+        if (vendaService.haVenda()) {
             int codigo = LeDadosVendaUI.leCodigoVenda();
 
             if (vendaService.haVendaComEsseCodigo(codigo)) {
