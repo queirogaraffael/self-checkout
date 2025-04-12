@@ -1,4 +1,4 @@
-package com.gerenciador_estoque_fluxo_caixa.application;
+package com.gerenciador_estoque_fluxo_caixa;
 
 import com.gerenciador_estoque_fluxo_caixa.controllers.MenuPrincipalController;
 import com.gerenciador_estoque_fluxo_caixa.factory.ApplicationContext;
