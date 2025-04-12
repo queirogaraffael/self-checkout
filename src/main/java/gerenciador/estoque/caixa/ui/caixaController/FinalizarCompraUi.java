@@ -1,0 +1,10 @@
+package main.java.gerenciador.estoque.caixa.ui.caixaController;
+
+import javax.swing.*;
+
+public class FinalizarCompraUi {
+
+    public static void mensagemAgracedimentoCompra(){
+        JOptionPane.showMessageDialog(null, "Obrigado, volte sempre!");
+    }
+}

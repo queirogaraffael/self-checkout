@@ -30,17 +30,17 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 ## Imagens do Sistema
 
 ### Tela Principal
-![Menu Principal](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Menu%20Principal.png?raw=true)
+![Menu Principal](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/assets/Menu%20Principal.png?raw=true)
 
 ### Gerenciador de Estoque
-![Gerenciador de Estoque](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Gerenciador%20Estoque%201.png?raw=true)
-![Gerenciador de Estoque](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Gerenciador%20Estoque%202.png?raw=true)
+![Gerenciador de Estoque](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/assets/Gerenciador%20Estoque%201.png?raw=true)
+![Gerenciador de Estoque](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/assets/Gerenciador%20Estoque%202.png?raw=true)
 
 ### Fluxo de Caixa
-![Fluxo de Caixa](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Fluxo%20Caixa.png?raw=true)
+![Fluxo de Caixa](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/assets/Fluxo%20Caixa.png?raw=true)
 
 ### Validação de Senha
-![Validação de Senha](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/Validacao%20Senha.png?raw=true)
+![Validação de Senha](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/assets/Validacao%20Senha.png?raw=true)
 
 
 ## Estrutura do Projeto
