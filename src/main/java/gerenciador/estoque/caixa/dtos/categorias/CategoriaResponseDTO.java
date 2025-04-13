@@ -16,4 +16,6 @@ public class CategoriaResponseDTO {
     public String toString() {
         return id + " - " + nome;
     }
+
+
 }
