@@ -1,13 +1,14 @@
 package main.java.gerenciador.estoque.caixa.ui;
 
 
+import main.java.gerenciador.estoque.caixa.enums.StatusNotaFiscal;
 import main.java.gerenciador.estoque.caixa.model.domain.NotaFiscal;
 
 import javax.swing.*;
 
 public class NotaFiscalUI {
 
-    private static Object[] opcoes = {"Sim", "Nao"};
+    private final static Object[] opcoes = {"Sim", "Nao"};
 
     public static int opcaoNotaFiscal(String mensagem) {
         return JOptionPane.showOptionDialog(null, mensagem, "Opcoes", JOptionPane.DEFAULT_OPTION,
@@ -15,19 +16,19 @@ public class NotaFiscalUI {
     }
 
     public static String verificarAcao(NotaFiscal notaFiscal) {
-        return notaFiscal.getStatusNotaFiscal()
+        return notaFiscal.getStatusNotaFiscal() == StatusNotaFiscal.ATIVADA
                 ? "Deseja modificar o diretorio?"
                 : "Ativar gerador de nota fiscal?";
     }
 
     public static String mensagemSucesso(NotaFiscal notaFiscal) {
-        return notaFiscal.getStatusNotaFiscal()
+        return notaFiscal.getStatusNotaFiscal() == StatusNotaFiscal.ATIVADA
                 ? "Gerador de notas fiscais com novo diretorio ativado com sucesso!"
                 : "Gerador de notas fiscais ativado com sucesso!";
     }
 
     public static String mensagemFalha(NotaFiscal notaFiscal) {
-        return notaFiscal.getStatusNotaFiscal()
+        return notaFiscal.getStatusNotaFiscal() == StatusNotaFiscal.ATIVADA
                 ? "Falha ao tentar ativar o novo diretorio do gerador de notas fiscais."
                 : "Falha ao tentar ativar gerador de notas fiscais.";
     }

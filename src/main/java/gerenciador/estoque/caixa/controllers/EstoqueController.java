@@ -7,6 +7,7 @@ import main.java.gerenciador.estoque.caixa.dtos.produtos.ProdutoAtualizarQuantid
 import main.java.gerenciador.estoque.caixa.dtos.produtos.ProdutoCreateDTO;
 import main.java.gerenciador.estoque.caixa.dtos.produtos.ProdutoDTO;
 import main.java.gerenciador.estoque.caixa.dtos.vendas.VendaResponseDTO;
+import main.java.gerenciador.estoque.caixa.enums.StatusNotaFiscal;
 import main.java.gerenciador.estoque.caixa.model.domain.NotaFiscal;
 import main.java.gerenciador.estoque.caixa.model.entities.Categoria;
 import main.java.gerenciador.estoque.caixa.model.entities.ItemVenda;
@@ -231,7 +232,7 @@ public class EstoqueController {
 
             if (VerificaDiretorio.verificarDiretorio(path)) {
                 notaFiscal.setCaminhoNotaFiscal(path);
-                notaFiscal.setStatusNotaFiscal(true);
+                notaFiscal.setStatusNotaFiscal(StatusNotaFiscal.ATIVADA);
 
                 String msg = NotaFiscalUI.mensagemSucesso(notaFiscal);
                 NotaFiscalUI.printaMensagem(msg);

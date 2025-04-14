@@ -1,29 +1,31 @@
 package main.java.gerenciador.estoque.caixa.model.domain;
 
+import main.java.gerenciador.estoque.caixa.enums.StatusNotaFiscal;
+
 public class NotaFiscal {
 
-	private boolean statusNotaFiscal;
-	private String caminhoNotaFiscal;
+    private StatusNotaFiscal statusNotaFiscal;
+    private String caminhoNotaFiscal;
 
-	public NotaFiscal() {
-		this.statusNotaFiscal = false;
-		this.caminhoNotaFiscal = "";
-	}
+    public NotaFiscal() {
+        this.statusNotaFiscal = StatusNotaFiscal.DESATIVADA;
+        this.caminhoNotaFiscal = "";
+    }
 
-	public boolean getStatusNotaFiscal() {
-		return statusNotaFiscal;
-	}
+    public StatusNotaFiscal getStatusNotaFiscal() {
+        return statusNotaFiscal;
+    }
 
-	public void setStatusNotaFiscal(Boolean statusNotaFiscal) {
-		this.statusNotaFiscal = statusNotaFiscal;
-	}
+    public void setStatusNotaFiscal(StatusNotaFiscal statusNotaFiscal) {
+        this.statusNotaFiscal = statusNotaFiscal;
+    }
 
-	public String getCaminhoNotaFiscal() {
-		return caminhoNotaFiscal;
-	}
+    public String getCaminhoNotaFiscal() {
+        return caminhoNotaFiscal;
+    }
 
-	public void setCaminhoNotaFiscal(String caminhoNotaFiscal) {
-		this.caminhoNotaFiscal = caminhoNotaFiscal;
-	}
-
+    public void setCaminhoNotaFiscal(String caminhoNotaFiscal) {
+        this.caminhoNotaFiscal = caminhoNotaFiscal;
+    }
 }
+

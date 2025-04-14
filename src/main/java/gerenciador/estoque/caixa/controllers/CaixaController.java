@@ -4,6 +4,7 @@ package main.java.gerenciador.estoque.caixa.controllers;
 import main.java.gerenciador.estoque.caixa.constantes.ConstantesMenuFluxoCaixa;
 import main.java.gerenciador.estoque.caixa.dtos.categorias.CategoriaResponseDTO;
 import main.java.gerenciador.estoque.caixa.dtos.produtos.ProdutoAtualizarQuantidadeDTO;
+import main.java.gerenciador.estoque.caixa.enums.StatusNotaFiscal;
 import main.java.gerenciador.estoque.caixa.model.domain.NotaFiscal;
 import main.java.gerenciador.estoque.caixa.model.entities.ItemVenda;
 import main.java.gerenciador.estoque.caixa.model.entities.Venda;
@@ -244,7 +245,7 @@ public class CaixaController {
         venda.setTotal(total);
         vendaService.atualizaVenda(venda);
 
-        if (Boolean.TRUE.equals(notaFiscal.getStatusNotaFiscal())) {
+        if (notaFiscal.getStatusNotaFiscal() == StatusNotaFiscal.ATIVADA) {
             GeradorNotaFiscal.geradorNotaFiscal(venda, listaCompras, notaFiscal.getCaminhoNotaFiscal());
         }
 
