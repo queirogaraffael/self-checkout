@@ -15,7 +15,6 @@
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password" value="1234567" />
 
-			<!-- Defina o comportamento de atualização do esquema -->
 			<property name="hibernate.hbm2ddl.auto" value="validate" />
 
 			<property name="hibernate.dialect"

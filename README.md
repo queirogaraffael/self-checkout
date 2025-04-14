@@ -1,6 +1,6 @@
 # Gerenciador de Estoque e Fluxo de Caixa
 
-Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa desenvolvido em Java. O sistema permite o cadastro, edição, remoção e listagem de produtos no estoque, além de fornecer funcionalidades de controle de vendas e fluxo de caixa.
+Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa desenvolvido em Java, com foco para pequenos comerciantes. O sistema permite o cadastro, edição, remoção e listagem de produtos no estoque, além de fornecer funcionalidades de controle de vendas e fluxo de caixa.
 
 ## Funcionalidades:
 
@@ -26,6 +26,13 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 * SQL: Linguagem utilizada para manipulação e consulta de dados no banco.
 * JPQL: Linguagem de consultas orientada a objetos para interagir com entidades JPA.
 * Swing: Biblioteca gráfica empregada na criação da interface do usuário.
+* JUnit: Framework utilizado para testes unitários.
+* Mockito: Framework utilizado para testes de integração.
+
+## Configuração do Banco de Dados (persistence.xml)
+
+O arquivo `persistence.xml` foi utilizado para configurar a persistência de dados com o JPA (Java Persistence API) e o Hibernate como provedor. Ele estabelece a conexão com o banco de dados MySQL, configurando a URL de conexão, as credenciais de acesso, a configuração do Hibernate e o gerenciamento de transações, garantindo a integridade dos dados.
+
 
 ## Imagens do Sistema
 
@@ -54,7 +61,7 @@ Este é um projeto de um sistema de gerenciamento de estoque e fluxo de caixa de
 Além disso, o projeto utiliza o padrão de projeto Factory para a criação de instâncias dos controllers e serviços, garantindo a centralização da lógica de instância e promovendo a reutilização de objetos.
 
 ### Diagrama UML
-![Diagrama UML](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/imagens/UML.png?raw=true)
+![Diagrama UML](https://github.com/queirogaraffael/sistema-estoque-caixa/blob/main/assest/UML.png?raw=true)
 
 ## Pré-Requisitos
 * Java Development Kit (JDK) instalado na máquina.
