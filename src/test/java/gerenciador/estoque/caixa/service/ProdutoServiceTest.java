@@ -1,8 +1,5 @@
 package test.java.gerenciador.estoque.caixa.service;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
 import main.java.gerenciador.estoque.caixa.dtos.produtos.*;
 import main.java.gerenciador.estoque.caixa.model.dao.ProdutoDao;
 import main.java.gerenciador.estoque.caixa.model.entities.Categoria;
@@ -13,6 +10,10 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ProdutoServiceTest {
 

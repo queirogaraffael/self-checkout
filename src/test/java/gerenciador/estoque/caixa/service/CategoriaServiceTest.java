@@ -4,16 +4,14 @@ import main.java.gerenciador.estoque.caixa.dtos.categorias.CategoriaResponseDTO;
 import main.java.gerenciador.estoque.caixa.model.dao.CategoriaDao;
 import main.java.gerenciador.estoque.caixa.service.CategoriaService;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CategoriaServiceTest {
 
