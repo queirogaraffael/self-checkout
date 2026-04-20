@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="accountSettings">
+  <component name="toolkitAccountSettings">
     <option name="activeRegion" value="us-east-1" />
     <option name="recentlyUsedProfiles">
       <list>
-        <option value="profile:academy-compass-273354656518-AdministratorAccess" />
+        <option value="profile:localstack" />
       </list>
     </option>
     <option name="recentlyUsedRegions">
