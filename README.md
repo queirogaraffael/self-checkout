@@ -96,17 +96,17 @@ Contribuições são bem-vindas! Sinta-se à vontade para propor melhorias e rep
 
 ### O que aprendi
 
-O desenvolvimento deste projeto proporcionou uma compreensão mais sólida de arquitetura de software. Por não ser baseado em um curso ou tutorial, a decisão de adotar o padrão MVC foi tomada desde o início, o que exigiu pesquisa ativa sobre a melhor forma de implementá-lo. Além disso, trabalhar com Java 8 e ferramentas menos popularizadas atualmente, como o `EntityManagerFactory` do Hibernate, representou um contato direto com código e práticas consideradas legado — experiência que contribuiu diretamente para a transição posterior ao Spring Boot.
+O desenvolvimento deste projeto proporcionou uma compreensão mais sólida de arquitetura de software. Por não ser baseado em um curso ou tutorial, a decisão de adotar o padrão MVC foi tomada desde o início, o que exigiu pesquisa ativa sobre a melhor forma de implementá-lo. Além disso, trabalhar com Java 8 e ferramentas menos popularizadas atualmente, como o `EntityManagerFactory` do Hibernate, representou um contato direto com código e práticas consideradas legado, experiência que contribuiu diretamente para a transição posterior ao Spring Boot.
 
 ### O que aprendi de mais valioso
 
-O aprendizado mais significativo foi o gerenciamento manual do ciclo de vida dos objetos. Sem um container de IoC, foi necessário controlar explicitamente a criação, o uso e o encerramento de instâncias como `EntityManagerFactory` e `EntityManager`, incluindo a abertura e o fechamento manual de transações — responsabilidades que no Spring Boot são abstraídas pelo framework. Esse contato direto tornou conceitos como injeção de dependência e gerenciamento de beans muito mais concretos.
+O aprendizado mais significativo foi o gerenciamento manual do ciclo de vida dos objetos. Sem um container de IoC, foi necessário controlar explicitamente a criação, o uso e o encerramento de instâncias como `EntityManagerFactory` e `EntityManager`, incluindo a abertura e o fechamento manual de transações, responsabilidades que no Spring Boot são abstraídas pelo framework. Esse contato direto tornou conceitos como injeção de dependência e gerenciamento de beans muito mais concretos.
 
 Em relação às ferramentas utilizadas, a escolha foi guiada pelo interesse em aprendê-las, sem ter passado por um processo formal de avaliação de alternativas. Ainda assim, a combinação de Java com um ORM se mostrou tecnicamente coerente para um sistema que lida com transações e persistência relacional.
 
 ### Problemas atuais
 
-A aplicação não possui controle de concorrência implementado na camada Java. Embora o banco de dados garanta a integridade dos dados por meio de constraints SQL, o uso simultâneo por múltiplos usuários pode gerar inconsistências na camada da aplicação. O sistema é composto por dois módulos distintos — gerenciamento de estoque e fluxo de caixa — e cada um suporta apenas um usuário simultâneo, o que restringe sua utilização em ambientes com mais de um operador ao mesmo tempo.
+A aplicação não possui controle de concorrência implementado na camada Java. Embora o banco de dados garanta a integridade dos dados por meio de constraints SQL, o uso simultâneo por múltiplos usuários pode gerar inconsistências na camada da aplicação. O sistema é composto por dois módulos distintos — gerenciamento de estoque e fluxo de caixa — e ambos não possuem tratamento de concorrência em nível de aplicação, o que significa que, embora poucos usuários simultâneos possam não causar problemas imediatos, à medida que o número de usuários cresce, o risco de inconsistências nos dados aumenta progressivamente.
 
 ### O que melhoraria
 
