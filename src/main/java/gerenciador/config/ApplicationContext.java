@@ -17,7 +17,7 @@ public class ApplicationContext {
     public MenuPrincipalController getMenuPrincipalController() {
         return new MenuPrincipalController(entityManagerFactoryService,
                 controllerFactory.createEstoqueController(),
-                controllerFactory.createCaixaController()
+                controllerFactory.createAutoatendimentoController()
         );
     }
 }

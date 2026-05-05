@@ -1,7 +1,7 @@
 package gerenciador.controller;
 
 
-import gerenciador.constant.MenuFluxoCaixaConstant;
+import gerenciador.constant.MenuAutoatendimentoConstant;
 import gerenciador.dto.categoria.CategoriaResponseDTO;
 import gerenciador.dto.produto.ProdutoAtualizarQuantidadeDTO;
 import gerenciador.model.enums.StatusNotaFiscal;
@@ -13,9 +13,9 @@ import gerenciador.service.ItemVendaService;
 import gerenciador.service.ProdutoService;
 import gerenciador.service.VendaService;
 import gerenciador.view.menu.ValidaSenhaView;
-import gerenciador.view.caixa.*;
+import gerenciador.view.autoatendimento.*;
 import gerenciador.view.shared.categoria.CategoriasView;
-import gerenciador.view.caixa.FluxoDeCaixaView;
+import gerenciador.view.autoatendimento.TerminalAutoatendimentoView;
 import gerenciador.view.shared.produto.AlertasProdutoView;
 import gerenciador.view.shared.produto.LeDadosProdutoView;
 import gerenciador.view.shared.produto.PrintaProdutoView;
@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class CaixaController {
+public class AutoatendimentoController {
 
     private final NotaFiscal notaFiscal;
     private final CategoriaService categoriaService;
@@ -35,7 +35,7 @@ public class CaixaController {
     private final ProdutoService produtoService;
     private final VendaService vendaService;
 
-    public CaixaController(NotaFiscal notaFiscal,
+    public AutoatendimentoController(NotaFiscal notaFiscal,
                            ItemVendaService itemVendaService,
                            CategoriaService categoriaService,
                            ProdutoService produtoService,
@@ -55,49 +55,49 @@ public class CaixaController {
 
         do {
             try {
-                opcaoMenuFluxoDeCaixa = FluxoDeCaixaView.exibirMenuFluxoDeCaixa();
+                opcaoMenuFluxoDeCaixa = TerminalAutoatendimentoView.exibirMenuPrincipal();
 
                 switch (opcaoMenuFluxoDeCaixa) {
 
-                    case (MenuFluxoCaixaConstant.ADICIONAR_PRODUTO):
+                    case (MenuAutoatendimentoConstant.ADICIONAR_PRODUTO):
                         adicionaProduto(listaCompras);
                         break;
 
-                    case (MenuFluxoCaixaConstant.SACOLA_COMPRAS):
+                    case (MenuAutoatendimentoConstant.SACOLA_COMPRAS):
                         listarSacola(listaCompras);
 
                         break;
 
-                    case (MenuFluxoCaixaConstant.PRODUTOS_EM_ESTOQUE):
+                    case (MenuAutoatendimentoConstant.PRODUTOS_EM_ESTOQUE):
                         listarEstoque();
                         break;
 
-                    case (MenuFluxoCaixaConstant.REMOVER_DA_SACOLA):
+                    case (MenuAutoatendimentoConstant.REMOVER_DA_SACOLA):
                         removerProduto(listaCompras);
                         break;
 
-                    case (MenuFluxoCaixaConstant.ALTERAR_QUANTIDADE):
-                        modificarQuantidade(listaCompras);
+                    case (MenuAutoatendimentoConstant.CORRIGIR_QUANTIDADE):
+                        corrigirQuantidade(listaCompras);
                         break;
 
-                    case (MenuFluxoCaixaConstant.FINALIZAR_COMPRA):
+                    case (MenuAutoatendimentoConstant.FINALIZAR_COMPRA):
                         finalizarCompra(listaCompras, notaFiscal);
                         break;
 
-                    case (MenuFluxoCaixaConstant.LIMPAR_SACOLA):
+                    case (MenuAutoatendimentoConstant.LIMPAR_SACOLA):
                         limparCarrinho(listaCompras);
                         break;
 
-                    case (MenuFluxoCaixaConstant.MENU_PRINCIPAL):
+                    case (MenuAutoatendimentoConstant.MENU_PRINCIPAL):
                         opcaoMenuFluxoDeCaixa = sair();
                         break;
 
                 }
             } catch (NumberFormatException erro) {
-                MenuCaixaView.alertaEntradaInvalida();
+                MenuAutoatendimentoView.alertaEntradaInvalida();
             }
 
-        } while (!opcaoMenuFluxoDeCaixa.equals(MenuFluxoCaixaConstant.MENU_PRINCIPAL));
+        } while (!opcaoMenuFluxoDeCaixa.equals(MenuAutoatendimentoConstant.MENU_PRINCIPAL));
     }
 
     private boolean processarAtualizacaoQuantidade(String codigoProduto, ItemVenda item, int quantidadeAtualNoCarrinho, int quantidadeDesejadaTotal) {
@@ -145,15 +145,15 @@ public class CaixaController {
         }
     }
 
-    private void modificarQuantidade(Set<ItemVenda> listaCompras) {
+    private void corrigirQuantidade(Set<ItemVenda> listaCompras) {
         if (listaCompras.isEmpty()) {
-            ModificarQuantidadeView.alertaCarrinhoVazio();
+            CorrigirQuantidadeView.alertaCarrinhoVazio();
             return;
         }
 
         String codigo = LeDadosProdutoView.leCodigoBarraProduto();
         if (!ItemVendaService.contemProduto(listaCompras, codigo)) {
-            ModificarQuantidadeView.alertaProdutoInvalido();
+            CorrigirQuantidadeView.alertaProdutoInvalido();
             return;
         }
 
@@ -162,12 +162,12 @@ public class CaixaController {
         Integer novaQuantidade = LeDadosProdutoView.leQuantidadeProduto();
 
         if (novaQuantidade <= 0) {
-            ModificarQuantidadeView.alertaProdutoInvalido();
+            CorrigirQuantidadeView.alertaProdutoInvalido();
             return;
         }
 
         if (processarAtualizacaoQuantidade(codigo, itemVenda, quantidadeAtual, novaQuantidade)) {
-            ModificarQuantidadeView.alertaQuantidadeProdutoModifica();
+            CorrigirQuantidadeView.alertaQuantidadeProdutoCorrigida();
         }
     }
 
@@ -273,9 +273,9 @@ public class CaixaController {
 
         if (!autenticacao) {
             ValidaSenhaView.exibirSenhaIncorreta();
-            return MenuFluxoCaixaConstant.CONTINUAR_NO_PROGRAMA;
+            return MenuAutoatendimentoConstant.CONTINUAR_NO_PROGRAMA;
         }
-        return MenuFluxoCaixaConstant.MENU_PRINCIPAL;
+        return MenuAutoatendimentoConstant.MENU_PRINCIPAL;
 
     }
 

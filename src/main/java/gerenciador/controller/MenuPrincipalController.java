@@ -10,12 +10,12 @@ public class MenuPrincipalController {
 
     private final JPAManager entityManagerFactoryService;
     private final EstoqueController estoqueController;
-    private final CaixaController caixaController;
+    private final AutoatendimentoController autoatendimentoController;
 
-    public MenuPrincipalController(JPAManager entityManagerFactoryService, EstoqueController estoqueController, CaixaController caixaController) {
+    public MenuPrincipalController(JPAManager entityManagerFactoryService, EstoqueController estoqueController, AutoatendimentoController autoatendimentoController) {
         this.entityManagerFactoryService = entityManagerFactoryService;
         this.estoqueController = estoqueController;
-        this.caixaController = caixaController;
+        this.autoatendimentoController = autoatendimentoController;
     }
 
     public void exibirMenuPrincipal() {
@@ -30,8 +30,8 @@ public class MenuPrincipalController {
                         processarGerenciadorEstoque();
                         break;
 
-                    case MenuPrincipalConstant.FLUXO_CAIXA:
-                        processarFluxoCaixa();
+                    case MenuPrincipalConstant.AUTOATENDIMENTO:
+                        iniciarAutoatendimento();
                         break;
 
                     case MenuPrincipalConstant.ENCERRAR_PROGRAMA:
@@ -59,8 +59,8 @@ public class MenuPrincipalController {
         }
     }
 
-    private void processarFluxoCaixa() {
-        caixaController.fluxoDeCaixa();
+    private void iniciarAutoatendimento() {
+        autoatendimentoController.fluxoDeCaixa();
     }
 
 }

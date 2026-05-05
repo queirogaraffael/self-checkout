@@ -1,4 +1,4 @@
-package gerenciador.view.caixa;
+package gerenciador.view.autoatendimento;
 
 import javax.swing.*;
 

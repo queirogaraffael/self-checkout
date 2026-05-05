@@ -4,13 +4,13 @@ import javax.swing.*;
 
 public class MenuPrincipalView {
 
-    private static final String MENU_TITLE = "Sistema Estoque-Caixa";
-    private static final String MENU_MESSAGE = "Escolha uma opcao: ";
+    private static final String MENU_TITLE = "Menu Administrativo";
+    private static final String MENU_MESSAGE = "Selecione uma opção:";
 
     private MenuPrincipalView() {
     }
 
-    private static final Object[] opcoes = { "Gerenciador de Estoque", "Fluxo de Caixa", "Encerrar programa" };
+    private static final Object[] opcoes = { "Gerenciador de Estoque", "Iniciar Autoatendimento", "Encerrar programa" };
 
     public static int exibeViewMenuPrincipal() {
         return JOptionPane.showOptionDialog(

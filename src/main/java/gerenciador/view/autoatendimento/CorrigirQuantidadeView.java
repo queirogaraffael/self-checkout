@@ -1,15 +1,15 @@
-package gerenciador.view.caixa;
+package gerenciador.view.autoatendimento;
 
 import javax.swing.*;
 
-public class ModificarQuantidadeView {
+public class CorrigirQuantidadeView {
 
     public static void alertaCarrinhoVazio(){
         JOptionPane.showMessageDialog(null, "Carrinho de compras vazio.");
     }
 
-    public static void alertaQuantidadeProdutoModifica(){
-        JOptionPane.showMessageDialog(null, "Quantidade modificada com sucesso!");
+    public static void alertaQuantidadeProdutoCorrigida(){
+        JOptionPane.showMessageDialog(null, "Quantidade corrigida com sucesso!");
     }
 
     public static void alertaProdutoInvalido(){

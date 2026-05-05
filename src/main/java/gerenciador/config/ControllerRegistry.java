@@ -1,7 +1,7 @@
 package gerenciador.config;
 
 
-import gerenciador.controller.CaixaController;
+import gerenciador.controller.AutoatendimentoController;
 import gerenciador.controller.EstoqueController;
 import gerenciador.infrastructure.RepositoryFactory;
 import gerenciador.model.NotaFiscal;
@@ -63,8 +63,8 @@ public class ControllerRegistry {
         return new EstoqueController(createNotaFiscal(), createItemVendaService(), createCategoriaService(), createProdutoService(), createVendaService());
     }
 
-    public CaixaController createCaixaController() {
-        return new CaixaController(createNotaFiscal(), createItemVendaService(), createCategoriaService(), createProdutoService(), createVendaService());
+    public AutoatendimentoController createAutoatendimentoController() {
+        return new AutoatendimentoController(createNotaFiscal(), createItemVendaService(), createCategoriaService(), createProdutoService(), createVendaService());
     }
 }
 
