@@ -4,7 +4,8 @@ package gerenciador.service;
 import gerenciador.model.ItemVenda;
 import gerenciador.model.Venda;
 
-import javax.swing.*;
+import gerenciador.view.shared.notafiscal.NotaFiscalView;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -38,7 +39,7 @@ public class GeradorNotaFiscal {
 			bw.write(sb.toString());
 
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Diretorio não encontrado: " + caminho);
+			NotaFiscalView.alertaDiretorioNaoEncontrado(caminho);
 		}
 
 	}
