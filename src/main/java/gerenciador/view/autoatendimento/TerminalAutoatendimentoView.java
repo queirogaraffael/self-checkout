@@ -9,7 +9,6 @@ public class TerminalAutoatendimentoView {
         Object[] opcoesMenu = { 
                 MenuAutoatendimentoConstant.ADICIONAR_PRODUTO, 
                 MenuAutoatendimentoConstant.SACOLA_COMPRAS, 
-                MenuAutoatendimentoConstant.PRODUTOS_EM_ESTOQUE,
                 MenuAutoatendimentoConstant.REMOVER_DA_SACOLA, 
                 MenuAutoatendimentoConstant.CORRIGIR_QUANTIDADE, 
                 MenuAutoatendimentoConstant.LIMPAR_SACOLA,

@@ -60,6 +60,26 @@ public class ProdutoService {
 
     }
 
+    public boolean existeProdutoPorCodigo(String codigo) {
+        return produtoDao.retornaProdutoPorCodigo(codigo) != null;
+    }
+
+    public int retornaQuantidadeAtual(String codigo) {
+        Produto produto = produtoDao.retornaProdutoPorCodigo(codigo);
+        return produto != null ? produto.getQuantidade() : 0;
+    }
+
+    public void decrementaEstoque(String codigo, int quantidade) {
+        Produto produto = produtoDao.retornaProdutoPorCodigo(codigo);
+        produto.setQuantidade(produto.getQuantidade() - quantidade);
+        produtoDao.atualizaProduto(produto);
+    }
+
+    public void incrementaEstoque(String codigo, int quantidade) {
+        Produto produto = produtoDao.retornaProdutoPorCodigo(codigo);
+        produto.setQuantidade(produto.getQuantidade() + quantidade);
+        produtoDao.atualizaProduto(produto);
+    }
 
     private String geraRelatorio(List<?> produtos){
         StringBuilder sb = new StringBuilder();

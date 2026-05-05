@@ -64,7 +64,7 @@ public class ControllerRegistry {
     }
 
     public AutoatendimentoController createAutoatendimentoController() {
-        return new AutoatendimentoController(createNotaFiscal(), createItemVendaService(), createCategoriaService(), createProdutoService(), createVendaService());
+        return new AutoatendimentoController(createNotaFiscal(), createItemVendaService(), createProdutoService(), createVendaService());
     }
 }
 

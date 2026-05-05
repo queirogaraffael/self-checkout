@@ -13,6 +13,7 @@ CREATE TABLE produtos (
     nome VARCHAR(40),
     preco DOUBLE,
     quantidade INT,
+    version INT DEFAULT 0,
     categoria_id INT NOT NULL,
     FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );

@@ -27,6 +27,9 @@ public class Produto implements Serializable {
     private Double preco;
     private Integer quantidade;
 
+    @Version
+    private Integer version;
+
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
