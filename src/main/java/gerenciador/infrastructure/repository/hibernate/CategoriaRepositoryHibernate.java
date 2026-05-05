@@ -20,7 +20,7 @@ public class CategoriaRepositoryHibernate implements CategoriaRepository {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 
 		try {
-			String jpql = "SELECT new gerenciador.dto.categorias.CategoriaResponseDTO(c.id, c.nome) " +
+			String jpql = "SELECT new gerenciador.dto.categoria.CategoriaResponseDTO(c.id, c.nome) " +
 					"FROM Categoria c";
 
 			return entityManager.createQuery(jpql, CategoriaResponseDTO.class).getResultList();

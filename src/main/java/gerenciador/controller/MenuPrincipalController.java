@@ -1,18 +1,18 @@
 package gerenciador.controller;
 
 import gerenciador.constant.MenuPrincipalConstant;
-import gerenciador.infrastructure.EntityManagerFactoryService;
+import gerenciador.infrastructure.JPAManager;
 import gerenciador.view.menu.MenuPrincipalView;
 import gerenciador.view.menu.ValidaSenhaView;
 import gerenciador.util.AutenticadorDeSenha;
 
 public class MenuPrincipalController {
 
-    private final EntityManagerFactoryService entityManagerFactoryService;
+    private final JPAManager entityManagerFactoryService;
     private final EstoqueController estoqueController;
     private final CaixaController caixaController;
 
-    public MenuPrincipalController(EntityManagerFactoryService entityManagerFactoryService, EstoqueController estoqueController, CaixaController caixaController) {
+    public MenuPrincipalController(JPAManager entityManagerFactoryService, EstoqueController estoqueController, CaixaController caixaController) {
         this.entityManagerFactoryService = entityManagerFactoryService;
         this.estoqueController = estoqueController;
         this.caixaController = caixaController;

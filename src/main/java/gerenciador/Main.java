@@ -2,7 +2,7 @@ package gerenciador;
 
 
 import gerenciador.controller.MenuPrincipalController;
-import gerenciador.factory.ApplicationContext;
+import gerenciador.config.ApplicationContext;
 
 public class Main {
     public static void main(String[] args) {

@@ -100,7 +100,6 @@ public class CaixaController {
         } while (!opcaoMenuFluxoDeCaixa.equals(MenuFluxoCaixaConstant.MENU_PRINCIPAL));
     }
 
-
     private boolean processarAtualizacaoQuantidade(String codigoProduto, ItemVenda item, int quantidadeAtualNoCarrinho, int quantidadeDesejadaTotal) {
         ProdutoAtualizarQuantidadeDTO estoque = produtoService.retornaProdutoAtualizarQuantidadeDTO(codigoProduto);
         if (estoque == null) {
@@ -127,7 +126,6 @@ public class CaixaController {
         produtoService.atualizaQuantidadeProduto(codigoProduto, estoque);
         return true;
     }
-
 
     private void adicionaProduto(Set<ItemVenda> listaCompras) {
         String codigoProduto = AdicionarProdutoView.leCodigoProduto();
@@ -173,7 +171,6 @@ public class CaixaController {
         }
     }
 
-
     private void listarSacola(Set<ItemVenda> listaCompras) {
         double subtotal = ItemVendaService.somaPrecos(listaCompras);
 
@@ -182,7 +179,6 @@ public class CaixaController {
         ListarSacolaView.exibirSacola(subtotal, relatorioListaCompras);
 
     }
-
 
     private void listarEstoque() {
 
@@ -225,7 +221,6 @@ public class CaixaController {
         RemoverProdutoView.alertaProdutoRemovidoComSucesso();
     }
 
-
     private void finalizarCompra(Set<ItemVenda> listaCompras, NotaFiscal notaFiscal) {
         if (Objects.isNull(listaCompras) || listaCompras.isEmpty()) {
             return;
@@ -253,7 +248,6 @@ public class CaixaController {
         FinalizarCompraView.mensagemAgracedimentoCompra();
     }
 
-
     private void limparCarrinho(Set<ItemVenda> listaCompras) {
 
         if (listaCompras == null || listaCompras.isEmpty()) {
@@ -272,7 +266,6 @@ public class CaixaController {
         listaCompras.clear();
         LimparCarrinhoView.alertaSacolaLimpaSucesso();
     }
-
 
     private String sair() {
         String senhaDigitada = ValidaSenhaView.exibirValidaSenha();

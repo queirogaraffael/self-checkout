@@ -58,7 +58,7 @@ public class VendaRepositoryHibernate implements VendaRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            String jpql = "SELECT new gerenciador.dto.vendas.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
+            String jpql = "SELECT new gerenciador.dto.venda.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
                     "FROM Venda v WHERE v.codigo = :codigo";
 
             List<VendaResponseDTO> vendas = entityManager.createQuery(jpql, VendaResponseDTO.class)
@@ -87,7 +87,7 @@ public class VendaRepositoryHibernate implements VendaRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            String jpql = "SELECT new gerenciador.dto.vendas.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
+            String jpql = "SELECT new gerenciador.dto.venda.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
                     "FROM Venda v";
 
             return entityManager.createQuery(jpql, VendaResponseDTO.class).getResultList();
@@ -108,7 +108,7 @@ public class VendaRepositoryHibernate implements VendaRepository {
 
         try {
 
-            String jpql = "SELECT new gerenciador.dto.vendas.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
+            String jpql = "SELECT new gerenciador.dto.venda.VendaResponseDTO(v.codigo, v.dataHora, v.total) " +
                     "FROM Venda v WHERE CAST(v.dataHora AS date) = :data";
 
             return entityManager

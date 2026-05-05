@@ -3,7 +3,7 @@ package gerenciador.infrastructure;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-public class EntityManagerFactoryService {
+public class JPAManager {
 
 	private EntityManagerFactory entityManagerFactory;
 

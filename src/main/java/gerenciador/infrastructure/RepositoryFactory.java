@@ -1,4 +1,4 @@
-package gerenciador.factory;
+package gerenciador.infrastructure;
 
 
 import gerenciador.infrastructure.repository.CategoriaRepository;

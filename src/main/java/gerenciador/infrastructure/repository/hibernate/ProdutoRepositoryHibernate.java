@@ -68,7 +68,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            String jpql = "SELECT new gerenciador.dto.produtos.ProdutoDTO(" +
+            String jpql = "SELECT new gerenciador.dto.produto.ProdutoDTO(" +
                     "p.codigoDeBarra, p.nome, p.preco, p.quantidade, p.categoria) " +
                     "FROM Produto p " +
                     "WHERE p.codigoDeBarra = :codigoDeBarra";
@@ -94,7 +94,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            String jpql = "SELECT new gerenciador.dto.produtos.ProdutoAtualizarQuantidadeDTO(p.quantidade) " +
+            String jpql = "SELECT new gerenciador.dto.produto.ProdutoAtualizarQuantidadeDTO(p.quantidade) " +
                     "FROM Produto p " +
                     "WHERE p.codigoDeBarra = :codigoDeBarra";
 
@@ -115,9 +115,6 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
         } finally {
             entityManager.close();
         }
-
-
-
 
     }
 
@@ -151,7 +148,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            String jpql = "SELECT new gerenciador.dto.produtos.ProdutoResponseDTO(p.codigoDeBarra, p.nome) "
+            String jpql = "SELECT new gerenciador.dto.produto.ProdutoResponseDTO(p.codigoDeBarra, p.nome) "
                     + "FROM Produto p WHERE p.categoria.id = :categoria";
 
             return entityManager
@@ -191,7 +188,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            String jpql = "SELECT new gerenciador.dto.produtos.ProdutoBaixoEstoqueResponseDTO(p.codigoDeBarra, p.nome, p.quantidade) "
+            String jpql = "SELECT new gerenciador.dto.produto.ProdutoBaixoEstoqueResponseDTO(p.codigoDeBarra, p.nome, p.quantidade) "
                     + "FROM Produto p WHERE p.quantidade <= :quantidade";
 
             return entityManager

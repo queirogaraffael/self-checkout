@@ -1,15 +1,16 @@
-package gerenciador.factory;
+package gerenciador.config;
 
 
 import gerenciador.controller.CaixaController;
 import gerenciador.controller.EstoqueController;
+import gerenciador.infrastructure.RepositoryFactory;
 import gerenciador.model.NotaFiscal;
 import gerenciador.service.CategoriaService;
 import gerenciador.service.ItemVendaService;
 import gerenciador.service.ProdutoService;
 import gerenciador.service.VendaService;
 
-public class ControllerFactory {
+public class ControllerRegistry {
 
     private final RepositoryFactory repositoryFactory;
     private NotaFiscal notaFiscal;
@@ -19,8 +20,8 @@ public class ControllerFactory {
     private ProdutoService produtoService;
     private VendaService vendaService;
 
-    public ControllerFactory(RepositoryFactory daoFactory) {
-        this.repositoryFactory = daoFactory;
+    public ControllerRegistry(RepositoryFactory repositoryFactory) {
+        this.repositoryFactory = repositoryFactory;
     }
 
     public NotaFiscal createNotaFiscal() {
