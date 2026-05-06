@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,7 +15,7 @@ public class VendaResponseDTO {
 
     private Integer codigo;
     private LocalDateTime dataHora;
-    private Double total;
+    private BigDecimal total;
 
 
     public String getDataHoraString() {

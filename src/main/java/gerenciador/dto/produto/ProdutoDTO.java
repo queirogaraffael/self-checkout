@@ -2,18 +2,19 @@ package gerenciador.dto.produto;
 
 import gerenciador.model.Categoria;
 import gerenciador.model.Produto;
+import java.math.BigDecimal;
 
 public class ProdutoDTO {
     private String codigoDeBarra;
     private String nome;
-    private Double preco;
+    private BigDecimal preco;
     private Integer quantidade;
     private Categoria categoria;
 
     public ProdutoDTO() {
     }
 
-    public ProdutoDTO(String codigoDeBarra, String nome, Double preco, Integer quantidade, Categoria categoria) {
+    public ProdutoDTO(String codigoDeBarra, String nome, BigDecimal preco, Integer quantidade, Categoria categoria) {
         this.codigoDeBarra = codigoDeBarra;
         this.nome = nome;
         this.preco = preco;
@@ -35,8 +36,8 @@ public class ProdutoDTO {
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
 
-    public Double getPreco() { return preco; }
-    public void setPreco(Double preco) { this.preco = preco; }
+    public BigDecimal getPreco() { return preco; }
+    public void setPreco(BigDecimal preco) { this.preco = preco; }
 
     public Integer getQuantidade() { return quantidade; }
     public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }

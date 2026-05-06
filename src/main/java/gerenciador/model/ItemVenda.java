@@ -7,6 +7,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "itemVenda")
@@ -68,8 +69,8 @@ public class ItemVenda implements Serializable {
         this.quantidade = quantidade;
     }
 
-    public Double subTotal() {
-        return id.getProduto().getPreco() * quantidade;
+    public BigDecimal subTotal() {
+        return id.getProduto().getPreco().multiply(BigDecimal.valueOf(quantidade));
     }
 
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
@@ -29,7 +30,7 @@ public class Venda implements Serializable {
     @EqualsAndHashCode.Include
     private Integer codigo;
     private LocalDateTime dataHora;
-    private Double total;
+    private BigDecimal total;
 
     @OneToMany(mappedBy = "id.venda")
     private Set<ItemVenda> itens = new HashSet<>();

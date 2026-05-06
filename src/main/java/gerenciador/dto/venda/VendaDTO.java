@@ -3,13 +3,14 @@ package gerenciador.dto.venda;
 
 import gerenciador.model.Venda;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class VendaDTO {
 
     private Integer codigo;
     private LocalDateTime dataHora;
-    private Double total;
+    private BigDecimal total;
 
     public VendaDTO() {
     }
@@ -32,11 +33,11 @@ public class VendaDTO {
         this.dataHora = dataHora;
     }
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 }

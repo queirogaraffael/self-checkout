@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.RollbackException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.Set;
@@ -51,11 +52,11 @@ public class FinalizarCompraService {
                 venda.setDataHora(LocalDateTime.now());
                 em.persist(venda);
 
-                double total = 0;
+                BigDecimal total = BigDecimal.ZERO;
                 for (ItemVenda item : listaCompras) {
                     item.setVenda(venda);
                     em.persist(item);
-                    total += item.subTotal();
+                    total = total.add(item.subTotal());
                 }
 
                 venda.setTotal(total);

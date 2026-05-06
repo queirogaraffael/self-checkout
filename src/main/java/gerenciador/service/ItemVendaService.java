@@ -6,6 +6,7 @@ import gerenciador.infrastructure.repository.ProdutoRepository;
 import gerenciador.model.ItemVenda;
 import gerenciador.model.Produto;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class ItemVendaService {
@@ -22,11 +23,11 @@ public class ItemVendaService {
         return listaCompras.stream().anyMatch(p -> p.getProduto().getCodigoDeBarra().equals(codigo));
     }
 
-    public static Double somaPrecos(Set<ItemVenda> listaCompras) {
-        double total = 0;
+    public static BigDecimal somaPrecos(Set<ItemVenda> listaCompras) {
+        BigDecimal total = BigDecimal.ZERO;
 
         for (ItemVenda p : listaCompras) {
-            total += p.getProduto().getPreco() * p.getQuantidade();
+            total = total.add(p.subTotal());
         }
         return total;
     }

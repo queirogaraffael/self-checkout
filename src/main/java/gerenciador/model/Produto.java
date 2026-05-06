@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class Produto implements Serializable {
     @EqualsAndHashCode.Include
     private String codigoDeBarra;
     private String nome;
-    private Double preco;
+    private BigDecimal preco;
     private Integer quantidade;
 
     @Version

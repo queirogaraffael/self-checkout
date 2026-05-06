@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import gerenciador.model.Categoria;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -12,7 +13,7 @@ public class ProdutoCreateDTO {
 
     private String codigoDeBarra;
     private String nome;
-    private Double preco;
+    private BigDecimal preco;
     private Integer quantidade;
     private Categoria categoria;
 
