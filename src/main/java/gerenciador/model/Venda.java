@@ -1,7 +1,9 @@
 package gerenciador.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,7 +15,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "vendas")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Venda implements Serializable {
@@ -22,6 +26,7 @@ public class Venda implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer codigo;
     private LocalDateTime dataHora;
     private Double total;
