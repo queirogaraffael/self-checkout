@@ -35,4 +35,8 @@ public class RepositoryFactory {
     public VendaRepository createVendaRepository() {
         return new VendaRepositoryHibernate(entityManagerFactory);
     }
+
+    public EntityManagerFactory getEntityManagerFactory() {
+        return entityManagerFactory;
+    }
 }

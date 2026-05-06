@@ -1,11 +1,11 @@
 package gerenciador.config;
 
-
 import gerenciador.controller.AutoatendimentoController;
 import gerenciador.controller.EstoqueController;
 import gerenciador.infrastructure.RepositoryFactory;
 import gerenciador.model.NotaFiscal;
 import gerenciador.service.CategoriaService;
+import gerenciador.service.FinalizarCompraService;
 import gerenciador.service.ItemVendaService;
 import gerenciador.service.ProdutoService;
 import gerenciador.service.VendaService;
@@ -19,6 +19,7 @@ public class ControllerRegistry {
     private CategoriaService categoriaService;
     private ProdutoService produtoService;
     private VendaService vendaService;
+    private FinalizarCompraService finalizarCompraService;
 
     public ControllerRegistry(RepositoryFactory repositoryFactory) {
         this.repositoryFactory = repositoryFactory;
@@ -33,7 +34,8 @@ public class ControllerRegistry {
 
     public ItemVendaService createItemVendaService() {
         if (itemVendaService == null) {
-            itemVendaService = new ItemVendaService(repositoryFactory.createItemVendaRepository(), repositoryFactory.createProdutoRepository());
+            itemVendaService = new ItemVendaService(repositoryFactory.createItemVendaRepository(),
+                    repositoryFactory.createProdutoRepository());
         }
         return itemVendaService;
     }
@@ -60,11 +62,19 @@ public class ControllerRegistry {
     }
 
     public EstoqueController createEstoqueController() {
-        return new EstoqueController(createNotaFiscal(), createItemVendaService(), createCategoriaService(), createProdutoService(), createVendaService());
+        return new EstoqueController(createNotaFiscal(), createItemVendaService(), createCategoriaService(),
+                createProdutoService(), createVendaService());
+    }
+
+    public FinalizarCompraService createFinalizarCompraService() {
+        if (finalizarCompraService == null) {
+            finalizarCompraService = new FinalizarCompraService(repositoryFactory.getEntityManagerFactory());
+        }
+        return finalizarCompraService;
     }
 
     public AutoatendimentoController createAutoatendimentoController() {
-        return new AutoatendimentoController(createNotaFiscal(), createItemVendaService(), createProdutoService(), createVendaService());
+        return new AutoatendimentoController(createNotaFiscal(), createItemVendaService(), createProdutoService(),
+                createFinalizarCompraService());
     }
 }
-

@@ -2,25 +2,19 @@ package gerenciador.controller;
 
 
 import gerenciador.constant.MenuAutoatendimentoConstant;
-import gerenciador.model.enums.StatusNotaFiscal;
+import gerenciador.model.enums.ResultadoFinalizacao;
 import gerenciador.model.NotaFiscal;
 import gerenciador.model.ItemVenda;
-import gerenciador.model.Venda;
+import gerenciador.service.FinalizarCompraService;
 import gerenciador.service.ItemVendaService;
 import gerenciador.service.ProdutoService;
-import gerenciador.service.VendaService;
 import gerenciador.view.menu.ValidaSenhaView;
 import gerenciador.view.autoatendimento.*;
 import gerenciador.view.autoatendimento.TerminalAutoatendimentoView;
 import gerenciador.view.shared.produto.LeDadosProdutoView;
 import gerenciador.util.AutenticadorDeSenha;
-import gerenciador.service.GeradorNotaFiscal;
 
-import javax.persistence.OptimisticLockException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,16 +23,16 @@ public class AutoatendimentoController {
     private final NotaFiscal notaFiscal;
     private final ItemVendaService itemVendaService;
     private final ProdutoService produtoService;
-    private final VendaService vendaService;
+    private final FinalizarCompraService finalizarCompraService;
 
     public AutoatendimentoController(NotaFiscal notaFiscal,
                            ItemVendaService itemVendaService,
                            ProdutoService produtoService,
-                           VendaService vendaService) {
+                           FinalizarCompraService finalizarCompraService) {
         this.notaFiscal = notaFiscal;
         this.itemVendaService = itemVendaService;
         this.produtoService = produtoService;
-        this.vendaService = vendaService;
+        this.finalizarCompraService = finalizarCompraService;
     }
 
     public void fluxoDeCaixa() {
@@ -70,7 +64,7 @@ public class AutoatendimentoController {
                         break;
 
                     case (MenuAutoatendimentoConstant.FINALIZAR_COMPRA):
-                        finalizarCompra(listaCompras, notaFiscal);
+                        finalizarCompra(listaCompras);
                         break;
 
                     case (MenuAutoatendimentoConstant.LIMPAR_SACOLA):
@@ -157,66 +151,24 @@ public class AutoatendimentoController {
         ListarSacolaView.exibirSacola(subtotal, relatorioListaCompras);
     }
 
-    private void finalizarCompra(Set<ItemVenda> listaCompras, NotaFiscal notaFiscal) {
+    private void finalizarCompra(Set<ItemVenda> listaCompras) {
         if (Objects.isNull(listaCompras) || listaCompras.isEmpty()) {
             return;
         }
 
-        List<ItemVenda> itensDecrementados = new ArrayList<>();
+        ResultadoFinalizacao resultado = finalizarCompraService.finalizar(listaCompras, notaFiscal);
 
-        for (ItemVenda item : listaCompras) {
-            boolean sucesso = decrementaComRetry(item, itensDecrementados);
-            if (!sucesso) {
-                FinalizarCompraView.alertaProdutoEsgotado(item.getProduto().getNome());
-                rollbackEstoque(itensDecrementados);
-                return;
-            }
-        }
-
-        Venda venda = new Venda();
-        venda.setDataHora(LocalDateTime.now());
-        vendaService.adicionaVenda(venda);
-
-        double total = listaCompras.stream()
-                .peek(item -> item.setVenda(venda))
-                .mapToDouble(ItemVenda::subTotal)
-                .sum();
-
-        listaCompras.forEach(itemVendaService::adicionaItemVenda);
-
-        venda.setTotal(total);
-        vendaService.atualizaVenda(venda);
-
-        if (notaFiscal.getStatusNotaFiscal() == StatusNotaFiscal.ATIVADA) {
-            GeradorNotaFiscal.geradorNotaFiscal(venda, listaCompras, notaFiscal.getCaminhoNotaFiscal());
-        }
-
-        listaCompras.clear();
-        FinalizarCompraView.mensagemAgracedimentoCompra();
-    }
-
-    private boolean decrementaComRetry(ItemVenda item, List<ItemVenda> itensDecrementados) {
-        String codigo = item.getProduto().getCodigoDeBarra();
-        int quantidade = item.getQuantidade();
-
-        try {
-            produtoService.decrementaEstoque(codigo, quantidade);
-            itensDecrementados.add(item);
-            return true;
-        } catch (OptimisticLockException e) {
-            int estoqueAtual = produtoService.retornaQuantidadeAtual(codigo);
-            if (estoqueAtual >= quantidade) {
-                produtoService.decrementaEstoque(codigo, quantidade);
-                itensDecrementados.add(item);
-                return true;
-            }
-            return false;
-        }
-    }
-
-    private void rollbackEstoque(List<ItemVenda> itensDecrementados) {
-        for (ItemVenda item : itensDecrementados) {
-            produtoService.incrementaEstoque(item.getProduto().getCodigoDeBarra(), item.getQuantidade());
+        switch (resultado) {
+            case SUCESSO:
+                listaCompras.clear();
+                FinalizarCompraView.mensagemAgracedimentoCompra();
+                break;
+            case PRODUTO_ESGOTADO:
+                FinalizarCompraView.alertaProdutoEsgotado(resultado.getNomeProduto());
+                break;
+            case SISTEMA_OCUPADO:
+                FinalizarCompraView.alertaSistemaSobrecarregado();
+                break;
         }
     }
 
