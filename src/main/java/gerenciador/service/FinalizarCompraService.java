@@ -12,11 +12,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.RollbackException;
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.Set;
 
 public class FinalizarCompraService {
 
     private static final int MAX_TENTATIVAS = 3;
+    private static final long DELAY_BASE_MS = 100;
+    private static final long DELAY_MAX_MS = 1000;
+    private static final Random random = new Random();
 
     private final EntityManagerFactory entityManagerFactory;
 
@@ -66,6 +70,7 @@ public class FinalizarCompraService {
 
             } catch (RollbackException | OptimisticLockException e) {
                 tentativas++;
+                aguardarComBackoffEJitter(tentativas);
             } finally {
                 if (em.getTransaction().isActive()) {
                     em.getTransaction().rollback();
@@ -75,5 +80,15 @@ public class FinalizarCompraService {
         }
 
         return ResultadoFinalizacao.SISTEMA_OCUPADO;
+    }
+
+    private void aguardarComBackoffEJitter(int tentativa) {
+        long backoff = Math.min(DELAY_MAX_MS, DELAY_BASE_MS * (1L << tentativa));
+        long delay = (long) (random.nextDouble() * backoff);
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
