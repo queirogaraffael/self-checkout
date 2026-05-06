@@ -6,6 +6,7 @@ import gerenciador.dto.venda.VendaResponseDTO;
 import gerenciador.infrastructure.repository.VendaRepository;
 import gerenciador.model.Venda;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -57,16 +58,16 @@ public class VendaService {
     }
 
     private String geraRelatorioVendaComPrecoTotal(List<VendaResponseDTO> vendas){
-        Double total = 0.0;
+        BigDecimal total = BigDecimal.ZERO;
 
         StringBuilder sb = new StringBuilder();
 
         for (VendaResponseDTO venda : vendas) {
-            sb.append(venda + "\n");
-            total += venda.getTotal();
+            sb.append(venda).append("\n");
+            total = total.add(venda.getTotal());
         }
 
-        sb.append("Total: ").append(total);
+        sb.append("Total: ").append(String.format("%.2f", total));
 
         return sb.toString();
     }

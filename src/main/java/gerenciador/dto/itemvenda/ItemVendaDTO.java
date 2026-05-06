@@ -4,13 +4,14 @@ package gerenciador.dto.itemvenda;
 import gerenciador.dto.produto.ProdutoDTO;
 import gerenciador.dto.venda.VendaDTO;
 import gerenciador.model.ItemVenda;
+import java.math.BigDecimal;
 
 public class ItemVendaDTO {
 
     private ProdutoDTO produto;
     private VendaDTO venda;
     private Integer quantidade;
-    private Double subTotal;
+    private BigDecimal subTotal;
 
     public ItemVendaDTO() {
     }
@@ -38,11 +39,11 @@ public class ItemVendaDTO {
         return quantidade;
     }
 
-    public Double getSubTotal() {
+    public BigDecimal getSubTotal() {
         return subTotal;
     }
 
-    public void setSubTotal(Double subTotal) {
+    public void setSubTotal(BigDecimal subTotal) {
         this.subTotal = subTotal;
     }
 }

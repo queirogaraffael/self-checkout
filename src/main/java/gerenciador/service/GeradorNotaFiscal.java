@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Set;
 
 public class GeradorNotaFiscal {
@@ -23,9 +24,9 @@ public class GeradorNotaFiscal {
 
 		sb.append(ItemVendaService.geraRelatorioItemVenda(listaCompras));
 
-		double total = venda.getTotal();
+		BigDecimal total = venda.getTotal();
 
-		sb.append("Total: ").append(total);
+		sb.append(String.format("Total: R$ %.2f", total));
 
 		File diretorio = new File(caminho);
 

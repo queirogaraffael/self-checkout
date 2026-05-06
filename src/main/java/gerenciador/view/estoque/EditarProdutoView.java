@@ -1,6 +1,7 @@
 package gerenciador.view.estoque;
 
 import javax.swing.*;
+import java.math.BigDecimal;
 
 public class EditarProdutoView {
 
@@ -11,8 +12,8 @@ public class EditarProdutoView {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
     }
 
-    public static Double leNovoPreco() {
-        return Double.valueOf(JOptionPane.showInputDialog("Digite o novo preco: "));
+    public static BigDecimal leNovoPreco() {
+        return new BigDecimal(JOptionPane.showInputDialog("Digite o novo preco: "));
     }
 
     public static Integer leNovaQuantidade() {

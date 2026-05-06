@@ -14,6 +14,7 @@ import gerenciador.view.autoatendimento.TerminalAutoatendimentoView;
 import gerenciador.view.shared.produto.LeDadosProdutoView;
 import gerenciador.util.AutenticadorDeSenha;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -146,7 +147,7 @@ public class AutoatendimentoController {
     }
 
     private void listarSacola(Set<ItemVenda> listaCompras) {
-        double subtotal = ItemVendaService.somaPrecos(listaCompras);
+        BigDecimal subtotal = ItemVendaService.somaPrecos(listaCompras);
         String relatorioListaCompras = ItemVendaService.geraRelatorioItemVenda(listaCompras);
         ListarSacolaView.exibirSacola(subtotal, relatorioListaCompras);
     }

@@ -31,6 +31,7 @@ import gerenciador.view.estoque.venda.VendaView;
 import gerenciador.util.ManipulacaoData;
 import gerenciador.util.VerificaDiretorio;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -137,7 +138,7 @@ public class EstoqueController {
         } else {
 
             String nome = LeDadosProdutoView.leNomeProduto();
-            Double valor = LeDadosProdutoView.leValorProduto();
+            BigDecimal valor = LeDadosProdutoView.leValorProduto();
             Integer quantidade = LeDadosProdutoView.leQuantidadeProduto();
 
             CategoriaResponseDTO categoria = selecionaCategoria();
@@ -164,7 +165,7 @@ public class EstoqueController {
 
                 if (opcaoEditar == 0) {
                     ProdutoAtualizarPrecoDTO atualizarPrecoDTO = new ProdutoAtualizarPrecoDTO();
-                    Double novoPreco = EditarProdutoView.leNovoPreco();
+                    BigDecimal novoPreco = EditarProdutoView.leNovoPreco();
                     atualizarPrecoDTO.setPreco(novoPreco);
 
                   statusAtualizacao = produtoService.atualizaPrecoProduto(codigo, atualizarPrecoDTO);

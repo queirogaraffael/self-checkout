@@ -1,6 +1,7 @@
 package gerenciador.view.shared.produto;
 
 import javax.swing.*;
+import java.math.BigDecimal;
 
 public class LeDadosProdutoView {
 
@@ -12,8 +13,8 @@ public class LeDadosProdutoView {
         return JOptionPane.showInputDialog("Digite o nome do produto: ");
     }
 
-    public static Double leValorProduto(){
-        return Double.parseDouble(JOptionPane.showInputDialog("Valor do produto: "));
+    public static BigDecimal leValorProduto(){
+        return new BigDecimal(JOptionPane.showInputDialog("Valor do produto: "));
     }
 
     public static Integer leQuantidadeProduto(){
