@@ -15,6 +15,7 @@ import gerenciador.service.CategoriaService;
 import gerenciador.service.ItemVendaService;
 import gerenciador.service.ProdutoService;
 import gerenciador.service.VendaService;
+import gerenciador.service.NotaFiscalService;
 import gerenciador.view.estoque.GerenciadorDeEstoqueView;
 import gerenciador.view.estoque.notafiscal.NotaFiscalView;
 import gerenciador.view.shared.categoria.CategoriasView;
@@ -29,7 +30,6 @@ import gerenciador.view.estoque.venda.LeDadosVendaView;
 import gerenciador.view.estoque.venda.PrintarVendaView;
 import gerenciador.view.estoque.venda.VendaView;
 import gerenciador.util.ManipulacaoData;
-import gerenciador.util.VerificaDiretorio;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -42,6 +42,7 @@ public class EstoqueController {
     private final CategoriaService categoriaService;
     private final ProdutoService produtoService;
     private final VendaService vendaService;
+    private final NotaFiscalService notaFiscalService = new NotaFiscalService();
 
     public EstoqueController(NotaFiscal notaFiscal,
                              ItemVendaService itemVendaService,
@@ -230,11 +231,10 @@ public class EstoqueController {
 
         if (opcao == 0) {
             String path = NotaFiscalView.leCaminhoNotaFiscal();
+            
+            boolean sucesso = notaFiscalService.configurarCaminho(notaFiscal, path);
 
-            if (VerificaDiretorio.verificarDiretorio(path)) {
-                notaFiscal.setCaminhoNotaFiscal(path);
-                notaFiscal.setStatusNotaFiscal(StatusNotaFiscal.ATIVADA);
-
+            if (sucesso) {
                 String msg = NotaFiscalView.mensagemSucesso(notaFiscal);
                 NotaFiscalView.printaMensagem(msg);
             } else {
