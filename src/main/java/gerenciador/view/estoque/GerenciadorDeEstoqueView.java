@@ -5,11 +5,11 @@ import javax.swing.JOptionPane;
 public class GerenciadorDeEstoqueView {
 	public static String exibirMenuGerenciadorDeEstoque() {
 
-		Object[] opcoesMenu = { "Cadastrar Produto", "Editar Produto", "Estoque", "Visualizar Produto",
-				"Estoque Baixo", "Categorias", "Remover Produto",
-				"Configurar Nota Fiscal", "Vendas", "Detalhes Venda", "Menu Principal" };
+		Object[] opcoesMenu = { "Novo Produto", "Atualizar Produto", "Inventário Completo", "Consultar Produto",
+				"Alerta de Reposição", "Gerenciar Categorias", "Excluir Produto",
+				"Configurações de Cupom Fiscal", "Histórico de Vendas", "Consultar Recibo de Venda", "Menu Principal" };
 
-		Object opcaoSelecionada = JOptionPane.showInputDialog(null, "Escolha uma opcao", "Gerenciador de Estoque",
+		Object opcaoSelecionada = JOptionPane.showInputDialog(null, "Selecione a operação desejada:", "Painel de Administração (Retaguarda)",
 				JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
 
 		if (opcaoSelecionada != null) {
@@ -21,6 +21,6 @@ public class GerenciadorDeEstoqueView {
 
 	public static void alertaEntradasInvalida(){
 		JOptionPane.showMessageDialog(null,
-				"Entrada invalida. Por favor, insira um numero correspondente a opcao desejada.");
+				"Operação inválida. Por favor, selecione uma das opções disponíveis no menu.");
 	}
 }

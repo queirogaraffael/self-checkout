@@ -1,7 +1,5 @@
 package gerenciador.service;
 
-
-
 import gerenciador.dto.venda.VendaResponseDTO;
 import gerenciador.infrastructure.repository.VendaRepository;
 import gerenciador.model.Venda;
@@ -11,7 +9,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import gerenciador.model.ItemVenda;
-import gerenciador.service.ItemVendaService;
 import gerenciador.util.ManipulacaoData;
 
 public class VendaService {
@@ -22,11 +19,11 @@ public class VendaService {
         this.vendaDao = vendaDao;
     }
 
-    public void adicionaVenda(Venda venda){
+    public void adicionaVenda(Venda venda) {
         vendaDao.adicionaVenda(venda);
     }
 
-    public void atualizaVenda(Venda venda){
+    public void atualizaVenda(Venda venda) {
         vendaDao.atualizarVenda(venda);
     }
 
@@ -34,11 +31,11 @@ public class VendaService {
         return vendaDao.haVenda();
     }
 
-    public boolean haVendaComEsseCodigo(Integer codigo){
+    public boolean haVendaComEsseCodigo(Integer codigo) {
         return vendaDao.haVendaComEsseCodigo(codigo);
     }
 
-    public VendaResponseDTO retornaVenda(Integer codigo){
+    public VendaResponseDTO retornaVenda(Integer codigo) {
         return vendaDao.retornaVendaDTOPorCodigo(codigo);
     }
 
@@ -54,18 +51,18 @@ public class VendaService {
         if (ManipulacaoData.verificaSeADataEPosterior(dataString)) {
             throw new IllegalArgumentException("DATA_FUTURA");
         }
-        
+
         LocalDate data = ManipulacaoData.retornaLocalDate(dataString);
         List<VendaResponseDTO> vendas = vendaDao.retornaVendasPorData(data);
-        
+
         if (vendas.isEmpty()) {
             return "";
         }
-        
+
         return geraRelatorioVendaComPrecoTotal(vendas);
     }
 
-    private String geraRelatorio(List<?> vendas){
+    private String geraRelatorio(List<?> vendas) {
         StringBuilder sb = new StringBuilder();
 
         for (Object venda : vendas) {
@@ -74,7 +71,7 @@ public class VendaService {
         return sb.toString();
     }
 
-    private String geraRelatorioVendaComPrecoTotal(List<VendaResponseDTO> vendas){
+    private String geraRelatorioVendaComPrecoTotal(List<VendaResponseDTO> vendas) {
         BigDecimal total = BigDecimal.ZERO;
 
         StringBuilder sb = new StringBuilder();
