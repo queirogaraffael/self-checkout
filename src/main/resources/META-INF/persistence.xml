@@ -7,7 +7,7 @@
 	<persistence-unit name="persistencia" transaction-type="RESOURCE_LOCAL">
 		<properties>
 			<property name="javax.persistence.jdbc.url"
-			          value="jdbc:mysql://localhost:3306/estoque_fluxo_caixa_db?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true" />
+			          value="jdbc:mysql://localhost:3306/estoque_fluxo_caixa_db?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true&amp;characterEncoding=UTF-8&amp;useUnicode=true" />
 
 			<property name="javax.persistence.jdbc.driver"
 			          value="com.mysql.cj.jdbc.Driver" />
@@ -20,6 +20,10 @@
 
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
+
+			<property name="hibernate.connection.CharSet" value="UTF-8" />
+			<property name="hibernate.connection.characterEncoding" value="UTF-8" />
+			<property name="hibernate.connection.useUnicode" value="true" />
 		</properties>
 
 	</persistence-unit>

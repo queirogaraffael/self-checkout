@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 USE estoque_fluxo_caixa_db;
 
 INSERT INTO categorias (id, nome) VALUES 

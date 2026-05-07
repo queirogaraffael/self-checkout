@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 CREATE DATABASE IF NOT EXISTS estoque_fluxo_caixa_db 
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_unicode_ci;
