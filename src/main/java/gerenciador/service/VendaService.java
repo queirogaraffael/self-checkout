@@ -9,6 +9,7 @@ import gerenciador.model.Venda;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import gerenciador.util.ManipulacaoData;
 
 public class VendaService {
 
@@ -43,8 +44,21 @@ public class VendaService {
         return geraRelatorio(vendas);
     }
 
-    public String retornaRelatorioVendasPorData(LocalDate data) {
+    public String retornaRelatorioVendasPorData(String dataString) {
+        if (!ManipulacaoData.verificaFormatoData(dataString)) {
+            throw new IllegalArgumentException("FORMATO_INVALIDO");
+        }
+        if (ManipulacaoData.verificaSeADataEPosterior(dataString)) {
+            throw new IllegalArgumentException("DATA_FUTURA");
+        }
+        
+        LocalDate data = ManipulacaoData.retornaLocalDate(dataString);
         List<VendaResponseDTO> vendas = vendaDao.retornaVendasPorData(data);
+        
+        if (vendas.isEmpty()) {
+            return "";
+        }
+        
         return geraRelatorioVendaComPrecoTotal(vendas);
     }
 

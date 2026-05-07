@@ -29,7 +29,6 @@ import gerenciador.view.estoque.venda.AlertasVendaView;
 import gerenciador.view.estoque.venda.LeDadosVendaView;
 import gerenciador.view.estoque.venda.PrintarVendaView;
 import gerenciador.view.estoque.venda.VendaView;
-import gerenciador.util.ManipulacaoData;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -248,43 +247,34 @@ public class EstoqueController {
 
     private void listarVendas() {
 
-        if (vendaService.haVenda()) {
+        if (!vendaService.haVenda()) {
+            AlertasVendaView.alertaSemVendaRegistrada();
+            return;
+        }
 
-            int opcaoListagem = VendaView.listarVendasOpcoes();
+        int opcaoListagem = VendaView.listarVendasOpcoes();
 
-            if (opcaoListagem == 0) {
+        if (opcaoListagem == 0) {
+            String resultadoListagemVendas = vendaService.retornaRelatorioVendas();
+            PrintarVendaView.printarVenda(resultadoListagemVendas);
 
-                String resultadoListagemVendas = vendaService.retornaRelatorioVendas();
-                PrintarVendaView.printarVenda(resultadoListagemVendas);
+        } else if (opcaoListagem == 1) {
+            String dataString = LeDataView.leData();
 
-            } else if (opcaoListagem == 1) {
+            try {
+                String resultadoListagemVendasPorData = vendaService.retornaRelatorioVendasPorData(dataString);
 
-                String dataString = LeDataView.leData();
-                boolean formatoAprovado = ManipulacaoData.verificaFormatoData(dataString);
-
-                if (formatoAprovado) {
-
-                    LocalDate data = ManipulacaoData.retornaLocalDate(dataString);
-                    if (!ManipulacaoData.verificaSeADataEPosterior(dataString)) {
-
-                        String resultadoListagemVendasPorData = vendaService.retornaRelatorioVendasPorData(data);
-
-                        if (resultadoListagemVendasPorData.isEmpty()) {
-                            AlertasVendaView.semResultadoVendaParaData();
-                        } else {
-                            PrintarVendaView.printarVenda(resultadoListagemVendasPorData);
-                        }
-
-                    } else {
-                        AlertasDataView.alertaDataPosteriorAtual();
-                    }
-
+                if (resultadoListagemVendasPorData.isEmpty()) {
+                    AlertasVendaView.semResultadoVendaParaData();
                 } else {
-                    AlertasDataView.alertaProblemaFormatoData();
+                    PrintarVendaView.printarVenda(resultadoListagemVendasPorData);
                 }
-
-            } else {
-                AlertasVendaView.alertaSemVendaRegistrada();
+            } catch (IllegalArgumentException e) {
+                if ("FORMATO_INVALIDO".equals(e.getMessage())) {
+                    AlertasDataView.alertaProblemaFormatoData();
+                } else if ("DATA_FUTURA".equals(e.getMessage())) {
+                    AlertasDataView.alertaDataPosteriorAtual();
+                }
             }
         }
     }
