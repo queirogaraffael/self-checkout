@@ -13,6 +13,8 @@ import gerenciador.view.autoatendimento.*;
 import gerenciador.view.autoatendimento.TerminalAutoatendimentoView;
 import gerenciador.view.shared.produto.LeDadosProdutoView;
 import gerenciador.util.AutenticadorDeSenha;
+import gerenciador.session.MonitorSessao;
+import gerenciador.session.SessaoAutoatendimento;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -41,39 +43,65 @@ public class AutoatendimentoController {
         String opcaoMenuFluxoDeCaixa = "";
 
         Set<ItemVenda> listaCompras = new HashSet<>();
+        
+        SessaoAutoatendimento sessao = new SessaoAutoatendimento();
+        MonitorSessao monitor = new MonitorSessao(sessao);
+
+        monitor.iniciar(
+            () -> listaCompras.isEmpty(),
+            () -> {
+                listaCompras.clear();
+                sessao.setNoMenuAutoatendimento(true);
+            }
+        );
 
         do {
+            sessao.setNoMenuAutoatendimento(true);
             try {
                 opcaoMenuFluxoDeCaixa = TerminalAutoatendimentoView.exibirMenuPrincipal();
+                sessao.registrarAtividade();
+                
+                if (opcaoMenuFluxoDeCaixa == null) {
+                    opcaoMenuFluxoDeCaixa = "";
+                } else if (!opcaoMenuFluxoDeCaixa.equals(MenuAutoatendimentoConstant.MENU_PRINCIPAL)) {
+                    sessao.setNoMenuAutoatendimento(false);
+                }
 
                 switch (opcaoMenuFluxoDeCaixa) {
 
                     case (MenuAutoatendimentoConstant.ADICIONAR_PRODUTO):
                         adicionaProduto(listaCompras);
+                        sessao.registrarAtividade();
                         break;
 
                     case (MenuAutoatendimentoConstant.SACOLA_COMPRAS):
                         listarSacola(listaCompras);
+                        sessao.registrarAtividade();
                         break;
 
                     case (MenuAutoatendimentoConstant.REMOVER_DA_SACOLA):
                         removerProduto(listaCompras);
+                        sessao.registrarAtividade();
                         break;
 
                     case (MenuAutoatendimentoConstant.CORRIGIR_QUANTIDADE):
                         corrigirQuantidade(listaCompras);
+                        sessao.registrarAtividade();
                         break;
 
                     case (MenuAutoatendimentoConstant.FINALIZAR_COMPRA):
                         finalizarCompra(listaCompras);
+                        sessao.registrarAtividade();
                         break;
 
                     case (MenuAutoatendimentoConstant.LIMPAR_SACOLA):
                         limparCarrinho(listaCompras);
+                        sessao.registrarAtividade();
                         break;
 
                     case (MenuAutoatendimentoConstant.MENU_PRINCIPAL):
                         opcaoMenuFluxoDeCaixa = sair();
+                        sessao.registrarAtividade();
                         break;
 
                 }
@@ -81,7 +109,9 @@ public class AutoatendimentoController {
                 MenuAutoatendimentoView.alertaEntradaInvalida();
             }
 
-        } while (!opcaoMenuFluxoDeCaixa.equals(MenuAutoatendimentoConstant.MENU_PRINCIPAL));
+        } while (!MenuAutoatendimentoConstant.MENU_PRINCIPAL.equals(opcaoMenuFluxoDeCaixa));
+        
+        monitor.parar();
     }
 
     private void adicionaProduto(Set<ItemVenda> listaCompras) {
