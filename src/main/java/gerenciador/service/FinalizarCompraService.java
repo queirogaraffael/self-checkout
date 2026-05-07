@@ -13,8 +13,12 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.RollbackException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class FinalizarCompraService {
 
@@ -37,8 +41,19 @@ public class FinalizarCompraService {
             try {
                 em.getTransaction().begin();
 
+                List<Long> ids = listaCompras.stream()
+                        .map(item -> item.getProduto().getId())
+                        .collect(Collectors.toList());
+
+                Map<Long, Produto> produtosPorId = em
+                        .createQuery("SELECT p FROM Produto p WHERE p.id IN :ids", Produto.class)
+                        .setParameter("ids", ids)
+                        .getResultList()
+                        .stream()
+                        .collect(Collectors.toMap(Produto::getId, Function.identity()));
+
                 for (ItemVenda item : listaCompras) {
-                    Produto produto = em.find(Produto.class, item.getProduto().getId());
+                    Produto produto = produtosPorId.get(item.getProduto().getId());
 
                     if (produto.getQuantidade() < item.getQuantidade()) {
                         em.getTransaction().rollback();
