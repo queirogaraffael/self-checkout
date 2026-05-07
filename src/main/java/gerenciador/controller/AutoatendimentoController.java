@@ -1,6 +1,5 @@
 package gerenciador.controller;
 
-
 import gerenciador.constant.MenuAutoatendimentoConstant;
 import gerenciador.model.enums.ResultadoFinalizacao;
 import gerenciador.model.NotaFiscal;
@@ -29,9 +28,9 @@ public class AutoatendimentoController {
     private final FinalizarCompraService finalizarCompraService;
 
     public AutoatendimentoController(NotaFiscal notaFiscal,
-                           ItemVendaService itemVendaService,
-                           ProdutoService produtoService,
-                           FinalizarCompraService finalizarCompraService) {
+            ItemVendaService itemVendaService,
+            ProdutoService produtoService,
+            FinalizarCompraService finalizarCompraService) {
         this.notaFiscal = notaFiscal;
         this.itemVendaService = itemVendaService;
         this.produtoService = produtoService;
@@ -43,24 +42,23 @@ public class AutoatendimentoController {
         String opcaoMenuFluxoDeCaixa = "";
 
         Set<ItemVenda> listaCompras = new HashSet<>();
-        
+
         SessaoAutoatendimento sessao = new SessaoAutoatendimento();
         MonitorSessao monitor = new MonitorSessao(sessao);
 
         monitor.iniciar(
-            () -> listaCompras.isEmpty(),
-            () -> {
-                listaCompras.clear();
-                sessao.setNoMenuAutoatendimento(true);
-            }
-        );
+                () -> listaCompras.isEmpty(),
+                () -> {
+                    listaCompras.clear();
+                    sessao.setNoMenuAutoatendimento(true);
+                });
 
         do {
             sessao.setNoMenuAutoatendimento(true);
             try {
                 opcaoMenuFluxoDeCaixa = TerminalAutoatendimentoView.exibirMenuPrincipal();
                 sessao.registrarAtividade();
-                
+
                 if (opcaoMenuFluxoDeCaixa == null) {
                     opcaoMenuFluxoDeCaixa = "";
                 } else if (!opcaoMenuFluxoDeCaixa.equals(MenuAutoatendimentoConstant.MENU_PRINCIPAL)) {
@@ -106,16 +104,22 @@ public class AutoatendimentoController {
 
                 }
             } catch (NumberFormatException erro) {
+                if (erro.getMessage() != null && erro.getMessage().equals("null")) {
+                    continue;
+                }
                 MenuAutoatendimentoView.alertaEntradaInvalida();
             }
 
         } while (!MenuAutoatendimentoConstant.MENU_PRINCIPAL.equals(opcaoMenuFluxoDeCaixa));
-        
+
         monitor.parar();
     }
 
     private void adicionaProduto(Set<ItemVenda> listaCompras) {
         String codigoProduto = AdicionarProdutoView.leCodigoProduto();
+
+        if (codigoProduto == null)
+            return;
 
         if (!produtoService.existeProdutoPorCodigo(codigoProduto)) {
             AdicionarProdutoView.alertaProdutoIndisponivel();
@@ -142,6 +146,9 @@ public class AutoatendimentoController {
 
         String codigoProduto = LeDadosProdutoView.leCodigoBarraProduto();
 
+        if (codigoProduto == null)
+            return;
+
         if (!ItemVendaService.contemProduto(listaCompras, codigoProduto)) {
             RemoverProdutoView.alertaProdutoJaNaoConstava();
             return;
@@ -159,6 +166,10 @@ public class AutoatendimentoController {
         }
 
         String codigo = LeDadosProdutoView.leCodigoBarraProduto();
+
+        if (codigo == null)
+            return;
+
         if (!ItemVendaService.contemProduto(listaCompras, codigo)) {
             CorrigirQuantidadeView.alertaProdutoInvalido();
             return;
@@ -213,6 +224,10 @@ public class AutoatendimentoController {
 
     private String sair() {
         String senhaDigitada = ValidaSenhaView.exibirValidaSenha();
+
+        if (senhaDigitada == null)
+            return "";
+
         boolean autenticacao = AutenticadorDeSenha.autenticacaoSenha(senhaDigitada);
 
         if (!autenticacao) {

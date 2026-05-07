@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class SessaoAutoatendimento {
 
-    private static final long TIMEOUT_MS = 2 * 60 * 1000L; // 2 minutos
+    private static final long TIMEOUT_MS = 2 * 60 * 1000L;
 
     private final AtomicLong ultimaAtividade = new AtomicLong(System.currentTimeMillis());
     private final AtomicBoolean noMenuAutoatendimento = new AtomicBoolean(true);
