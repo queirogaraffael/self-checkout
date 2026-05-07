@@ -67,4 +67,33 @@ public class ItemVendaService {
         Produto produto = produtoDao.retornaProdutoPorCodigo(codigoBarra);
         return new ItemVenda(produto, quantidade);
     }
+
+    public void adicionarAoCarrinho(Set<ItemVenda> listaCompras, String codigoProduto, int quantidade) {
+        if (contemProduto(listaCompras, codigoProduto)) {
+            ItemVenda itemVenda = retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
+            itemVenda.setQuantidade(itemVenda.getQuantidade() + quantidade);
+        } else {
+            ItemVenda item = criaItemVendaPorCodigoProduto(codigoProduto, quantidade);
+            listaCompras.add(item);
+        }
+    }
+
+    public void removerDoCarrinho(Set<ItemVenda> listaCompras, String codigoProduto) {
+        ItemVenda itemVenda = retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
+        if (itemVenda != null) {
+            listaCompras.remove(itemVenda);
+        }
+    }
+
+    public boolean atualizarQuantidadeNoCarrinho(Set<ItemVenda> listaCompras, String codigo, int novaQuantidade) {
+        if (novaQuantidade <= 0) {
+            return false;
+        }
+        ItemVenda itemVenda = retornaItemVendaPeloCodigo(listaCompras, codigo);
+        if (itemVenda != null) {
+            itemVenda.setQuantidade(novaQuantidade);
+            return true;
+        }
+        return false;
+    }
 }

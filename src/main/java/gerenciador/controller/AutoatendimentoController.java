@@ -128,13 +128,7 @@ public class AutoatendimentoController {
 
         int quantidade = LeDadosProdutoView.leQuantidadeProduto();
 
-        if (ItemVendaService.contemProduto(listaCompras, codigoProduto)) {
-            ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
-            itemVenda.setQuantidade(itemVenda.getQuantidade() + quantidade);
-        } else {
-            ItemVenda item = itemVendaService.criaItemVendaPorCodigoProduto(codigoProduto, quantidade);
-            listaCompras.add(item);
-        }
+        itemVendaService.adicionarAoCarrinho(listaCompras, codigoProduto, quantidade);
     }
 
     private void removerProduto(Set<ItemVenda> listaCompras) {
@@ -154,8 +148,7 @@ public class AutoatendimentoController {
             return;
         }
 
-        ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigoProduto);
-        listaCompras.remove(itemVenda);
+        itemVendaService.removerDoCarrinho(listaCompras, codigoProduto);
         RemoverProdutoView.alertaProdutoRemovidoComSucesso();
     }
 
@@ -175,15 +168,15 @@ public class AutoatendimentoController {
             return;
         }
 
-        ItemVenda itemVenda = ItemVendaService.retornaItemVendaPeloCodigo(listaCompras, codigo);
         Integer novaQuantidade = LeDadosProdutoView.leQuantidadeProduto();
 
-        if (novaQuantidade <= 0) {
+        boolean sucesso = itemVendaService.atualizarQuantidadeNoCarrinho(listaCompras, codigo, novaQuantidade);
+
+        if (!sucesso) {
             CorrigirQuantidadeView.alertaProdutoInvalido();
             return;
         }
 
-        itemVenda.setQuantidade(novaQuantidade);
         CorrigirQuantidadeView.alertaQuantidadeProdutoCorrigida();
     }
 
