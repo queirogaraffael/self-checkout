@@ -3,6 +3,7 @@ package gerenciador.infrastructure.repository.hibernate;
 import gerenciador.dto.produto.*;
 import gerenciador.infrastructure.repository.ProdutoRepository;
 import gerenciador.model.Produto;
+import gerenciador.model.Categoria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -28,11 +29,13 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
             produto.setNome(produtoCreateDTO.getNome());
             produto.setPreco(produtoCreateDTO.getPreco());
             produto.setQuantidade(produtoCreateDTO.getQuantidade());
-            produto.setCategoria(produtoCreateDTO.getCategoria());
+            
+            Categoria categoria = entityManager.find(Categoria.class, produtoCreateDTO.getIdCategoria());
+            produto.setCategoria(categoria);
 
             entityManager.persist(produto);
             entityManager.getTransaction().commit();
-            return new ProdutoCreateDTO(produto.getCodigoDeBarra(), produto.getNome(), produto.getPreco(), produto.getQuantidade(), produto.getCategoria());
+            return new ProdutoCreateDTO(produto.getCodigoDeBarra(), produto.getNome(), produto.getPreco(), produto.getQuantidade(), categoria.getId(), categoria.getNome());
 
         } catch (Exception erro) {
             entityManager.getTransaction().rollback();

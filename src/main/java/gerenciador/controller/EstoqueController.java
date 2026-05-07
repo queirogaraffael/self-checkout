@@ -6,10 +6,7 @@ import gerenciador.dto.produto.ProdutoAtualizarPrecoDTO;
 import gerenciador.dto.produto.ProdutoAtualizarQuantidadeDTO;
 import gerenciador.dto.produto.ProdutoCreateDTO;
 import gerenciador.dto.produto.ProdutoDTO;
-import gerenciador.dto.venda.VendaResponseDTO;
-import gerenciador.model.enums.StatusNotaFiscal;
 import gerenciador.model.NotaFiscal;
-import gerenciador.model.Categoria;
 import gerenciador.model.ItemVenda;
 import gerenciador.service.CategoriaService;
 import gerenciador.service.ItemVendaService;
@@ -31,7 +28,6 @@ import gerenciador.view.estoque.venda.PrintarVendaView;
 import gerenciador.view.estoque.venda.VendaView;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Set;
 
 public class EstoqueController {
@@ -44,10 +40,10 @@ public class EstoqueController {
     private final NotaFiscalService notaFiscalService = new NotaFiscalService();
 
     public EstoqueController(NotaFiscal notaFiscal,
-                             ItemVendaService itemVendaService,
-                             CategoriaService categoriaService,
-                             ProdutoService produtoService,
-                             VendaService vendaService) {
+            ItemVendaService itemVendaService,
+            CategoriaService categoriaService,
+            ProdutoService produtoService,
+            VendaService vendaService) {
         this.notaFiscal = notaFiscal;
         this.itemVendaService = itemVendaService;
         this.categoriaService = categoriaService;
@@ -76,7 +72,7 @@ public class EstoqueController {
                     case (MenuEstoqueConstant.LISTAGEM):
                         listarProdutos();
                         break;
-                        
+
                     case (MenuEstoqueConstant.VISUALIZAR_PRODUTO):
                         visualizarProduto();
                         break;
@@ -118,15 +114,15 @@ public class EstoqueController {
 
         String codigo = LeDadosProdutoView.leCodigoBarraProduto();
 
-        if (produtoService.haProdutoComMesmoCodigoBarra(codigo)){
+        if (produtoService.haProdutoComMesmoCodigoBarra(codigo)) {
             ProdutoDTO produto = produtoService.retornaProdutoDTO(codigo);
 
             PrintaProdutoView.printaProdutos(produto.toString());
 
-        }else{
-           AlertasProdutoView.alertaProdutoNaoEncontrado();
+        } else {
+            AlertasProdutoView.alertaProdutoNaoEncontrado();
         }
-        
+
     }
 
     private void cadastrarProduto() {
@@ -143,7 +139,8 @@ public class EstoqueController {
 
             CategoriaResponseDTO categoria = selecionaCategoria();
 
-            ProdutoCreateDTO produtoCreateDTO = produtoService.adicionaProduto(new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, new Categoria(categoria.getId(), categoria.getNome())));
+            ProdutoCreateDTO produtoCreateDTO = produtoService.adicionaProduto(
+                    new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, categoria.getId(), categoria.getNome()));
 
             if (produtoCreateDTO != null) {
                 PrintaProdutoView.printaProdutoCriado(produtoCreateDTO);
@@ -151,7 +148,6 @@ public class EstoqueController {
 
         }
     }
-
 
     private void editarProduto() {
 
@@ -168,14 +164,14 @@ public class EstoqueController {
                     BigDecimal novoPreco = EditarProdutoView.leNovoPreco();
                     atualizarPrecoDTO.setPreco(novoPreco);
 
-                  statusAtualizacao = produtoService.atualizaPrecoProduto(codigo, atualizarPrecoDTO);
+                    statusAtualizacao = produtoService.atualizaPrecoProduto(codigo, atualizarPrecoDTO);
 
                 } else {
                     ProdutoAtualizarQuantidadeDTO atualizarQuantidadeDTO = new ProdutoAtualizarQuantidadeDTO();
                     Integer novaQuantidade = EditarProdutoView.leNovaQuantidade();
                     atualizarQuantidadeDTO.setQuantidade(novaQuantidade);
 
-                    statusAtualizacao = produtoService.atualizaQuantidadeProduto(codigo,atualizarQuantidadeDTO);
+                    statusAtualizacao = produtoService.atualizaQuantidadeProduto(codigo, atualizarQuantidadeDTO);
                 }
 
                 AlertasProdutoView.alertaAtualizacaoProduto(statusAtualizacao);
@@ -184,7 +180,6 @@ public class EstoqueController {
             }
 
         }
-
 
     }
 
@@ -204,7 +199,6 @@ public class EstoqueController {
 
     }
 
-
     private void listaProdutosEstoqueBaixo() {
 
         String resultado = produtoService.geraRelatorioProdutosEstoqueBaixo();
@@ -222,7 +216,6 @@ public class EstoqueController {
         CategoriasView.exibirCategorias(categorias);
     }
 
-
     private void ativadorNotaFiscal(NotaFiscal notaFiscal) {
         String mensagem = NotaFiscalView.verificarAcao(notaFiscal);
 
@@ -230,7 +223,7 @@ public class EstoqueController {
 
         if (opcao == 0) {
             String path = NotaFiscalView.leCaminhoNotaFiscal();
-            
+
             boolean sucesso = notaFiscalService.configurarCaminho(notaFiscal, path);
 
             if (sucesso) {
