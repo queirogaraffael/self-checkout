@@ -9,6 +9,9 @@ import gerenciador.model.Venda;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import gerenciador.model.ItemVenda;
+import gerenciador.service.ItemVendaService;
 import gerenciador.util.ManipulacaoData;
 
 public class VendaService {
@@ -90,6 +93,12 @@ public class VendaService {
         return venda.toStringSemPreco() + "\n"
                 + itensVenda
                 + String.format("Total: %.2f", venda.getTotal());
+    }
+
+    public String gerarDetalhesCompletosDaVenda(int codigo, Set<ItemVenda> itens) {
+        VendaResponseDTO vendaDTO = retornaVenda(codigo);
+        String relatorioItensVenda = ItemVendaService.geraRelatorioItemVenda(itens);
+        return gerarResumoVenda(vendaDTO, relatorioItensVenda);
     }
 
 }

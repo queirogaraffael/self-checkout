@@ -285,14 +285,8 @@ public class EstoqueController {
 
             if (vendaService.haVendaComEsseCodigo(codigo)) {
 
-                VendaResponseDTO vendaDTO = vendaService.retornaVenda(codigo);
-
                 Set<ItemVenda> itens = itemVendaService.retornaItensVenda(codigo);
-
-                String relatorioItensVenda = ItemVendaService.geraRelatorioItemVenda(itens);
-
-                String resultado = vendaService.gerarResumoVenda(vendaDTO, relatorioItensVenda);
-
+                String resultado = vendaService.gerarDetalhesCompletosDaVenda(codigo, itens);
                 PrintarVendaView.printarVenda(resultado);
 
             } else {
