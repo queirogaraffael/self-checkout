@@ -63,18 +63,20 @@ public class FinalizarCompraService {
                     produto.setQuantidade(produto.getQuantidade() - item.getQuantidade());
                 }
 
-                Venda venda = new Venda();
-                venda.setDataHora(LocalDateTime.now());
-                em.persist(venda);
-
                 BigDecimal total = BigDecimal.ZERO;
                 for (ItemVenda item : listaCompras) {
-                    item.setVenda(venda);
-                    em.persist(item);
                     total = total.add(item.subTotal());
                 }
 
+                Venda venda = new Venda();
+                venda.setDataHora(LocalDateTime.now());
                 venda.setTotal(total);
+                em.persist(venda);
+
+                for (ItemVenda item : listaCompras) {
+                    item.setVenda(venda);
+                    em.persist(item);
+                }
 
                 em.getTransaction().commit();
 
