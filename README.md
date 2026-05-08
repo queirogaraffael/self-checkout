@@ -13,6 +13,14 @@
 
 Sistema desktop de autoatendimento (self-checkout) para pequeno varejo, desenvolvido em Java puro sem frameworks de aplicação (sem Spring, sem CDI). O objetivo do projeto foi implementar manualmente as responsabilidades que frameworks modernos abstraem: gerenciamento de beans, ciclo de vida do EntityManager, injeção de dependência e concorrência, com o propósito de compreender o que ocorre por baixo dessas abstrações.
 
+**Arquitetura e Padrões:** O projeto segue o padrão arquitetural **MVC (Model-View-Controller)**, garantindo que as regras de negócio e a persistência de dados (Model) estejam totalmente desacopladas das interfaces gráficas (View) através da orquestração de controladores intermediários (Controller).
+
+**Contexto e Escopo de Uso:** O sistema foi dimensionado para as características reais de um pequeno/médio supermercado:
+
+- **Escala de Terminais:** Projetado para operar em um ambiente com, no máximo, 4 a 10 caixas de autoatendimento funcionando simultaneamente na mesma loja.
+- **Transações Rápidas (Modelo Express):** Focado no comportamento real de caixas de autoatendimento, que recebem clientes com carrinhos menores (estimado para o processamento rápido de, no máximo, ~60 itens). O sistema não é projetado para processar "compras do mês" gigantescas, mas sim para dar agilidade à loja.
+  _Nota: Este escopo específico foi fundamental para as decisões de design arquitetural. Com poucas instâncias e transações breves, abordagens de performance mais "leves", como o Optimistic Locking, tornam-se altamente eficientes e seguras._
+
 O sistema tem dois módulos:
 
 - **Autoatendimento (Fluxo de Caixa):** terminal voltado ao cliente final, com adição e remoção de produtos, correção de quantidade, finalização da compra e geração de nota fiscal em arquivo.
@@ -32,13 +40,13 @@ Entidades JPA, chave primária composta e enums de domínio:
 
 **Legenda:**
 
-| Símbolo | Significado |
-|---|---|
-| 🔑 | Chave Primária (`@Id`) |
-| 🔒 | Campo de versionamento (`@Version` — Optimistic Lock) |
-| `<<Entity>>` | Classe mapeada como tabela JPA |
-| `<<Embeddable>>` | Chave primária composta embutida |
-| `<<enumeration>>` | Enum do domínio |
+| Símbolo           | Significado                                           |
+| ----------------- | ----------------------------------------------------- |
+| 🔑                | Chave Primária (`@Id`)                                |
+| 🔒                | Campo de versionamento (`@Version` — Optimistic Lock) |
+| `<<Entity>>`      | Classe mapeada como tabela JPA                        |
+| `<<Embeddable>>`  | Chave primária composta embutida                      |
+| `<<enumeration>>` | Enum do domínio                                       |
 
 **Notas de Mapeamento:**
 
@@ -47,6 +55,26 @@ Entidades JPA, chave primária composta e enums de domínio:
 - `Categoria` usa `CascadeType.ALL` sobre `Produto`.
 - `StatusNotaFiscal` pertence à entidade `NotaFiscal` da camada de domínio, não mapeada diretamente como tabela JPA.
 - `ResultadoFinalizacao` é um enum de resultado de operação, não persistido no banco.
+
+## Estrutura do Projeto
+
+A organização de pacotes do sistema reflete a arquitetura MVC e o isolamento claro das responsabilidades entre configurações, persistência, regras de negócio e interface com o usuário:
+
+```text
+src/main/java/gerenciador
+├── config          # Configuração de IoC manual (ApplicationContext, ControllerRegistry) e Nota Fiscal
+├── constant        # Constantes literais do sistema (textos de menu)
+├── controller      # Controladores MVC (orquestram as chamadas entre View e Service)
+├── dto             # Objetos de Transferência de Dados (Data Transfer Objects)
+├── infrastructure  # Camada de infraestrutura técnica e conexão com o banco de dados
+│   ├── exception   # Exceções personalizadas de negócio (ProdutoEsgotadoException, etc)
+│   └── repository  # Interfaces de repositório e implementações concretas (Hibernate)
+├── model           # Entidades JPA (@Entity), chaves primárias compostas e Enums de domínio
+├── service         # Núcleo da lógica de negócio, cálculos (BigDecimal) e orquestração de persistência
+├── session         # Gerenciamento de timeout de sessão do cliente e monitoramento multithread
+├── util            # Classes utilitárias diversas (ex: AutenticadorDeSenha)
+└── view            # Telas da Interface Gráfica do usuário (Swing)
+```
 
 ---
 
@@ -369,12 +397,12 @@ A senha de acesso ao Painel de Administração é definida pelo próprio usuári
 
 ### Painel de Administração
 
-![Painel de Administração I](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Painel%20Administracao%20I.jpeg?raw=true)
-![Painel de Administração II](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Painel%20Administracao%20II.jpeg?raw=true)
+![Painel de Administração I](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Painel%20Administracao%20I.png?raw=true)
+![Painel de Administração II](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Painel%20Administracao%20II.png?raw=true)
 
 ### Autoatendimento
 
-![Autoatendimento](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Autoatendimento.jpeg?raw=true)
+![Autoatendimento](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Autoatendimento.png?raw=true)
 
 ### Validação de Senha
 
