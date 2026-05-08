@@ -14,6 +14,7 @@ import gerenciador.service.ProdutoService;
 import gerenciador.service.VendaService;
 import gerenciador.service.NotaFiscalService;
 import gerenciador.view.estoque.GerenciadorDeEstoqueView;
+import gerenciador.view.shared.AlertaGeralView;
 import gerenciador.view.estoque.notafiscal.NotaFiscalView;
 import gerenciador.view.shared.categoria.CategoriasView;
 import gerenciador.view.shared.produto.ProdutoView;
@@ -98,6 +99,9 @@ public class EstoqueController {
                 }
             } catch (NumberFormatException erro) {
                 GerenciadorDeEstoqueView.alertaEntradasInvalida();
+            } catch (Exception erro) {
+                System.err.println("Erro inesperado no estoque: " + erro.getMessage());
+                AlertaGeralView.alertaErroInesperado();
             }
 
         } while (!opcao.equals(MenuEstoqueConstant.MENU_PRINCIPAL));

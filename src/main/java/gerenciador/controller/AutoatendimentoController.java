@@ -10,6 +10,7 @@ import gerenciador.service.ProdutoService;
 import gerenciador.view.menu.ValidaSenhaView;
 import gerenciador.view.autoatendimento.AutoatendimentoView;
 import gerenciador.view.autoatendimento.FinalizarCompraView;
+import gerenciador.view.shared.AlertaGeralView;
 import gerenciador.view.shared.produto.ProdutoView;
 import gerenciador.util.AutenticadorDeSenha;
 import gerenciador.session.MonitorSessao;
@@ -108,6 +109,9 @@ public class AutoatendimentoController {
                     continue;
                 }
                 AutoatendimentoView.alertaEntradaInvalida();
+            } catch (Exception erro) {
+                System.err.println("Erro inesperado no autoatendimento: " + erro.getMessage());
+                AlertaGeralView.alertaErroInesperado();
             }
 
         } while (!MenuAutoatendimentoConstant.MENU_PRINCIPAL.equals(opcaoMenuFluxoDeCaixa));
