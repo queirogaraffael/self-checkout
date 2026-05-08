@@ -1,4 +1,4 @@
-package gerenciador.view.estoque;
+package gerenciador.view.admin;
 
 import javax.swing.*;
 import java.math.BigDecimal;

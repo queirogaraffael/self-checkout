@@ -9,12 +9,12 @@ import gerenciador.util.AutenticadorDeSenha;
 public class MenuPrincipalController {
 
     private final JPAManager entityManagerFactoryService;
-    private final EstoqueController estoqueController;
+    private final PainelAdministrativoController painelAdministrativoController;
     private final AutoatendimentoController autoatendimentoController;
 
-    public MenuPrincipalController(JPAManager entityManagerFactoryService, EstoqueController estoqueController, AutoatendimentoController autoatendimentoController) {
+    public MenuPrincipalController(JPAManager entityManagerFactoryService, PainelAdministrativoController painelAdministrativoController, AutoatendimentoController autoatendimentoController) {
         this.entityManagerFactoryService = entityManagerFactoryService;
-        this.estoqueController = estoqueController;
+        this.painelAdministrativoController = painelAdministrativoController;
         this.autoatendimentoController = autoatendimentoController;
     }
 
@@ -53,7 +53,7 @@ public class MenuPrincipalController {
         boolean autenticacao = AutenticadorDeSenha.autenticacaoSenha(senhaDigitada);
 
         if (autenticacao) {
-            estoqueController.gerenciadorEstoque();
+            painelAdministrativoController.exibirPainelAdministrativo();
         } else {
             ValidaSenhaView.exibirSenhaIncorreta();
         }

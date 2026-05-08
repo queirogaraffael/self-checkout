@@ -1,9 +1,9 @@
-package gerenciador.view.estoque;
+package gerenciador.view.admin;
 
 import javax.swing.JOptionPane;
 
-public class GerenciadorDeEstoqueView {
-	public static String exibirMenuGerenciadorDeEstoque() {
+public class PainelAdministrativoView {
+	public static String exibirPainelAdministrativo() {
 
 		Object[] opcoesMenu = { "Novo Produto", "Atualizar Produto", "Inventário Completo", "Consultar Produto",
 				"Alerta de Reposição", "Gerenciar Categorias", "Excluir Produto",

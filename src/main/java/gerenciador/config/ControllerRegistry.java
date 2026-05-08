@@ -1,7 +1,7 @@
 package gerenciador.config;
 
 import gerenciador.controller.AutoatendimentoController;
-import gerenciador.controller.EstoqueController;
+import gerenciador.controller.PainelAdministrativoController;
 import gerenciador.infrastructure.RepositoryFactory;
 import gerenciador.service.CategoriaService;
 import gerenciador.service.FinalizarCompraService;
@@ -62,8 +62,8 @@ public class ControllerRegistry {
         return vendaService;
     }
 
-    public EstoqueController createEstoqueController() {
-        return new EstoqueController(createNotaFiscal(), createItemVendaService(), createCategoriaService(),
+    public PainelAdministrativoController createPainelAdministrativoController() {
+        return new PainelAdministrativoController(createNotaFiscal(), createItemVendaService(), createCategoriaService(),
                 createProdutoService(), createVendaService());
     }
 

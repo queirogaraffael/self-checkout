@@ -1,6 +1,6 @@
 package gerenciador.controller;
 
-import gerenciador.constant.MenuEstoqueConstant;
+import gerenciador.constant.MenuAdminConstant;
 import gerenciador.dto.categoria.CategoriaResponseDTO;
 import gerenciador.dto.produto.ProdutoAtualizarPrecoDTO;
 import gerenciador.dto.produto.ProdutoAtualizarQuantidadeDTO;
@@ -13,19 +13,19 @@ import gerenciador.service.ItemVendaService;
 import gerenciador.service.ProdutoService;
 import gerenciador.service.VendaService;
 import gerenciador.service.NotaFiscalService;
-import gerenciador.view.estoque.GerenciadorDeEstoqueView;
+import gerenciador.view.admin.PainelAdministrativoView;
 import gerenciador.view.shared.AlertaGeralView;
-import gerenciador.view.estoque.notafiscal.NotaFiscalView;
+import gerenciador.view.admin.notafiscal.NotaFiscalView;
 import gerenciador.view.shared.categoria.CategoriasView;
 import gerenciador.view.shared.produto.ProdutoView;
-import gerenciador.view.estoque.EditarProdutoView;
-import gerenciador.view.estoque.venda.VendaView;
+import gerenciador.view.admin.EditarProdutoView;
+import gerenciador.view.admin.venda.VendaView;
 
 import java.math.BigDecimal;
 import java.util.Set;
 import gerenciador.infrastructure.exception.ProdutoModificadoConcorrentementeException;
 
-public class EstoqueController {
+public class PainelAdministrativoController {
 
     private final NotaFiscal notaFiscal;
     private final ItemVendaService itemVendaService;
@@ -34,7 +34,7 @@ public class EstoqueController {
     private final VendaService vendaService;
     private final NotaFiscalService notaFiscalService = new NotaFiscalService();
 
-    public EstoqueController(NotaFiscal notaFiscal,
+    public PainelAdministrativoController(NotaFiscal notaFiscal,
             ItemVendaService itemVendaService,
             CategoriaService categoriaService,
             ProdutoService produtoService,
@@ -46,66 +46,66 @@ public class EstoqueController {
         this.vendaService = vendaService;
     }
 
-    public void gerenciadorEstoque() {
+    public void exibirPainelAdministrativo() {
         String opcao = "";
         do {
             try {
-                opcao = GerenciadorDeEstoqueView.exibirMenuGerenciadorDeEstoque();
+                opcao = PainelAdministrativoView.exibirPainelAdministrativo();
 
                 switch (opcao) {
 
-                    case (MenuEstoqueConstant.CADASTRAR):
+                    case (MenuAdminConstant.CADASTRAR):
 
                         cadastrarProduto();
                         break;
 
-                    case (MenuEstoqueConstant.EDITAR):
+                    case (MenuAdminConstant.EDITAR):
 
                         editarProduto();
                         break;
 
-                    case (MenuEstoqueConstant.LISTAGEM):
+                    case (MenuAdminConstant.LISTAGEM):
                         listarProdutos();
                         break;
 
-                    case (MenuEstoqueConstant.VISUALIZAR_PRODUTO):
+                    case (MenuAdminConstant.VISUALIZAR_PRODUTO):
                         visualizarProduto();
                         break;
 
-                    case (MenuEstoqueConstant.LISTAGEM_ESTOQUE_BAIXO):
+                    case (MenuAdminConstant.LISTAGEM_ESTOQUE_BAIXO):
                         listaProdutosEstoqueBaixo();
                         break;
 
-                    case (MenuEstoqueConstant.LISTAGEM_CATEGORIAS):
+                    case (MenuAdminConstant.LISTAGEM_CATEGORIAS):
                         listarCategorias();
                         break;
 
-                    case (MenuEstoqueConstant.CONFIGURAR_NOTA_FICAL):
+                    case (MenuAdminConstant.CONFIGURAR_NOTA_FICAL):
 
                         ativadorNotaFiscal(notaFiscal);
                         break;
 
-                    case (MenuEstoqueConstant.LISTAGEM_VENDAS):
+                    case (MenuAdminConstant.LISTAGEM_VENDAS):
                         listarVendas();
                         break;
 
-                    case (MenuEstoqueConstant.DETALHES_VENDA):
+                    case (MenuAdminConstant.DETALHES_VENDA):
 
                         detalharVenda();
                         break;
 
-                    case (MenuEstoqueConstant.MENU_PRINCIPAL):
+                    case (MenuAdminConstant.MENU_PRINCIPAL):
                         break;
 
                 }
             } catch (NumberFormatException erro) {
-                GerenciadorDeEstoqueView.alertaEntradasInvalida();
+                PainelAdministrativoView.alertaEntradasInvalida();
             } catch (Exception erro) {
                 System.err.println("Erro inesperado no estoque: " + erro.getMessage());
                 AlertaGeralView.alertaErroInesperado();
             }
 
-        } while (!opcao.equals(MenuEstoqueConstant.MENU_PRINCIPAL));
+        } while (!opcao.equals(MenuAdminConstant.MENU_PRINCIPAL));
     }
 
     private void visualizarProduto() {

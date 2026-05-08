@@ -1,4 +1,4 @@
-package gerenciador.view.estoque.notafiscal;
+package gerenciador.view.admin.notafiscal;
 
 
 import gerenciador.model.enums.StatusNotaFiscal;

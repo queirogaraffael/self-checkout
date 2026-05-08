@@ -1,6 +1,6 @@
 package gerenciador.constant;
 
-public class MenuEstoqueConstant {
+public class MenuAdminConstant {
 
 	public static final String CADASTRAR = "Novo Produto";
 	public static final String EDITAR = "Atualizar Produto";
