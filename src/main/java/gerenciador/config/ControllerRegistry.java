@@ -8,6 +8,8 @@ import gerenciador.service.FinalizarCompraService;
 import gerenciador.service.ItemVendaService;
 import gerenciador.service.ProdutoService;
 import gerenciador.service.VendaService;
+import gerenciador.infrastructure.repository.FinalizarCompraRepository;
+import gerenciador.infrastructure.repository.hibernate.FinalizarCompraRepositoryHibernate;
 
 public class ControllerRegistry {
 
@@ -65,9 +67,13 @@ public class ControllerRegistry {
                 createProdutoService(), createVendaService());
     }
 
+    public FinalizarCompraRepository createFinalizarCompraRepository() {
+        return new FinalizarCompraRepositoryHibernate(repositoryFactory.getEntityManagerFactory());
+    }
+
     public FinalizarCompraService createFinalizarCompraService() {
         if (finalizarCompraService == null) {
-            finalizarCompraService = new FinalizarCompraService(repositoryFactory.getEntityManagerFactory());
+            finalizarCompraService = new FinalizarCompraService(createFinalizarCompraRepository());
         }
         return finalizarCompraService;
     }
