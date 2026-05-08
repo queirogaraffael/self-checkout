@@ -36,7 +36,7 @@ O sistema tem dois módulos:
 
 Entidades JPA, chave primária composta e enums de domínio:
 
-![Diagrama de Classes JPA](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/venda-produto-item-jpa-class-diagram.png?raw=true)
+![Diagrama de Classes JPA](https://github.com/queirogaraffael/self-checkout/blob/main/assets/venda-produto-item-jpa-class-diagram.png?raw=true)
 
 **Legenda:**
 
@@ -411,21 +411,21 @@ A senha de acesso ao Painel de Administração é definida pelo próprio usuári
 
 ### Menu Principal
 
-![Menu Principal](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Menu%20Principal.png?raw=true)
+![Menu Principal](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Menu%20Principal.png?raw=true)
 
 ### Painel de Administração
 
-![Painel de Administração I](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Painel%20Administracao%20I.png?raw=true)
-![Painel de Administração II](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Painel%20Administracao%20II.png?raw=true)
+![Painel de Administração I](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Painel%20Administracao%20I.png?raw=true)
+![Painel de Administração II](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Painel%20Administracao%20II.png?raw=true)
 
 ### Autoatendimento
 
-![Autoatendimento](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Autoatendimento.png?raw=true)
+![Autoatendimento](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Autoatendimento.png?raw=true)
 
 ### Validação de Senha
 
-![Validação de Senha](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/assets/Validacao%20Senha.png?raw=true)
+![Validação de Senha](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Validacao%20Senha.png?raw=true)
 
 ## Licença
 
-[MIT](https://github.com/queirogaraffael/self-checkout-retail-desktop/blob/main/LICENSE)
+Este projeto está licenciado sob a [Licença MIT](https://github.com/queirogaraffael/self-checkout/blob/main/LICENSE)
