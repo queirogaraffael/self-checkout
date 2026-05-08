@@ -150,7 +150,17 @@ private Integer version;
 
 O Hibernate incrementa esse campo automaticamente a cada `UPDATE`. Se dois terminais leram `version = 5` e um deles commitou primeiro, o segundo receberá `OptimisticLockException` ao tentar commitar, pois o `WHERE version = 5` não encontrará mais a linha.
 
-Essa estratégia foi preferível ao Pessimistic Locking (`SELECT FOR UPDATE`) porque, no contexto de 4–10 terminais físicos com transações de milissegundos, colisões são improváveis. O custo de bloquear o registro para o caso majoritário (sem colisão) não se justifica. Quando a colisão ocorre, o retry com backoff a resolve; e na retentativa, o registro é lido novamente com dados frescos, o que permite detectar corretamente o estoque zerado via `ProdutoEsgotadoException`.
+### Justificativa para uso de Lock Otimista
+
+O lock pessimista foi considerado e descartado por um motivo técnico específico. O método de finalizar a compra busca múltiplos produtos em uma única query com `IN :ids`, onde os IDs são derivados de um `Set<ItemVenda>` sem ordenação garantida. Em um cenário de lock pessimista com `SELECT ... FOR UPDATE`, duas transações concorrentes que compartilham produtos em comum poderiam adquirir os locks em ordens diferentes, introduzindo risco de *deadlock* clássico sem que haja qualquer garantia estrutural de ordenação para preveni-lo.
+
+O lock otimista elimina esse risco porque nenhum lock é adquirido no momento da leitura. A integridade é garantida pelo campo `@Version` na entidade `Produto`, que faz o MySQL rejeitar no commit qualquer transação que tente sobrescrever uma versão já modificada por outra transação concorrente. Quando isso ocorre, a transação é reexecutada com *backoff* exponencial e *jitter*, relendo o estado atual do banco.
+
+Vale registrar que o argumento de *overhead* não é determinante nesse caso. Em um portal de autoatendimento com volume baixo por transação e baixa probabilidade de dois clientes disputarem o mesmo produto simultaneamente, o custo real de ambas as abordagens é simétrico. A escolha pelo lock otimista se justifica pela ausência de risco de deadlock, e não por ganho de performance.
+
+### Isolation Level
+
+O projeto foi desenvolvido e validado com `REPEATABLE_READ`, que é o padrão do MySQL. Não é necessário alterar essa configuração. A consistência das transações concorrentes é garantida pelo mecanismo de lock otimista via `@Version` no nível da aplicação, mantendo a integridade dos dados de forma independente do *isolation level* configurado no servidor.
 
 ### Transação por tentativa com `EntityManager` isolado
 
