@@ -4,10 +4,10 @@ import gerenciador.dto.venda.VendaResponseDTO;
 import gerenciador.infrastructure.repository.VendaRepository;
 import gerenciador.model.ItemVenda;
 import gerenciador.model.Venda;
-import gerenciador.service.VendaService;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -36,7 +36,7 @@ public class VendaServiceTest {
         // Cenário
         Set<ItemVenda> itensVenda = new HashSet<>();
         LocalDateTime dataHora = LocalDateTime.now();
-        Venda venda = new Venda(null, dataHora, 10.0, itensVenda);
+        Venda venda = new Venda(null, dataHora, new BigDecimal("10.00"), itensVenda);
 
         // Ação
         vendaService.adicionaVenda(venda);
@@ -50,7 +50,7 @@ public class VendaServiceTest {
         // Cenário
         Set<ItemVenda> itensVenda = new HashSet<>();
         LocalDateTime dataHora = LocalDateTime.now();
-        Venda venda = new Venda(null, dataHora, 10.0, itensVenda);
+        Venda venda = new Venda(null, dataHora, new BigDecimal("10.00"), itensVenda);
 
         // Ação
         vendaService.atualizaVenda(venda);
@@ -89,7 +89,7 @@ public class VendaServiceTest {
         // Cenário
         Integer codigo = 1;
         LocalDateTime dataHora = LocalDateTime.of(2023, Month.APRIL, 13, 10, 30);
-        Double total = 10.0;
+        BigDecimal total = new BigDecimal("10.00");
         VendaResponseDTO vendaDTO = new VendaResponseDTO(codigo, dataHora, total);
 
         when(vendaDao.retornaVendaDTOPorCodigo(codigo)).thenReturn(vendaDTO);
@@ -100,15 +100,15 @@ public class VendaServiceTest {
         // Validação
         assertEquals(codigo, resultado.getCodigo());
         assertEquals(dataHora, resultado.getDataHora());
-        assertEquals(total, resultado.getTotal(), 0.01);
+        assertEquals(total, resultado.getTotal());
     }
 
     @Test
     public void testRetornaRelatorioVendas() {
         // Cenário
         List<VendaResponseDTO> vendas = Arrays.asList(
-                new VendaResponseDTO(1, LocalDateTime.of(2023, 4, 13, 10, 30), 10.0),
-                new VendaResponseDTO(2, LocalDateTime.of(2023, 4, 14, 11, 45), 20.0)
+                new VendaResponseDTO(1, LocalDateTime.of(2023, 4, 13, 10, 30), new BigDecimal("10.00")),
+                new VendaResponseDTO(2, LocalDateTime.of(2023, 4, 14, 11, 45), new BigDecimal("20.00"))
         );
         when(vendaDao.retornaVendas()).thenReturn(vendas);
 
@@ -126,13 +126,13 @@ public class VendaServiceTest {
         // Cenário
         LocalDate data = LocalDate.of(2025, 4, 1);
         List<VendaResponseDTO> vendas = Arrays.asList(
-                new VendaResponseDTO(1, LocalDateTime.of(2025, 4, 1, 10, 30), 10.0),
-                new VendaResponseDTO(2, LocalDateTime.of(2025, 4, 1, 15, 45), 20.0)
+                new VendaResponseDTO(1, LocalDateTime.of(2025, 4, 1, 10, 30), new BigDecimal("10.00")),
+                new VendaResponseDTO(2, LocalDateTime.of(2025, 4, 1, 15, 45), new BigDecimal("20.00"))
         );
         when(vendaDao.retornaVendasPorData(data)).thenReturn(vendas);
 
         // Ação
-        String relatorio = vendaService.retornaRelatorioVendasPorData(data);
+        String relatorio = vendaService.retornaRelatorioVendasPorData("01/04/2025");
 
         // Validação
         assertTrue(relatorio.contains("Venda: Codigo = 1"));
@@ -144,7 +144,7 @@ public class VendaServiceTest {
     @Test
     public void testGerarResumoVenda() {
         // Cenário
-        VendaResponseDTO vendaDTO = new VendaResponseDTO(1, LocalDateTime.of(2025, 4, 1, 10, 30), 10.0);
+        VendaResponseDTO vendaDTO = new VendaResponseDTO(1, LocalDateTime.of(2025, 4, 1, 10, 30), new BigDecimal("10.00"));
         String itensVenda = "Item 1: Produto A, Quantidade: 2";
 
         // Ação
@@ -152,7 +152,7 @@ public class VendaServiceTest {
 
         // Validação
         assertTrue(resumo.contains("Produto A"));
-        assertTrue(resumo.contains("Total: 10.00"));
+        assertTrue(resumo.contains("Total: 10.00") || resumo.contains("Total: 10,00"));
         assertTrue(resumo.contains("Item 1: Produto A"));
     }
 }

@@ -2,7 +2,6 @@ package gerenciador.service;
 
 import gerenciador.dto.categoria.CategoriaResponseDTO;
 import gerenciador.infrastructure.repository.CategoriaRepository;
-import gerenciador.service.CategoriaService;
 import org.junit.Before;
 import org.junit.Test;
 

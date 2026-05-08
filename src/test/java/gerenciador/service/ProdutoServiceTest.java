@@ -4,11 +4,12 @@ import gerenciador.dto.produto.*;
 import gerenciador.infrastructure.repository.ProdutoRepository;
 import gerenciador.model.Categoria;
 import gerenciador.model.Produto;
-import gerenciador.service.ProdutoService;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -29,7 +30,7 @@ public class ProdutoServiceTest {
     @Test
     public void testAdicionaProduto() {
         // Cenário
-        ProdutoCreateDTO produtoCreateDTO = new ProdutoCreateDTO("123456789", "Produto A", 10.0, 5, new Categoria());
+        ProdutoCreateDTO produtoCreateDTO = new ProdutoCreateDTO("123456789", "Produto A", new BigDecimal("10.00"), 5, 1, "Categoria A");
         when(produtoDao.adicionaProduto(produtoCreateDTO)).thenReturn(produtoCreateDTO);
 
         // Ação
@@ -43,7 +44,7 @@ public class ProdutoServiceTest {
     public void testRetornaProdutoDTO() {
         // Cenário
         String codigo = "123456789";
-        ProdutoDTO produtoDTO = new ProdutoDTO("123456789", "Produto A", 10.0, 5, new Categoria());
+        ProdutoDTO produtoDTO = new ProdutoDTO("123456789", "Produto A", new BigDecimal("10.00"), 5, new Categoria());
         when(produtoDao.retornaProdutoDTOPorCodigo(codigo)).thenReturn(produtoDTO);
 
         // Ação
@@ -52,7 +53,7 @@ public class ProdutoServiceTest {
         // Validação
         assertEquals(codigo, resultado.getCodigoDeBarra());
         assertEquals("Produto A", resultado.getNome());
-        assertEquals(10.0, resultado.getPreco(), 0.01);
+        assertEquals(new BigDecimal("10.00"), resultado.getPreco());
         assertEquals((Integer) 5, resultado.getQuantidade());
     }
 
@@ -119,8 +120,8 @@ public class ProdutoServiceTest {
         // Cenário
         String codigo = "123456789";
         ProdutoAtualizarPrecoDTO atualizarPrecoDTO = new ProdutoAtualizarPrecoDTO();
-        atualizarPrecoDTO.setPreco(15.0);
-        Produto produto = new Produto(1L, codigo, "Produto A", 10.0, 5, new Categoria(), null);
+        atualizarPrecoDTO.setPreco(new BigDecimal("15.00"));
+        Produto produto = new Produto(1L, codigo, "Produto A", new BigDecimal("10.00"), 5, 0, new Categoria(), new HashSet<>());
         when(produtoDao.retornaProdutoPorCodigo(codigo)).thenReturn(produto);
         when(produtoDao.atualizaProduto(produto)).thenReturn(true);
 
@@ -129,7 +130,7 @@ public class ProdutoServiceTest {
 
         // Validação
         assertTrue(resultado);
-        assertEquals(15.0, produto.getPreco(), 0.01);
+        assertEquals(new BigDecimal("15.00"), produto.getPreco());
     }
 
     @Test
@@ -137,7 +138,7 @@ public class ProdutoServiceTest {
         // Cenário
         String codigo = "123456789";
         ProdutoAtualizarQuantidadeDTO atualizarQuantidadeDTO = new ProdutoAtualizarQuantidadeDTO(10);
-        Produto produto = new Produto(1L, codigo, "Produto A", 10.0, 5, new Categoria(), null);
+        Produto produto = new Produto(1L, codigo, "Produto A", new BigDecimal("10.00"), 5, 0, new Categoria(), new HashSet<>());
         when(produtoDao.retornaProdutoPorCodigo(codigo)).thenReturn(produto);
         when(produtoDao.atualizaProduto(produto)).thenReturn(true);
 

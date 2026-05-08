@@ -4,10 +4,10 @@ import gerenciador.infrastructure.repository.ItemVendaRepository;
 import gerenciador.infrastructure.repository.ProdutoRepository;
 import gerenciador.model.ItemVenda;
 import gerenciador.model.Produto;
-import gerenciador.service.ItemVendaService;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +34,7 @@ public class ItemVendaServiceTest {
         produto.setId(1L);
         produto.setCodigoDeBarra("12345");
         produto.setNome("Produto A");
-        produto.setPreco(10.0);
+        produto.setPreco(new BigDecimal("10.00"));
         produto.setQuantidade(10);
         produto.setCategoria(null);
 
@@ -56,7 +56,7 @@ public class ItemVendaServiceTest {
         produtoA.setId(1L);
         produtoA.setCodigoDeBarra("12345");
         produtoA.setNome("Produto A");
-        produtoA.setPreco(10.0);
+        produtoA.setPreco(new BigDecimal("10.00"));
         produtoA.setQuantidade(10);
         produtoA.setCategoria(null);
 
@@ -64,7 +64,7 @@ public class ItemVendaServiceTest {
         produtoB.setId(2L);
         produtoB.setCodigoDeBarra("67890");
         produtoB.setNome("Produto B");
-        produtoB.setPreco(15.0);
+        produtoB.setPreco(new BigDecimal("15.00"));
         produtoB.setQuantidade(5);
         produtoB.setCategoria(null);
 
@@ -75,10 +75,10 @@ public class ItemVendaServiceTest {
         listaCompras.add(itemVendaB);
 
         // Ação
-        Double total = ItemVendaService.somaPrecos(listaCompras);
+        BigDecimal total = ItemVendaService.somaPrecos(listaCompras);
 
         // Validação
-        assertEquals(35.0, total, 0.01);
+        assertEquals(new BigDecimal("35.00"), total);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ItemVendaServiceTest {
         produto.setId(1L);
         produto.setCodigoDeBarra("12345");
         produto.setNome("Produto A");
-        produto.setPreco(10.0);
+        produto.setPreco(new BigDecimal("10.00"));
         produto.setQuantidade(10);
         produto.setCategoria(null);
 
@@ -113,7 +113,7 @@ public class ItemVendaServiceTest {
         produto.setId(1L);
         produto.setCodigoDeBarra("12345");
         produto.setNome("Produto A");
-        produto.setPreco(10.0);
+        produto.setPreco(new BigDecimal("10.00"));
         produto.setQuantidade(10);
         produto.setCategoria(null);
 
@@ -137,7 +137,7 @@ public class ItemVendaServiceTest {
         produto.setId(1L);
         produto.setCodigoDeBarra("12345");
         produto.setNome("Produto A");
-        produto.setPreco(10.0);
+        produto.setPreco(new BigDecimal("10.00"));
         produto.setQuantidade(10);
         produto.setCategoria(null);
         ItemVenda itemVenda = new ItemVenda(produto, 2);
@@ -156,7 +156,7 @@ public class ItemVendaServiceTest {
         produtoA.setId(1L);
         produtoA.setCodigoDeBarra("12345");
         produtoA.setNome("Produto A");
-        produtoA.setPreco(10.0);
+        produtoA.setPreco(new BigDecimal("10.00"));
         produtoA.setQuantidade(10);
         produtoA.setCategoria(null);
 
@@ -164,7 +164,7 @@ public class ItemVendaServiceTest {
         produtoB.setId(2L);
         produtoB.setCodigoDeBarra("67890");
         produtoB.setNome("Produto B");
-        produtoB.setPreco(15.0);
+        produtoB.setPreco(new BigDecimal("15.00"));
         produtoB.setQuantidade(5);
         produtoB.setCategoria(null);
 
@@ -178,8 +178,8 @@ public class ItemVendaServiceTest {
         String relatorio = ItemVendaService.geraRelatorioItemVenda(itensVenda);
 
         // Validação
-        assertTrue(relatorio.contains("Codigo: 12345, nome = Produto A, Preco: 10.0 R$, Quantidade: 2"));
-        assertTrue(relatorio.contains("Codigo: 67890, nome = Produto B, Preco: 15.0 R$, Quantidade: 1"));
+        assertTrue(relatorio.contains("Codigo: 12345, nome = Produto A, Preco: 10.00 R$, Quantidade: 2"));
+        assertTrue(relatorio.contains("Codigo: 67890, nome = Produto B, Preco: 15.00 R$, Quantidade: 1"));
     }
 
     @Test
@@ -191,7 +191,7 @@ public class ItemVendaServiceTest {
         produto.setId(1L);
         produto.setCodigoDeBarra("12345");
         produto.setNome("Produto A");
-        produto.setPreco(10.0);
+        produto.setPreco(new BigDecimal("10.00"));
         produto.setQuantidade(10);
         produto.setCategoria(null);
 
