@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     quantidade INT NOT NULL,
     version INT NOT NULL DEFAULT 0,
     categoria_id INT NOT NULL,
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
 
     FOREIGN KEY (categoria_id) REFERENCES categorias(id),
 

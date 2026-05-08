@@ -62,6 +62,14 @@ public class ProdutoView {
         }
     }
 
+    public static void alertaInativacaoProduto(boolean status) {
+        if (status) {
+            JOptionPane.showMessageDialog(null, "Produto inativado com sucesso!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Problema ao inativar produto. Verifique se ele existe e tente novamente.");
+        }
+    }
+
     public static void alertaConflitoAtualizacaoProduto() {
         JOptionPane.showMessageDialog(null,
                 "Os dados deste produto foram alterados por outro usuário simultaneamente.\nPor favor, reabra o produto para ver os dados atualizados.",

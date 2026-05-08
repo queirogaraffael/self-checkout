@@ -88,7 +88,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
             String jpql = "SELECT new gerenciador.dto.produto.ProdutoDTO(" +
                     "p.codigoDeBarra, p.nome, p.preco, p.quantidade, p.categoria) " +
                     "FROM Produto p " +
-                    "WHERE p.codigoDeBarra = :codigoDeBarra";
+                    "WHERE p.codigoDeBarra = :codigoDeBarra AND p.ativo = true";
 
             List<ProdutoDTO> produtos = entityManager.createQuery(jpql, ProdutoDTO.class)
                     .setParameter("codigoDeBarra", codigo)
@@ -113,7 +113,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
         try {
             String jpql = "SELECT new gerenciador.dto.produto.ProdutoAtualizarQuantidadeDTO(p.quantidade) " +
                     "FROM Produto p " +
-                    "WHERE p.codigoDeBarra = :codigoDeBarra";
+                    "WHERE p.codigoDeBarra = :codigoDeBarra AND p.ativo = true";
 
             List<ProdutoAtualizarQuantidadeDTO> produtos = entityManager.createQuery(jpql, ProdutoAtualizarQuantidadeDTO.class)
                     .setParameter("codigoDeBarra", codigo)
@@ -140,7 +140,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
 
         try {
             String jpql = "SELECT p FROM Produto p " +
-                    "WHERE p.codigoDeBarra = :codigoDeBarra";
+                    "WHERE p.codigoDeBarra = :codigoDeBarra AND p.ativo = true";
 
             List<Produto> produtos = entityManager.createQuery(jpql, Produto.class)
                     .setParameter("codigoDeBarra", codigo)
@@ -166,7 +166,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
 
         try {
             String jpql = "SELECT new gerenciador.dto.produto.ProdutoResponseDTO(p.codigoDeBarra, p.nome) "
-                    + "FROM Produto p WHERE p.categoria.id = :categoria";
+                    + "FROM Produto p WHERE p.categoria.id = :categoria AND p.ativo = true";
 
             return entityManager
                     .createQuery(jpql, ProdutoResponseDTO.class)
@@ -187,7 +187,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
         entityManager.getTransaction().begin();
 
         try {
-            Long quantidade = entityManager.createQuery("SELECT COUNT(p) FROM Produto p", Long.class).getSingleResult();
+            Long quantidade = entityManager.createQuery("SELECT COUNT(p) FROM Produto p WHERE p.ativo = true", Long.class).getSingleResult();
 
             return quantidade == 0;
 
@@ -206,7 +206,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
 
         try {
             String jpql = "SELECT new gerenciador.dto.produto.ProdutoBaixoEstoqueResponseDTO(p.codigoDeBarra, p.nome, p.quantidade) "
-                    + "FROM Produto p WHERE p.quantidade <= :quantidade";
+                    + "FROM Produto p WHERE p.quantidade <= :quantidade AND p.ativo = true";
 
             return entityManager
                     .createQuery(jpql, ProdutoBaixoEstoqueResponseDTO.class)
@@ -228,7 +228,7 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
         try {
 
             String jpql = "SELECT COUNT(p) FROM Produto p " +
-                    "WHERE p.codigoDeBarra = :codigoDeBarra";
+                    "WHERE p.codigoDeBarra = :codigoDeBarra AND p.ativo = true";
 
             Long quantidade = entityManager.createQuery(jpql, Long.class)
                     .setParameter("codigoDeBarra", codigo)

@@ -64,6 +64,11 @@ public class PainelAdministrativoController {
                         editarProduto();
                         break;
 
+                    case (MenuAdminConstant.INATIVAR_PRODUTO):
+
+                        inativarProduto();
+                        break;
+
                     case (MenuAdminConstant.LISTAGEM):
                         listarProdutos();
                         break;
@@ -183,6 +188,17 @@ public class PainelAdministrativoController {
 
         }
 
+    }
+
+    private void inativarProduto() {
+        String codigo = ProdutoView.leCodigoBarraProduto();
+
+        if (produtoService.existeProdutoPorCodigo(codigo)) {
+            boolean status = produtoService.inativarProduto(codigo);
+            ProdutoView.alertaInativacaoProduto(status);
+        } else {
+            ProdutoView.alertaProdutoNaoEncontrado();
+        }
     }
 
     private void listarProdutos() {

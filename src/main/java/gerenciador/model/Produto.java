@@ -31,6 +31,9 @@ public class Produto implements Serializable {
     private String nome;
     private BigDecimal preco;
     private Integer quantidade;
+    
+    @Column(name = "ativo", nullable = false)
+    private boolean ativo = true;
 
     @Version
     private Integer version;

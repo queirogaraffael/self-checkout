@@ -60,6 +60,15 @@ public class ProdutoService {
 
     }
 
+    public boolean inativarProduto(String codigo) {
+        Produto produto = produtoDao.retornaProdutoPorCodigo(codigo);
+        if (produto != null) {
+            produto.setAtivo(false);
+            return produtoDao.atualizaProduto(produto);
+        }
+        return false;
+    }
+
     public boolean existeProdutoPorCodigo(String codigo) {
         return produtoDao.retornaProdutoPorCodigo(codigo) != null;
     }

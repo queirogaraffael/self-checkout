@@ -6,6 +6,7 @@ public class MenuAdminConstant {
 	public static final String EDITAR = "Atualizar Produto";
 	public static final String LISTAGEM = "Inventário Completo";
 	public static final String VISUALIZAR_PRODUTO = "Consultar Produto";
+	public static final String INATIVAR_PRODUTO = "Inativar Produto";
 	public static final String LISTAGEM_ESTOQUE_BAIXO = "Alerta de Reposição";
 	public static final String LISTAGEM_CATEGORIAS = "Gerenciar Categorias";
 	public static final String CONFIGURAR_NOTA_FICAL = "Configurações de Cupom Fiscal";

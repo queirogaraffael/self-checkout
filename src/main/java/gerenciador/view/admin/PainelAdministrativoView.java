@@ -6,7 +6,7 @@ public class PainelAdministrativoView {
 	public static String exibirPainelAdministrativo() {
 
 		Object[] opcoesMenu = { "Novo Produto", "Atualizar Produto", "Inventário Completo", "Consultar Produto",
-				"Alerta de Reposição", "Gerenciar Categorias", "Excluir Produto",
+				"Alerta de Reposição", "Gerenciar Categorias", "Inativar Produto",
 				"Configurações de Cupom Fiscal", "Histórico de Vendas", "Consultar Recibo de Venda", "Menu Principal" };
 
 		Object opcaoSelecionada = JOptionPane.showInputDialog(null, "Selecione a operação desejada:", "Painel de Administração (Retaguarda)",
