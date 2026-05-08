@@ -10,6 +10,10 @@ import javax.persistence.EntityManagerFactory;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.OptimisticLockException;
+import javax.persistence.RollbackException;
+import gerenciador.infrastructure.exception.ProdutoModificadoConcorrentementeException;
+
 public class ProdutoRepositoryHibernate implements ProdutoRepository {
 
     private final EntityManagerFactory entityManagerFactory;
@@ -56,12 +60,22 @@ public class ProdutoRepositoryHibernate implements ProdutoRepository {
             entityManager.getTransaction().commit();
             return true;
 
+        } catch (OptimisticLockException erro) {
+            if (entityManager.getTransaction().isActive()) entityManager.getTransaction().rollback();
+            throw new ProdutoModificadoConcorrentementeException("O produto foi alterado por outro usuário.");
+        } catch (RollbackException erro) {
+            if (entityManager.getTransaction().isActive()) entityManager.getTransaction().rollback();
+            if (erro.getCause() instanceof OptimisticLockException) {
+                throw new ProdutoModificadoConcorrentementeException("O produto foi alterado por outro usuário.", erro);
+            }
+            System.err.println("Problema na atualizacao do produto." + erro.getMessage());
+            return false;
         } catch (Exception erro) {
-            entityManager.getTransaction().rollback();
+            if (entityManager.getTransaction().isActive()) entityManager.getTransaction().rollback();
             System.err.println("Problema na atualizacao do produto." + erro.getMessage());
             return false;
         } finally {
-            entityManager.close();
+            if (entityManager.isOpen()) entityManager.close();
         }
 
     }

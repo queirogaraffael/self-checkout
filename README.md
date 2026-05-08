@@ -158,6 +158,14 @@ O lock otimista elimina esse risco porque nenhum lock é adquirido no momento da
 
 Vale registrar que o argumento de *overhead* não é determinante nesse caso. Em um portal de autoatendimento com volume baixo por transação e baixa probabilidade de dois clientes disputarem o mesmo produto simultaneamente, o custo real de ambas as abordagens é simétrico. A escolha pelo lock otimista se justifica pela ausência de risco de deadlock, e não por ganho de performance.
 
+### Concorrência no Painel Administrativo vs Autoatendimento
+
+Enquanto o módulo de autoatendimento trata colisões de concorrência com retentativas automáticas (*retry* + *jitter*) para não interromper a experiência do cliente final, o painel administrativo adota uma estratégia de **Fail-Fast com intervenção manual**.
+
+Se dois operadores tentarem editar o mesmo produto simultaneamente e ocorrer uma colisão (`OptimisticLockException`), a camada de persistência lança uma `ProdutoModificadoConcorrentementeException`. O *Controller* captura essa exceção e exibe um alerta informando ao funcionário que os dados foram alterados por outro usuário, exigindo que ele reabra o produto.
+
+Essa distinção de design é intencional: no autoatendimento, a colisão é geralmente uma disputa de "quantidade de estoque", que pode ser resolvida de forma segura relendo o banco. No painel administrativo, o conflito pode envolver preços ou descrições, e uma retentativa automática poderia sobrescrever a decisão humana do outro operador silenciosamente. Ao notificar o usuário, garantimos que qualquer alteração administrativa seja baseada no estado mais recente e consistente do produto.
+
 ### Isolation Level
 
 O projeto foi desenvolvido e validado com `REPEATABLE_READ`, que é o padrão do MySQL. Não é necessário alterar essa configuração. A consistência das transações concorrentes é garantida pelo mecanismo de lock otimista via `@Version` no nível da aplicação, mantendo a integridade dos dados de forma independente do *isolation level* configurado no servidor.

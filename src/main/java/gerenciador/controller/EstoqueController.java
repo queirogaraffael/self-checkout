@@ -23,6 +23,7 @@ import gerenciador.view.estoque.venda.VendaView;
 
 import java.math.BigDecimal;
 import java.util.Set;
+import gerenciador.infrastructure.exception.ProdutoModificadoConcorrentementeException;
 
 public class EstoqueController {
 
@@ -154,24 +155,28 @@ public class EstoqueController {
             String codigo = ProdutoView.leCodigoBarraProduto();
 
             if (produtoService.haProdutoComMesmoCodigoBarra(codigo)) {
-                boolean statusAtualizacao;
+                try {
+                    boolean statusAtualizacao;
 
-                if (opcaoEditar == 0) {
-                    ProdutoAtualizarPrecoDTO atualizarPrecoDTO = new ProdutoAtualizarPrecoDTO();
-                    BigDecimal novoPreco = EditarProdutoView.leNovoPreco();
-                    atualizarPrecoDTO.setPreco(novoPreco);
+                    if (opcaoEditar == 0) {
+                        ProdutoAtualizarPrecoDTO atualizarPrecoDTO = new ProdutoAtualizarPrecoDTO();
+                        BigDecimal novoPreco = EditarProdutoView.leNovoPreco();
+                        atualizarPrecoDTO.setPreco(novoPreco);
 
-                    statusAtualizacao = produtoService.atualizaPrecoProduto(codigo, atualizarPrecoDTO);
+                        statusAtualizacao = produtoService.atualizaPrecoProduto(codigo, atualizarPrecoDTO);
 
-                } else {
-                    ProdutoAtualizarQuantidadeDTO atualizarQuantidadeDTO = new ProdutoAtualizarQuantidadeDTO();
-                    Integer novaQuantidade = EditarProdutoView.leNovaQuantidade();
-                    atualizarQuantidadeDTO.setQuantidade(novaQuantidade);
+                    } else {
+                        ProdutoAtualizarQuantidadeDTO atualizarQuantidadeDTO = new ProdutoAtualizarQuantidadeDTO();
+                        Integer novaQuantidade = EditarProdutoView.leNovaQuantidade();
+                        atualizarQuantidadeDTO.setQuantidade(novaQuantidade);
 
-                    statusAtualizacao = produtoService.atualizaQuantidadeProduto(codigo, atualizarQuantidadeDTO);
+                        statusAtualizacao = produtoService.atualizaQuantidadeProduto(codigo, atualizarQuantidadeDTO);
+                    }
+
+                    ProdutoView.alertaAtualizacaoProduto(statusAtualizacao);
+                } catch (ProdutoModificadoConcorrentementeException e) {
+                    ProdutoView.alertaConflitoAtualizacaoProduto();
                 }
-
-                ProdutoView.alertaAtualizacaoProduto(statusAtualizacao);
             } else {
                 EditarProdutoView.alertaProdutoNaoCadastradoAinda();
             }

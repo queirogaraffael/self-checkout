@@ -62,6 +62,13 @@ public class ProdutoView {
         }
     }
 
+    public static void alertaConflitoAtualizacaoProduto() {
+        JOptionPane.showMessageDialog(null,
+                "Os dados deste produto foram alterados por outro usuário simultaneamente.\nPor favor, reabra o produto para ver os dados atualizados.",
+                "Conflito de Atualização",
+                JOptionPane.WARNING_MESSAGE);
+    }
+
     public static void alertaProdutoNaoEncontrado() {
         JOptionPane.showMessageDialog(null, "Produto nao encontrado.");
     }
