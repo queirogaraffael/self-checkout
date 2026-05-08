@@ -1,7 +1,7 @@
 package gerenciador.service;
 
 import gerenciador.model.ItemVenda;
-import gerenciador.model.NotaFiscal;
+import gerenciador.config.NotaFiscal;
 import gerenciador.model.Produto;
 import gerenciador.model.Venda;
 import gerenciador.model.enums.ResultadoFinalizacao;

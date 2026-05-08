@@ -2,15 +2,15 @@ package gerenciador.controller;
 
 import gerenciador.constant.MenuAutoatendimentoConstant;
 import gerenciador.model.enums.ResultadoFinalizacao;
-import gerenciador.model.NotaFiscal;
+import gerenciador.config.NotaFiscal;
 import gerenciador.model.ItemVenda;
 import gerenciador.service.FinalizarCompraService;
 import gerenciador.service.ItemVendaService;
 import gerenciador.service.ProdutoService;
 import gerenciador.view.menu.ValidaSenhaView;
-import gerenciador.view.autoatendimento.*;
-import gerenciador.view.autoatendimento.TerminalAutoatendimentoView;
-import gerenciador.view.shared.produto.LeDadosProdutoView;
+import gerenciador.view.autoatendimento.AutoatendimentoView;
+import gerenciador.view.autoatendimento.FinalizarCompraView;
+import gerenciador.view.shared.produto.ProdutoView;
 import gerenciador.util.AutenticadorDeSenha;
 import gerenciador.session.MonitorSessao;
 import gerenciador.session.SessaoAutoatendimento;
@@ -56,7 +56,7 @@ public class AutoatendimentoController {
         do {
             sessao.setNoMenuAutoatendimento(true);
             try {
-                opcaoMenuFluxoDeCaixa = TerminalAutoatendimentoView.exibirMenuPrincipal();
+                opcaoMenuFluxoDeCaixa = AutoatendimentoView.exibirMenuPrincipal();
                 sessao.registrarAtividade();
 
                 if (opcaoMenuFluxoDeCaixa == null) {
@@ -107,7 +107,7 @@ public class AutoatendimentoController {
                 if (erro.getMessage() != null && erro.getMessage().equals("null")) {
                     continue;
                 }
-                MenuAutoatendimentoView.alertaEntradaInvalida();
+                AutoatendimentoView.alertaEntradaInvalida();
             }
 
         } while (!MenuAutoatendimentoConstant.MENU_PRINCIPAL.equals(opcaoMenuFluxoDeCaixa));
@@ -116,17 +116,17 @@ public class AutoatendimentoController {
     }
 
     private void adicionaProduto(Set<ItemVenda> listaCompras) {
-        String codigoProduto = AdicionarProdutoView.leCodigoProduto();
+        String codigoProduto = AutoatendimentoView.leCodigoProduto();
 
         if (codigoProduto == null)
             return;
 
         if (!produtoService.existeProdutoPorCodigo(codigoProduto)) {
-            AdicionarProdutoView.alertaProdutoIndisponivel();
+            AutoatendimentoView.alertaProdutoIndisponivel();
             return;
         }
 
-        int quantidade = LeDadosProdutoView.leQuantidadeProduto();
+        int quantidade = ProdutoView.leQuantidadeProduto();
 
         itemVendaService.adicionarAoCarrinho(listaCompras, codigoProduto, quantidade);
     }
@@ -134,56 +134,56 @@ public class AutoatendimentoController {
     private void removerProduto(Set<ItemVenda> listaCompras) {
 
         if (Objects.isNull(listaCompras) || listaCompras.isEmpty()) {
-            RemoverProdutoView.alertaSacolaVazia();
+            AutoatendimentoView.alertaSacolaVazia();
             return;
         }
 
-        String codigoProduto = LeDadosProdutoView.leCodigoBarraProduto();
+        String codigoProduto = ProdutoView.leCodigoBarraProduto();
 
         if (codigoProduto == null)
             return;
 
         if (!ItemVendaService.contemProduto(listaCompras, codigoProduto)) {
-            RemoverProdutoView.alertaProdutoJaNaoConstava();
+            AutoatendimentoView.alertaProdutoJaNaoConstava();
             return;
         }
 
         itemVendaService.removerDoCarrinho(listaCompras, codigoProduto);
-        RemoverProdutoView.alertaProdutoRemovidoComSucesso();
+        AutoatendimentoView.alertaProdutoRemovidoComSucesso();
     }
 
     private void corrigirQuantidade(Set<ItemVenda> listaCompras) {
         if (listaCompras.isEmpty()) {
-            CorrigirQuantidadeView.alertaCarrinhoVazio();
+            AutoatendimentoView.alertaCarrinhoVazio();
             return;
         }
 
-        String codigo = LeDadosProdutoView.leCodigoBarraProduto();
+        String codigo = ProdutoView.leCodigoBarraProduto();
 
         if (codigo == null)
             return;
 
         if (!ItemVendaService.contemProduto(listaCompras, codigo)) {
-            CorrigirQuantidadeView.alertaProdutoInvalido();
+            AutoatendimentoView.alertaProdutoInvalido();
             return;
         }
 
-        Integer novaQuantidade = LeDadosProdutoView.leQuantidadeProduto();
+        Integer novaQuantidade = ProdutoView.leQuantidadeProduto();
 
         boolean sucesso = itemVendaService.atualizarQuantidadeNoCarrinho(listaCompras, codigo, novaQuantidade);
 
         if (!sucesso) {
-            CorrigirQuantidadeView.alertaProdutoInvalido();
+            AutoatendimentoView.alertaProdutoInvalido();
             return;
         }
 
-        CorrigirQuantidadeView.alertaQuantidadeProdutoCorrigida();
+        AutoatendimentoView.alertaQuantidadeProdutoCorrigida();
     }
 
     private void listarSacola(Set<ItemVenda> listaCompras) {
         BigDecimal subtotal = ItemVendaService.somaPrecos(listaCompras);
         String relatorioListaCompras = ItemVendaService.geraRelatorioItemVenda(listaCompras);
-        ListarSacolaView.exibirSacola(subtotal, relatorioListaCompras);
+        AutoatendimentoView.exibirSacola(subtotal, relatorioListaCompras);
     }
 
     private void finalizarCompra(Set<ItemVenda> listaCompras) {
@@ -212,7 +212,7 @@ public class AutoatendimentoController {
             return;
         }
         listaCompras.clear();
-        LimparCarrinhoView.alertaSacolaLimpaSucesso();
+        AutoatendimentoView.alertaSacolaLimpaSucesso();
     }
 
     private String sair() {

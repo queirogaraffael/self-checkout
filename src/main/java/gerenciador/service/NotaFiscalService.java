@@ -1,6 +1,6 @@
 package gerenciador.service;
 
-import gerenciador.model.NotaFiscal;
+import gerenciador.config.NotaFiscal;
 import gerenciador.model.enums.StatusNotaFiscal;
 import gerenciador.util.VerificaDiretorio;
 

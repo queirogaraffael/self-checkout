@@ -1,4 +1,4 @@
-package gerenciador.model;
+package gerenciador.config;
 
 import gerenciador.model.enums.StatusNotaFiscal;
 

@@ -2,7 +2,7 @@ package gerenciador.view.estoque.notafiscal;
 
 
 import gerenciador.model.enums.StatusNotaFiscal;
-import gerenciador.model.NotaFiscal;
+import gerenciador.config.NotaFiscal;
 
 import javax.swing.*;
 

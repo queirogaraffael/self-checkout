@@ -3,7 +3,6 @@ package gerenciador.config;
 import gerenciador.controller.AutoatendimentoController;
 import gerenciador.controller.EstoqueController;
 import gerenciador.infrastructure.RepositoryFactory;
-import gerenciador.model.NotaFiscal;
 import gerenciador.service.CategoriaService;
 import gerenciador.service.FinalizarCompraService;
 import gerenciador.service.ItemVendaService;

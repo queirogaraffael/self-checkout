@@ -6,7 +6,7 @@ import gerenciador.dto.produto.ProdutoAtualizarPrecoDTO;
 import gerenciador.dto.produto.ProdutoAtualizarQuantidadeDTO;
 import gerenciador.dto.produto.ProdutoCreateDTO;
 import gerenciador.dto.produto.ProdutoDTO;
-import gerenciador.model.NotaFiscal;
+import gerenciador.config.NotaFiscal;
 import gerenciador.model.ItemVenda;
 import gerenciador.service.CategoriaService;
 import gerenciador.service.ItemVendaService;
@@ -16,15 +16,8 @@ import gerenciador.service.NotaFiscalService;
 import gerenciador.view.estoque.GerenciadorDeEstoqueView;
 import gerenciador.view.estoque.notafiscal.NotaFiscalView;
 import gerenciador.view.shared.categoria.CategoriasView;
-import gerenciador.view.estoque.data.AlertasDataView;
-import gerenciador.view.estoque.data.LeDataView;
-import gerenciador.view.shared.produto.AlertasProdutoView;
+import gerenciador.view.shared.produto.ProdutoView;
 import gerenciador.view.estoque.EditarProdutoView;
-import gerenciador.view.shared.produto.LeDadosProdutoView;
-import gerenciador.view.shared.produto.PrintaProdutoView;
-import gerenciador.view.estoque.venda.AlertasVendaView;
-import gerenciador.view.estoque.venda.LeDadosVendaView;
-import gerenciador.view.estoque.venda.PrintarVendaView;
 import gerenciador.view.estoque.venda.VendaView;
 
 import java.math.BigDecimal;
@@ -112,30 +105,30 @@ public class EstoqueController {
 
     private void visualizarProduto() {
 
-        String codigo = LeDadosProdutoView.leCodigoBarraProduto();
+        String codigo = ProdutoView.leCodigoBarraProduto();
 
         if (produtoService.haProdutoComMesmoCodigoBarra(codigo)) {
             ProdutoDTO produto = produtoService.retornaProdutoDTO(codigo);
 
-            PrintaProdutoView.printaProdutos(produto.toString());
+            ProdutoView.printaProdutos(produto.toString());
 
         } else {
-            AlertasProdutoView.alertaProdutoNaoEncontrado();
+            ProdutoView.alertaProdutoNaoEncontrado();
         }
 
     }
 
     private void cadastrarProduto() {
 
-        String codigoBarra = LeDadosProdutoView.leCodigoBarraProduto();
+        String codigoBarra = ProdutoView.leCodigoBarraProduto();
 
         if (produtoService.haProdutoComMesmoCodigoBarra(codigoBarra)) {
-            AlertasProdutoView.alertaProdutoJaCadastrado();
+            ProdutoView.alertaProdutoJaCadastrado();
         } else {
 
-            String nome = LeDadosProdutoView.leNomeProduto();
-            BigDecimal valor = LeDadosProdutoView.leValorProduto();
-            Integer quantidade = LeDadosProdutoView.leQuantidadeProduto();
+            String nome = ProdutoView.leNomeProduto();
+            BigDecimal valor = ProdutoView.leValorProduto();
+            Integer quantidade = ProdutoView.leQuantidadeProduto();
 
             CategoriaResponseDTO categoria = selecionaCategoria();
 
@@ -143,7 +136,7 @@ public class EstoqueController {
                     new ProdutoCreateDTO(codigoBarra, nome, valor, quantidade, categoria.getId(), categoria.getNome()));
 
             if (produtoCreateDTO != null) {
-                PrintaProdutoView.printaProdutoCriado(produtoCreateDTO);
+                ProdutoView.printaProdutoCriado(produtoCreateDTO);
             }
 
         }
@@ -154,7 +147,7 @@ public class EstoqueController {
         int opcaoEditar = EditarProdutoView.opcaoEditar();
 
         if (opcaoEditar != 2) {
-            String codigo = LeDadosProdutoView.leCodigoBarraProduto();
+            String codigo = ProdutoView.leCodigoBarraProduto();
 
             if (produtoService.haProdutoComMesmoCodigoBarra(codigo)) {
                 boolean statusAtualizacao;
@@ -174,7 +167,7 @@ public class EstoqueController {
                     statusAtualizacao = produtoService.atualizaQuantidadeProduto(codigo, atualizarQuantidadeDTO);
                 }
 
-                AlertasProdutoView.alertaAtualizacaoProduto(statusAtualizacao);
+                ProdutoView.alertaAtualizacaoProduto(statusAtualizacao);
             } else {
                 EditarProdutoView.alertaProdutoNaoCadastradoAinda();
             }
@@ -186,7 +179,7 @@ public class EstoqueController {
     private void listarProdutos() {
 
         if (produtoService.haProduto()) {
-            AlertasProdutoView.alertaListaProdutoVazia();
+            ProdutoView.alertaListaProdutoVazia();
         } else {
             CategoriaResponseDTO categoria = selecionaCategoria();
 
@@ -194,7 +187,7 @@ public class EstoqueController {
 
             String resultado = produtoService.geraRelatorioProdutosPorCategoria(idCategoria);
 
-            PrintaProdutoView.printaProdutos(resultado);
+            ProdutoView.printaProdutos(resultado);
         }
 
     }
@@ -204,9 +197,9 @@ public class EstoqueController {
         String resultado = produtoService.geraRelatorioProdutosEstoqueBaixo();
 
         if (resultado.isEmpty()) {
-            AlertasProdutoView.alertaProdutoEstoqueBaixo();
+            ProdutoView.alertaProdutoEstoqueBaixo();
         } else {
-            PrintaProdutoView.printaProdutos(resultado);
+            ProdutoView.printaProdutos(resultado);
         }
 
     }
@@ -241,7 +234,7 @@ public class EstoqueController {
     private void listarVendas() {
 
         if (!vendaService.haVenda()) {
-            AlertasVendaView.alertaSemVendaRegistrada();
+            VendaView.alertaSemVendaRegistrada();
             return;
         }
 
@@ -249,24 +242,24 @@ public class EstoqueController {
 
         if (opcaoListagem == 0) {
             String resultadoListagemVendas = vendaService.retornaRelatorioVendas();
-            PrintarVendaView.printarVenda(resultadoListagemVendas);
+            VendaView.printarVenda(resultadoListagemVendas);
 
         } else if (opcaoListagem == 1) {
-            String dataString = LeDataView.leData();
+            String dataString = VendaView.leData();
 
             try {
                 String resultadoListagemVendasPorData = vendaService.retornaRelatorioVendasPorData(dataString);
 
                 if (resultadoListagemVendasPorData.isEmpty()) {
-                    AlertasVendaView.semResultadoVendaParaData();
+                    VendaView.semResultadoVendaParaData();
                 } else {
-                    PrintarVendaView.printarVenda(resultadoListagemVendasPorData);
+                    VendaView.printarVenda(resultadoListagemVendasPorData);
                 }
             } catch (IllegalArgumentException e) {
                 if ("FORMATO_INVALIDO".equals(e.getMessage())) {
-                    AlertasDataView.alertaProblemaFormatoData();
+                    VendaView.alertaProblemaFormatoData();
                 } else if ("DATA_FUTURA".equals(e.getMessage())) {
-                    AlertasDataView.alertaDataPosteriorAtual();
+                    VendaView.alertaDataPosteriorAtual();
                 }
             }
         }
@@ -274,20 +267,20 @@ public class EstoqueController {
 
     private void detalharVenda() {
         if (vendaService.haVenda()) {
-            int codigo = LeDadosVendaView.leCodigoVenda();
+            int codigo = VendaView.leCodigoVenda();
 
             if (vendaService.haVendaComEsseCodigo(codigo)) {
 
                 Set<ItemVenda> itens = itemVendaService.retornaItensVenda(codigo);
                 String resultado = vendaService.gerarDetalhesCompletosDaVenda(codigo, itens);
-                PrintarVendaView.printarVenda(resultado);
+                VendaView.printarVenda(resultado);
 
             } else {
-                AlertasVendaView.alertaVendaInvalida();
+                VendaView.alertaVendaInvalida();
             }
 
         } else {
-            AlertasVendaView.alertaSemVendaRegistrada();
+            VendaView.alertaSemVendaRegistrada();
         }
     }
 
