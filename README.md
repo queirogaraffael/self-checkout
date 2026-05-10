@@ -36,7 +36,7 @@ O sistema tem dois módulos:
 
 Entidades JPA, chave primária composta e enums de domínio:
 
-![Diagrama de Classes JPA](https://github.com/queirogaraffael/self-checkout/blob/main/assets/venda-produto-item-jpa-class-diagram.png?raw=true)
+![Diagrama de Classes JPA](assets/venda-produto-item-jpa-class-diagram.png)
 
 **Legenda:**
 
@@ -420,20 +420,20 @@ A senha de acesso ao Painel de Administração é definida pelo próprio usuári
 
 ### Menu Principal
 
-![Menu Principal](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Menu%20Principal.png?raw=true)
+![Menu Principal](assets/Menu%20Principal.png)
 
 ### Painel de Administração
 
-![Painel de Administração I](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Painel%20Administracao%20I.png?raw=true)
-![Painel de Administração II](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Painel%20Administracao%20II.png?raw=true)
+![Painel de Administração I](assets/Painel%20Administracao%20I.png)
+![Painel de Administração II](assets/Painel%20Administracao%20II.png)
 
 ### Autoatendimento
 
-![Autoatendimento](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Autoatendimento.png?raw=true)
+![Autoatendimento](assets/Autoatendimento.png)
 
 ### Validação de Senha
 
-![Validação de Senha](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Validacao%20Senha.png?raw=true)
+![Validação de Senha](assets/Validacao%20Senha.png)
 
 
 ## Evolução e Comparativo entre Projetos
