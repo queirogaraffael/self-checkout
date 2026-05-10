@@ -206,6 +206,15 @@ em.createQuery("SELECT p FROM Produto p WHERE p.id IN :ids", Produto.class)
 
 Isso reduz o número de round-trips ao banco de O(n) para O(1) por tentativa de finalização.
 
+### Entidades Gerenciadas vs. Updates Nativos (DTOs)
+
+Ao deduzir o estoque durante a finalização da compra, a abordagem escolhida foi carregar as instâncias completas da entidade `Produto` (Managed Entities) para o contexto transacional do JPA, em vez de utilizar DTOs (Data Transfer Objects) parciais com chamadas de `UPDATE` direto no banco.
+
+Embora uma query de atualização atômica (`UPDATE Produto SET quantidade = quantidade - X WHERE id = Y`) pudesse economizar alguns bytes no *payload* por não trafegar colunas extras, a decisão por **Entidades Gerenciadas** sustenta-se em dois pilares técnicos:
+
+1.  **O verdadeiro gargalo é o Round-Trip:** Em aplicações com banco de dados em rede, a latência de comunicação (ida e volta) impacta exponencialmente mais a performance do que a largura de banda de alguns bytes adicionais. Ao utilizar a estratégia de *batch SELECT* (`IN :ids`), todos os itens são recuperados em uma única viagem. Trazer a linha inteira da tabela ou apenas duas colunas em uma única query possui custo computacional prático idêntico neste cenário.
+2.  **Manutenção do Optimistic Locking:** Fazer atualizações SQL diretas "cega" o Hibernate. Apenas ao modificar o estado de um objeto gerenciado em memória (`produto.setQuantidade(...)`), o ORM consegue registrar a alteração (via *Dirty Checking*) e gerar o `UPDATE` atrelado ao controle de versão (`@Version`). Isso garante que a proteção contra concorrência não seja perdida, blindando a venda contra qualquer tipo de modificação simultânea (por exemplo, um administrador alterando o preço do item no exato momento da compra).
+
 ### Thread safety na camada de controller
 
 O `AutoatendimentoController` captura `Exception` genérica no loop principal, exibe `AlertaGeralView` e **continua no loop**, sem nunca propagar a exceção para o menu principal. Essa decisão é de segurança: um erro de runtime dentro de um módulo de autoatendimento não deve permitir que o terminal retorne ao menu administrativo sem autenticação.
