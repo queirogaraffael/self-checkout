@@ -11,7 +11,7 @@
 
 ## Visão Geral
 
-Sistema desktop de autoatendimento (self-checkout) para pequeno varejo, desenvolvido em Java puro sem frameworks de aplicação (sem Spring, sem CDI). O objetivo do projeto foi implementar manualmente as responsabilidades que frameworks modernos abstraem: gerenciamento de beans, ciclo de vida do EntityManager, injeção de dependência e concorrência, com o propósito de compreender o que ocorre por baixo dessas abstrações.
+Sistema desktop de autoatendimento (self-checkout) para pequeno varejo, desenvolvido em Java puro sem frameworks de aplicação (sem Spring). O objetivo do projeto foi implementar manualmente as responsabilidades que frameworks modernos abstraem: gerenciamento de beans, ciclo de vida do EntityManager, injeção de dependência e concorrência, com o propósito de compreender o que ocorre por baixo dessas abstrações.
 
 **Arquitetura e Padrões:** O projeto segue o padrão arquitetural **MVC (Model-View-Controller)**, garantindo que as regras de negócio e a persistência de dados (Model) estejam totalmente desacopladas das interfaces gráficas (View) através da orquestração de controladores intermediários (Controller).
 
@@ -23,7 +23,7 @@ Sistema desktop de autoatendimento (self-checkout) para pequeno varejo, desenvol
 
 O sistema tem dois módulos:
 
-- **Autoatendimento (Fluxo de Caixa):** terminal voltado ao cliente final, com adição e remoção de produtos, correção de quantidade, finalização da compra e geração de nota fiscal em arquivo.
+- **Autoatendimento:** terminal voltado ao cliente final, com adição e remoção de produtos, correção de quantidade, finalização da compra e geração de nota fiscal em arquivo.
 - **Painel de Administração:** módulo restrito por senha para operadores, com cadastro e edição de produtos, categorias, visualização de estoque baixo, relatório de vendas por data e detalhamento de venda.
 
 **Por que Hibernate sem Spring Data?** A escolha foi deliberada: gerenciar o `EntityManager` e as transações manualmente torna o contrato com o banco de dados explícito, sem a mediação de repositórios gerados por proxy. Isso é descrito em detalhe na seção [JPAManager](#jpamanager).
@@ -82,7 +82,7 @@ src/main/java/gerenciador
 
 ### Contexto e necessidade
 
-Quando dois terminais de autoatendimento finalizam uma compra simultaneamente, o Hibernate detecta a colisão via `@Version` e lança `OptimisticLockException`. Sem um mecanismo de retry, o segundo terminal simplesmente falharia e devolveria o erro ao cliente, o que é inaceitável em um ponto de venda.
+Quando dois terminais de autoatendimento finalizam uma compra simultaneamente, o Hibernate detecta a colisão na entidade `Produto` via `@Version` e lança `OptimisticLockException`. Sem um mecanismo de retry, o segundo terminal simplesmente falharia e devolveria o erro ao cliente, o que é inaceitável em um ponto de venda.
 
 ### Implementação
 
@@ -133,7 +133,7 @@ O jitter (`random.nextDouble() * backoff`) distribui o delay dentro do intervalo
 
 ### Integridade de Estoque e Risco de Inconsistência
 
-Considere o seguinte cenário: há apenas uma unidade de um produto em estoque e dois clientes o escaneiam em terminais diferentes, finalizando a compra ao mesmo tempo. Sem tratamento de concorrência, ambas as transações leriam `quantidade = 1`, ambas subtrairiam 1 e ambas commitariam, resultando em `quantidade = -1` no banco — uma inconsistência grave.
+Considere o seguinte cenário: há apenas uma unidade de um produto em estoque e dois clientes o escaneiam em terminais diferentes, finalizando a compra ao mesmo tempo. Sem tratamento de concorrência, ambas as transações leriam `quantidade = 1`, ambas subtrairiam 1 e ambas commitariam, resultando em `quantidade = -1` no banco, ou seja, uma inconsistência grave.
 
 Isso não é apenas um cenário de tentativa deliberada de burlar o sistema. É uma condição de corrida legítima que pode acontecer naturalmente em qualquer loja com baixo estoque. O Optimistic Locking garante que apenas uma das transações seja commitada; o retry com leitura de dados frescos garante que a segunda detecte o estoque zerado e retorne `ProdutoEsgotadoException` ao cliente, mantendo a integridade do banco.
 
@@ -156,7 +156,7 @@ O lock pessimista foi considerado e descartado por um motivo técnico específic
 
 O lock otimista elimina esse risco porque nenhum lock é adquirido no momento da leitura. A integridade é garantida pelo campo `@Version` na entidade `Produto`, que faz o MySQL rejeitar no commit qualquer transação que tente sobrescrever uma versão já modificada por outra transação concorrente. Quando isso ocorre, a transação é reexecutada com *backoff* exponencial e *jitter*, relendo o estado atual do banco.
 
-Vale registrar que o argumento de *overhead* não é determinante nesse caso. Em um portal de autoatendimento com volume baixo por transação e baixa probabilidade de dois clientes disputarem o mesmo produto simultaneamente, o custo real de ambas as abordagens é simétrico. A escolha pelo lock otimista se justifica pela ausência de risco de deadlock, e não por ganho de performance.
+Vale registrar que o argumento de *overhead* não foi determinante nesse caso. Em um portal de autoatendimento com volume baixo por transação e baixa probabilidade de dois clientes disputarem o mesmo produto simultaneamente, o custo real de ambas as abordagens é simétrico. A escolha pelo lock otimista se justificou pela ausência de risco de deadlock, e não por ganho de performance.
 
 ### Concorrência no Painel Administrativo vs Autoatendimento
 
@@ -164,7 +164,7 @@ Enquanto o módulo de autoatendimento trata colisões de concorrência com reten
 
 Se dois operadores tentarem editar o mesmo produto simultaneamente e ocorrer uma colisão (`OptimisticLockException`), a camada de persistência lança uma `ProdutoModificadoConcorrentementeException`. O *Controller* captura essa exceção e exibe um alerta informando ao funcionário que os dados foram alterados por outro usuário, exigindo que ele reabra o produto.
 
-Essa distinção de design é intencional: no autoatendimento, a colisão é geralmente uma disputa de "quantidade de estoque", que pode ser resolvida de forma segura relendo o banco. No painel administrativo, o conflito pode envolver preços ou descrições, e uma retentativa automática poderia sobrescrever a decisão humana do outro operador silenciosamente. Ao notificar o usuário, garantimos que qualquer alteração administrativa seja baseada no estado mais recente e consistente do produto.
+Essa distinção de design é intencional: no autoatendimento, a colisão é geralmente uma disputa de "quantidade de estoque", que pode ser resolvida de forma segura relendo o banco. No painel administrativo, o conflito pode envolver preços ou descrições, e uma retentativa automática poderia sobrescrever a decisão humana do outro operador silenciosamente. Ao notificar o usuário, garantimos que qualquer alteração administrativa seja baseada no estado mais recente e consistente do produto. Além disso, o uso de lock otimista aqui evita que um operador "bloqueie" um registro por tempo indeterminado (o que ocorreria com o lock pessimista), garantindo que o sistema não fique travado por ações humanas não planejadas.
 
 ### Isolation Level
 
@@ -324,7 +324,7 @@ public void fechaEntityManagerFactory() {
 ```
 
 - **Singleton:** O `EntityManagerFactory` é criado uma única vez (conexão ao pool é cara).
-- **Externalização de credenciais:** `carregarConfiguracoesBanco()` lê `config.properties` em tempo de execução, sobrescrevendo as credenciais do `persistence.xml`. Isso permite que usuário e senha sejam configurados sem recompilar o projeto — alinhado ao princípio de configuração externa.
+- **Externalização de credenciais:** `carregarConfiguracoesBanco()` lê `config.properties` em tempo de execução, sobrescrevendo as credenciais do `persistence.xml`. Isso permite que usuário e senha sejam configurados sem recompilar o projeto, ou seja, é alinhado ao princípio de configuração externa.
 - **Fechamento explícito:** `MenuPrincipalController` chama `fechaEntityManagerFactory()` no bloco `finally` ao encerrar a aplicação, garantindo que o pool de conexões seja liberado corretamente.
 
 ### O que o Spring abstrairia
@@ -362,7 +362,7 @@ O teste mais crítico é o de `FinalizarCompraService`, que cobre a lógica de n
 
 - **JUnit 4.12** — framework de testes
 - **Mockito 1.10.19** — mocking de dependências
-- **`maven-surefire-plugin` 2.22.2** com `--add-opens java.base/java.lang=ALL-UNNAMED` — necessário para o CGLIB do Mockito legado funcionar no Java 17+
+- **`maven-surefire-plugin` 2.22.2** com `--add-opens java.base/java.lang=ALL-UNNAMED` — necessário para o CGLIB do Mockito legado funcionar em ambientes com Java 17+ (embora o projeto utilize Java 8, essa flag garante compatibilidade caso o ambiente de execução utilize uma JDK mais recente).
 
 ### Cobertura por classe
 
@@ -425,6 +425,27 @@ A senha de acesso ao Painel de Administração é definida pelo próprio usuári
 ### Validação de Senha
 
 ![Validação de Senha](https://github.com/queirogaraffael/self-checkout/blob/main/assets/Validacao%20Senha.png?raw=true)
+
+
+## Evolução e Comparativo entre Projetos
+
+Para fins de estudo e evolução técnica, este projeto pode ser comparado com o [Gerenciador de Hotel](https://github.com/queirogaraffael/gerenciador-hotel), um sistema desenvolvido anteriormente que utiliza uma estrutura de padrões similar (MVC, IoC manual), mas que ainda não contava com implementações de tratamento de concorrência e algumas boas práticas de segurança e organização que foram refinadas neste projeto de varejo.
+
+### Diferenças Principais:
+
+*   **Gestão de Concorrência:** Enquanto este sistema de varejo implementa **Optimistic Locking** para garantir a integridade em vendas simultâneas, o projeto de hotel não possui um mecanismo de tratamento de concorrência, embora utilize a mesma base de **IoC manual** e **Dependency Injection**.
+*   **Gerenciamento de Persistência:** Ambos os projetos utilizam o mesmo estilo de controle manual do `EntityManagerFactory` e transações explícitas, porém a organização e o isolamento das camadas neste projeto de self-checkout foram significativamente aprimorados.
+*   **Avanços Técnicos:** Este sistema de self-checkout introduz conceitos como **Exponential Backoff + Jitter** e **Monitoramento Multithread de Sessão**, que não estão presentes no gerenciador de hotel.(Melhoria: totalmente correto isso )
+
+### Resumo do Projeto Gerenciador de Hotel:
+Este é um sistema para gerenciamento de um hotel, permitindo a administração de quartos, hóspedes, reservas, funcionários, além de controlar o check-in e check-out.
+
+*   **Funcionalidades:** Cadastro e listagem de quartos/hóspedes, verificação de disponibilidade por data, gestão de manutenções e histórico de hospedagem.
+*   **Tecnologias:** Java 17 (Gerenciador de Hotel) vs Java 8 (Self-Checkout), PostgreSQL vs MySQL, Hibernate, Swing e Lombok.
+*   **Arquitetura:** Segue o padrão MVC e utiliza o padrão Factory para criação de instâncias.
+
+O comparativo entre os dois demonstra meu progresso em lidar com cenários complexos de concorrência, integridade de dados e arquitetura desacoplada.
+
 
 ## Licença
 
