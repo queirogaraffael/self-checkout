@@ -15,12 +15,16 @@ Sistema desktop de autoatendimento (self-checkout) para pequeno varejo, desenvol
 
 **Arquitetura e Padrões:** O projeto segue o padrão arquitetural **MVC (Model-View-Controller)**, garantindo que as regras de negócio e a persistência de dados (Model) estejam totalmente desacopladas das interfaces gráficas (View) através da orquestração de controladores intermediários (Controller).
 
-**Contexto e Escopo de Uso:** O sistema foi dimensionado para as características reais de um pequeno/médio supermercado:
+**Contexto e Escopo de Uso:** O sistema foi dimensionado para as características reais de um pequeno/médio supermercado.
+
+Todos os terminais de autoatendimento executam instâncias independentes da aplicação (uma JVM por terminal), porém conectadas ao mesmo banco de dados MySQL centralizado da loja. Isso torna o controle de concorrência essencial para garantir a integridade do estoque durante vendas simultâneas.
 
 - **Escala de Terminais:** Projetado para operar em um ambiente com, no máximo, 4 a 10 caixas de autoatendimento funcionando simultaneamente na mesma loja.
-- **Transações Rápidas (Modelo Express):** Focado no comportamento real de caixas de autoatendimento, que recebem clientes com carrinhos menores (estimado para o processamento rápido de, no máximo, ~60 itens). O sistema não é projetado para processar "compras do mês" gigantescas, mas sim para dar agilidade à loja.
-  _Nota: Este escopo específico foi fundamental para as decisões de design arquitetural. Com poucas instâncias e transações breves, abordagens de performance mais "leves", como o Optimistic Locking, tornam-se altamente eficientes e seguras._
 
+- **Transações Rápidas (Modelo Express):** Focado no comportamento real de caixas de autoatendimento, que recebem clientes com carrinhos menores (estimado para o processamento rápido de, no máximo, ~60 itens). O sistema não é projetado para processar "compras do mês" gigantescas, mas sim para dar agilidade à loja.
+
+  _Nota: Este escopo específico foi fundamental para as decisões de design arquitetural. Com poucas instâncias e transações breves, abordagens de concorrência mais leves, como o Optimistic Locking, tornam-se altamente eficientes e seguras._
+  
 O sistema tem dois módulos:
 
 - **Autoatendimento:** terminal voltado ao cliente final, com adição e remoção de produtos, correção de quantidade, finalização da compra e geração de nota fiscal em arquivo.
