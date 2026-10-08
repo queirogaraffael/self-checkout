@@ -11,6 +11,8 @@
 
 ## Visão Geral
 
+> **Status do projeto:** Este projeto é um MVP / prova de conceito com foco educacional. Ele implementa o fluxo central de um self-checkout (venda, estoque, concorrência e sessão), mas não é um sistema pronto para produção. Ficam de fora, por exemplo, integração com meios de pagamento e hardware (leitor de código de barras, impressora fiscal), emissão de nota fiscal fiscalmente válida, autenticação robusta e testes de integração.
+
 Sistema desktop de autoatendimento (self-checkout) para pequeno varejo, desenvolvido em Java puro sem frameworks de aplicação (sem Spring). O objetivo do projeto foi implementar manualmente as responsabilidades que frameworks modernos abstraem: gerenciamento de beans, ciclo de vida do EntityManager, injeção de dependência e concorrência, com o propósito de compreender o que ocorre por baixo dessas abstrações.
 
 **Arquitetura e Padrões:** O projeto segue o padrão arquitetural **MVC (Model-View-Controller)**, garantindo que as regras de negócio e a persistência de dados (Model) estejam totalmente desacopladas das interfaces gráficas (View) através da orquestração de controladores intermediários (Controller).
